@@ -39,22 +39,26 @@ html * {
 }
 
 :root {
-    --main-color: #EC8392;
-    --main-color-hover: #fff;
-    --secondary-color: #000;
+    --primary-color: #0B4C6A;
+    --contrast-color: #093D55;
+    --secondary-color: #89B66A;
+    --accent-color: #E86942;
+    --background-color: #F9FAF8;
+    --text-color: #333333;
+    --muted-text-color: #5F6B74;
+
+    --main-color: var(--accent-color);
+    --main-color-hover: var(--contrast-color);
     --trans: all 0.1s linear;
     --btn-rad: 16px;
-    --main-warning-color: #ff8d02;
 
     --input-border-rad: 24px;
 
-    --muted-text-color: #717171;
-    --dark-text-color: #272727;
-
+    --dark-text-color: var(--text-color);
     --fw-700: 700;
-    --placeholder-color: #A9A9A9;
-    --color-67: #676767;
-    --color-444: #444C4E;
+    --placeholder-color: #8A9097;
+    --color-67: #5F6B74;
+    --color-444: #333333;
 
 }
 
@@ -96,6 +100,8 @@ body {
 
 
     /*background-image: url('/assets/images/svg/bg-body.svg');*/
+    background-color: var(--background-color);
+    color: var(--text-color);
 }
 
 /* NAVBAR */
@@ -118,7 +124,7 @@ body {
 }
 
 header nav {
-    background-color: #731F3F1C;
+    background-color: rgba(11, 76, 106, 0.1);
 }
 
 .dontate-fast {
@@ -137,23 +143,23 @@ header nav {
 
 header nav .navbar-nav .nav-link {
     font-weight: 400;
-    color: #6C6C6C;
+    color: var(--muted-text-color);
 
 }
 
 header nav .navbar-nav .nav-link.active {
     font-weight: 500;
-    color: var(--dark-text-color);
+    color: var(--primary-color);
 
 }
 
 .btn-currency {
-    color: #444C4E;
+    color: var(--text-color);
     font-weight: 500;
     font-size: 14px;
     display: inline-block;
     text-decoration: none;
-    border: 1px solid #D6D6D6;
+    border: 1px solid rgba(9, 61, 85, 0.2);
     padding: 8px;
     border-radius: 11px;
 }
@@ -174,14 +180,14 @@ header nav .navbar-nav .nav-link.active {
 
 .language-switcher a {
     text-decoration: none;
-    color: #3F3F3F;
+    color: var(--text-color);
     display: flex;
     align-items: flex-end;
 }
 
 .btn-donate {
     display: block;
-    color: #000;
+    color: #fff;
     text-decoration: none;
     background-color: var(--main-color);
     padding: 12px 25px;
@@ -192,36 +198,36 @@ header nav .navbar-nav .nav-link.active {
 }
 
 .btn-donate:hover {
-    background-color: var(--dark-text-color);
+    background-color: var(--main-color-hover);
     color: #fff;
-    border-color: var(--dark-text-color);
+    border-color: var(--main-color-hover);
 
 }
 
 
 .btn-send {
     display: block;
-    color: #000;
+    color: #fff;
     text-decoration: none;
-    background-color: var(--main-color);
+    background-color: var(--primary-color);
     padding: 12px 25px;
     font-weight: 500;
-    border: 1px solid var(--main-color);
+    border: 1px solid var(--primary-color);
     border-radius: var(--btn-rad);
     transition: var(--trans);
 }
 
 .btn-send:hover {
-    background-color: var(--dark-text-color);
+    background-color: var(--main-color-hover);
     color: #fff;
-    border-color: var(--dark-text-color);
+    border-color: var(--main-color-hover);
 
 }
 
 
 .btn-donate-now {
     display: block;
-    color: #000;
+    color: #fff;
     text-decoration: none;
     background-color: var(--main-color);
     padding: 12px 25px;
@@ -232,9 +238,9 @@ header nav .navbar-nav .nav-link.active {
 }
 
 .btn-donate-now:hover {
-    background-color: var(--dark-text-color);
+    background-color: var(--main-color-hover);
     color: #fff;
-    border-color: var(--dark-text-color);
+    border-color: var(--main-color-hover);
 
 }
 
@@ -260,7 +266,7 @@ h1.main-title {
 
 /* hero-banner */
 .hero-banner {
-    background-color: #731F3F1C;
+    background-color: rgba(11, 76, 106, 0.08);
     padding: 50px;
     padding-top: 8rem !important;
 }
@@ -318,7 +324,7 @@ h1.main-title {
 
 .progress-fill {
     height: 100%;
-    background-color: #e27b8c;
+    background-color: var(--accent-color);
     border-radius: 10px;
     transition: var(--trans);
 }
@@ -362,7 +368,7 @@ h1.main-title {
 
 .clipped-image-container .text-cut {
     position: absolute;
-    color: #6B6B6B;
+    color: var(--muted-text-color);
     top: 26px;
     inset-inline-start: 14px;
     font-weight: 400;
@@ -448,7 +454,7 @@ h1.main-title {
 }
 
 .campaign-banner {
-    background-color: #EC839208;
+    background-color: #E8694208;
     padding: 20px;
     border-radius: 24px;
 }
@@ -485,7 +491,7 @@ h1.main-title {
 }
 
 .followors .plus {
-    color: #D9384A;
+    color: var(--accent-color);
 
 }
 
@@ -625,8 +631,8 @@ h1.main-title {
 }
 
 .how-to .step-number.active {
-    background-color: #f26b81;
-    color: #000;
+    background-color: var(--accent-color);
+    color: #fff;
     border-color: transparent;
 }
 
@@ -685,7 +691,7 @@ h1.main-title {
 }
 
 .main-section.support-section {
-    background-color: #F5F5F5;
+    background-color: #E8F1E2;
     padding: 50px;
 }
 
@@ -710,14 +716,14 @@ h1.main-title {
     display: inline-block;
     text-decoration: none;
     border-radius: 16px;
-    border: 1px solid #000;
+    border: 1px solid var(--primary-color);
     padding: 14px;
-    color: #000;
+    color: var(--primary-color);
     transition: var(--trans);
 }
 
 .main-section.support-section .btn-show-more:hover {
-    background-color: var(--dark-text-color);
+    background-color: var(--primary-color);
     color: #fff;
 }
 
@@ -788,7 +794,7 @@ h1.main-title {
 
 .where-card {
     padding: 30px;
-    background-color: #1D50A30D;
+    background-color: #0B4C6A0D;
     border-radius: 24px;
 }
 
@@ -863,7 +869,7 @@ h1.main-title {
 }
 
 span.plus {
-    color: #D9384A;
+    color: var(--accent-color);
 }
 
 .activites .other img {
@@ -1000,13 +1006,13 @@ span.plus {
 
 /* optional: hover effect or color tweak */
 .numbered-list li:hover span {
-    background-color: var(--main-color, #f47b83);
+    background-color: var(--main-color, #E86942);
     color: #fff;
-    border-color: var(--main-color, #f47b83);
+    border-color: var(--main-color, #E86942);
 }
 
 .main-section .donate {
-    background-color: #199E4F;
+    background-color: var(--secondary-color);
     border-radius: 50px;
     display: flex;
     justify-content: space-between;
@@ -1014,7 +1020,7 @@ span.plus {
 }
 
 .main-section .donate.blue {
-    background-color: #3590FF;
+    background-color: var(--primary-color);
 }
 
 .main-section .donate .content {
@@ -1022,7 +1028,7 @@ span.plus {
 }
 
 .main-section .donate .content p {
-    color: #F0F0F0;
+    color: var(--contrast-color);
 }
 
 .main-section .donate .content .btn-donate {
@@ -1031,11 +1037,12 @@ span.plus {
 
 .main-section .donate .content .form-input {
     width: 390px;
-    background-color: #ffffff28;
+    background-color: rgba(255, 255, 255, 0.6);
+    color: var(--contrast-color);
 }
 
 .main-section .donate .content .form-input::placeholder {
-    color: #F3F3F3;
+    color: rgba(9, 61, 85, 0.65);
 }
 
 .main-section .donate .content .holder {
@@ -1169,7 +1176,7 @@ footer .footer-bottom {
 }
 
 .blank-banner p.desc {
-    color: #444C4E;
+    color: var(--text-color);
     font-size: 18px;
     width: 55%;
 }
@@ -1195,7 +1202,7 @@ footer .footer-bottom {
 }
 
 .float-section .title {
-    color: #444C4E;
+    color: var(--text-color);
     font-size: 16px;
     font-weight: 600;
     margin-bottom: 10px;
@@ -1249,14 +1256,14 @@ footer .footer-bottom {
 }
 
 .users-rate .content p:first-child {
-    color: #444C4E;
+    color: var(--text-color);
     font-weight: 400;
     margin-top: 10px;
 }
 
 .users-rate .content p:last-child {
     font-size: 12px;
-    color: #444C4E;
+    color: var(--text-color);
 }
 
 .users-rate .rate {
@@ -1266,7 +1273,7 @@ footer .footer-bottom {
 
 .users-rate .rate p {
     font-size: 36px;
-    color: #000;
+    color: var(--primary-color);
 }
 
 @media (max-width:992px) {
@@ -1334,7 +1341,7 @@ footer .footer-bottom {
 }
 
 .stats .change-life {
-    background-color: #EC83921A;
+    background-color: #E869421A;
     padding: 30px;
     border-radius: 16px;
 }
@@ -1353,7 +1360,7 @@ footer .footer-bottom {
 }
 
 .stats .change-life p {
-    color: #444C4E;
+    color: var(--text-color);
     width: 80%;
 }
 
@@ -1390,7 +1397,7 @@ footer .footer-bottom {
 }
 
 .about-roaya .vision {
-    background-color: #000 !important;
+    background-color: var(--contrast-color) !important;
 }
 
 .about-roaya .vision .intro>p {
@@ -1399,11 +1406,11 @@ footer .footer-bottom {
 
 
 .about-roaya .mission {
-    background-color: #fff5e3 !important;
+    background-color: #FCE3DB !important;
 }
 
 .about-roaya .mission .intro>p {
-    color: #000 !important;
+    color: var(--text-color) !important;
 }
 
 .about-roaya .our-msg {
@@ -1454,7 +1461,7 @@ footer .footer-bottom {
 }
 
 .supporter-card .supporter .name {
-    color: #444C4E;
+    color: var(--text-color);
 }
 
 .supporter-card .supporter .date {
@@ -1462,17 +1469,17 @@ footer .footer-bottom {
 }
 
 .page-banner.main {
-    background-color: #EC83921A;
+    background-color: #E869421A;
     padding: 15px 31px;
     border-radius: 24px;
 }
 
 .page-banner.main h1.bg {
-    background-color: #ffe7e7;
+    background-color: #FCE3DB;
     border-radius: 12px;
     padding: 10px 16px;
     font-weight: bold;
-    background: #ffe7e7 none repeat scroll 0 0;
+    background: #FCE3DB none repeat scroll 0 0;
     box-decoration-break: clone;
     display: inline;
     line-height:normal;
@@ -1481,7 +1488,7 @@ footer .footer-bottom {
 
 
 .gray-color {
-    color: #444C4E;
+    color: var(--text-color);
 }
 
 .social-black {
@@ -1516,7 +1523,7 @@ footer .footer-bottom {
         border-radius: 12px;
         padding: 6px 18px;
         font-weight: bold;
-        background: #ffe7e7 none repeat scroll 0 0;
+        background: #FCE3DB none repeat scroll 0 0;
         box-decoration-break: clone;
         display: inline;
         line-height: 1.3;
@@ -1538,7 +1545,7 @@ footer .footer-bottom {
 }
 
 .info-card .info p {
-    color: #444C4E;
+    color: var(--text-color);
     font-size: 18px;
     font-weight: 400;
 }
@@ -1569,7 +1576,7 @@ footer .footer-bottom {
 }
 
 .contact-form form .form-check-label {
-    color: #444C4E;
+    color: var(--text-color);
 }
 
 .contact-form form .btn-donate {
@@ -1622,7 +1629,7 @@ main.contact .main-section.support-section {
 }
 
 .page-banner.secound {
-    background-color: #9A39000A;
+    background-color: #E869420A;
 }
 
 main.blogs .stats .change-life {
@@ -1643,14 +1650,14 @@ main.blogs .btn-show-more {
     display: inline-block;
     text-decoration: none;
     border-radius: 16px;
-    border: 1px solid #000;
+    border: 1px solid var(--primary-color);
     padding: 14px;
-    color: #000;
+    color: var(--primary-color);
     transition: var(--trans);
 }
 
 main.blogs .btn-show-more:hover {
-    background-color: var(--dark-text-color);
+    background-color: var(--primary-color);
     color: #fff;
 }
 
@@ -1681,7 +1688,7 @@ main.blog .content {
     border: none;
     margin-inline-start: 15px;
     background-color: transparent;
-    color: #000;
+    color: var(--text-color);
     width: 100%;
 }
 
@@ -1811,12 +1818,12 @@ main.blog .content {
 }
 
 .filter-check:checked+.filter-btn p {
-    color: var(--dark-text-color);
+    color: #fff;
 }
 
 
 main.campaign .blank-banner {
-    background: linear-gradient(0deg, #199E4F, #199E4F),
+    background: linear-gradient(0deg, var(--secondary-color), var(--secondary-color)),
         linear-gradient(93.8deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.2) 98.9%);
     height: auto;
 
@@ -1969,7 +1976,7 @@ main.faq .search-container {
 }
 
 .donate-form form .form-group label {
-    color: #444C4E;
+    color: var(--text-color);
     font-size: 14px;
     font-weight: 400;
     margin-bottom: 10px;
@@ -2025,7 +2032,7 @@ main.faq .search-container {
 }
 
 .donate-section .campaign-section .donation-card {
-    background-color: #EC839224;
+    background-color: #E8694224;
     padding: 19px;
 }
 
@@ -2041,8 +2048,8 @@ main.faq .search-container {
 
 .btn-details {
     text-decoration: none;
-    color: #444C4E;
-    border: 1px solid #444C4E;
+    color: var(--text-color);
+    border: 1px solid var(--primary-color);
     border-radius: 16px;
     display: inline-block;
     text-align: center;
@@ -2075,14 +2082,14 @@ main.faq .search-container {
 
 .alert {
     border-radius: 16px;
-    color: #444C4E;
+    color: var(--text-color);
     display: flex;
     align-items: center;
 }
 
 .alert.alert-success {
-    background-color: #009A2412;
-    border-color: #009A243B;
+    background-color: #89B66A12;
+    border-color: #89B66A3B;
 }
 
 .carousel-indicators {
@@ -2143,7 +2150,7 @@ main.faq .search-container {
 }
 
 .mobileCarousal .carousel-indicators span.active {
-    background-color: var(--main-color, #007bff);
+    background-color: var(--main-color, #E86942);
     width: 24px;
 }
 
@@ -2162,7 +2169,7 @@ main.faq .search-container {
 
 .ss-main.CurrencySelect {
     background-color: transparent;
-    color: #444C4E;
+    color: var(--text-color);
     font-weight: 500;
     font-size: 14px;
     text-decoration: none;
