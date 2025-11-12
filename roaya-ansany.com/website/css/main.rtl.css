@@ -1,0 +1,28 @@
+.clipped-image-container .text-cut {
+    inset-inline-start: unset;
+    inset-inline-end: 14px;
+}
+.users-rate {
+    inset-inline-start: unset;
+}
+.about-main .stats .stat .stats-imgs .arrow a {
+    transform: rotate(118deg)
+}
+
+h1.main-title {
+    color: var(--dark-text-color);
+    font-size: 53px !important;
+    font-weight: 500;
+}
+.float-section{
+    transform: translateX(50%) !important;
+    right: 50% !important;
+    left: unset !important;
+}
+
+.float-section-container {
+    margin-bottom: 85% !important;
+}
+.blank-banner h1.title{
+    font-size: 31px !important;
+}
