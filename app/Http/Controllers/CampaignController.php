@@ -12,6 +12,8 @@ class CampaignController extends Controller
         $page      = (int) $request->get('page', 1);
         $campaigns = $api->getProjects($page, 12);
 
+        dd($campaigns); // TODO: remove after debugging
+
         return view('pages.campaigns', compact('campaigns'));
     }
 
