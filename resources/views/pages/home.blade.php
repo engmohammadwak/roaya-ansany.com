@@ -11,10 +11,20 @@
     $heroLabel  = $hero['label']       ?? ($locale==='ar' ? 'تبرعك سينقذ الكثير من الأشخاص' : 'Your donation will save many lives');
     $heroImg    = $hero['image']       ?? 'https://roaya-ansany.com/storage/uploads/pages/3PCwY0bnxr9NmLyHvTlL7wlNmBC5ir5vBG5gv0Wz.png';
 
-    // Label position — from HomeSetting dashboard
-    $heroLabelTop   = $data['hero']['label_top']   ?? '20px';
-    $heroLabelLeft  = $data['hero']['label_left']  ?? 'auto';
-    $heroLabelRight = $data['hero']['label_right'] ?? '40px';
+    // Label position — من الداشبورد مباشرةً (بدون قيم ثابتة)
+    $heroLabelTop   = $hero['label_top']   ?? '';
+    $heroLabelLeft  = $hero['label_left']  ?? '';
+    $heroLabelRight = $hero['label_right'] ?? '';
+
+    // بناء style الموضع ديناميكياً
+    $labelStyle = 'position:absolute; z-index:10;';
+    if ($heroLabelTop)   $labelStyle .= ' top:'.$heroLabelTop.';';
+    if ($heroLabelLeft)  $labelStyle .= ' left:'.$heroLabelLeft.';';
+    if ($heroLabelRight) $labelStyle .= ' right:'.$heroLabelRight.';';
+    // توسيط أفقي لو لا يسار ولا يمين محددين
+    if (!$heroLabelLeft && !$heroLabelRight) {
+        $labelStyle .= ' left:50%; transform:translateX(-50%);';
+    }
 @endphp
 
 @section('title', $locale === 'ar' ? 'الرئيسية' : 'Home')
@@ -29,11 +39,7 @@
 
     {{-- ✅ Hero Label Overlay — يظهر فوق الـ Slider دايماً، موضعه من الداشبورد --}}
     @if($heroLabel)
-    <div style="position:absolute;
-                top:{{ $heroLabelTop }};
-                left:{{ $heroLabelLeft }};
-                right:{{ $heroLabelRight }};
-                z-index:10;
+    <div style="{{ $labelStyle }}
                 background:rgba(255,255,255,0.85);
                 backdrop-filter:blur(4px);
                 padding:8px 18px;
@@ -130,15 +136,7 @@
                         <path d="M43 0C19.2518 0 0 19.2518 0 43V345C0 368.748 19.2518 388 43 388H398C421.748 388 441 368.748 441 345V115C441 98.9837 428.016 86 412 86H329C312.984 86 300 73.0163 300 57V29C300 12.9837 287.016 0 271 0H43Z" fill="{{ $p }}" fill-opacity="0.15"/>
                     </svg>
                     @if($heroLabel)
-                    <div style="position:absolute;
-                                top:{{ $heroLabelTop }};
-                                left:{{ $heroLabelLeft }};
-                                right:{{ $heroLabelRight }};
-                                text-align:center;
-                                z-index:2;
-                                font-size:14px;
-                                color:#555;
-                                font-weight:500">
+                    <div style="{{ $labelStyle }}; font-size:14px; color:#555; font-weight:500">
                         {{ $heroLabel }}
                     </div>
                     @endif

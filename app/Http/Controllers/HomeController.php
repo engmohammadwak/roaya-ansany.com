@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\HomeSetting;
 use App\Models\Partner;
+use App\Models\Setting;
 use App\Services\ApiService;
 use Illuminate\Support\Facades\Cache;
 
@@ -37,6 +38,11 @@ class HomeController extends Controller
             ];
         })->toArray();
 
+        // موضع النص من جدول Settings (ManageSettings)
+        $heroLabelTop   = Setting::get('hero_label_top',   '');
+        $heroLabelLeft  = Setting::get('hero_label_left',  '');
+        $heroLabelRight = Setting::get('hero_label_right', '');
+
         // بناء مصفوفة $data من DB (أولوية على API)
         $data = [
             'hero' => [
@@ -44,6 +50,9 @@ class HomeController extends Controller
                 'description' => $locale === 'ar' ? $hs->hero_description_ar : $hs->hero_description_en,
                 'label'       => $locale === 'ar' ? $hs->hero_label_ar       : $hs->hero_label_en,
                 'image'       => $hs->hero_image ? asset('storage/'.$hs->hero_image) : null,
+                'label_top'   => $heroLabelTop,
+                'label_left'  => $heroLabelLeft,
+                'label_right' => $heroLabelRight,
             ],
             'campaign_banner' => [
                 'title'       => $locale === 'ar' ? $hs->cb_title_ar       : $hs->cb_title_en,
