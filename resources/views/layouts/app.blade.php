@@ -22,7 +22,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="@yield('description', 'ساهم في إنقاذ الأرواح ودعم المحتاجين عبر حملات مؤسسة رؤيا الإنسانية.')">
-    <title>@yield('title', $siteName)</title>
+    <title>@hasSection('title') @yield('title') | {{ $siteName }} @else {{ $siteName }} @endif</title>
     <link rel="icon" href="{{ $favicon }}">
     <link rel="shortcut icon" href="{{ $favicon }}">
     <link rel="apple-touch-icon" href="{{ $favicon }}">
@@ -44,7 +44,6 @@
         .how-to .step-number.active     { background-color: {{ $cs }} !important; border-color: {{ $cs }} !important; }
         .followors .plus, span.plus     { color: {{ $cd }} !important; }
 
-        /* Gradients — تستخدم اللونين الديناميكيين */
         .hero-banner,
         .stats .change-life,
         .page-banner.main,
@@ -74,7 +73,6 @@
         .page-banner.main h1.bg {
             background: color-mix(in srgb, {{ $p }} 28%, transparent) !important;
         }
-        /* أزرار ولونية ثابتة تستخدم اللون الأساسي */
         .progress-fill                  { background-color: {{ $p }} !important; }
         .search-container img           { background-color: {{ $p }} !important; }
         .filter-check:checked+.filter-btn { background: {{ $p }} !important; border-color: {{ $p }} !important; }
