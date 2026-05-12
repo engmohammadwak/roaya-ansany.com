@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers;
+use App\Models\Contact;
 use App\Models\ContactPage;
-use App\Models\ContactMessage;
 use Illuminate\Http\Request;
 
 class ContactController extends Controller
@@ -12,13 +12,26 @@ class ContactController extends Controller
     }
 
     public function send(Request $request) {
-        $request->validate([
-            'name'    => 'required|string|max:255',
-            'email'   => 'required|email',
-            'subject' => 'nullable|string|max:255',
-            'message' => 'required|string|min:10',
+        $isAr  = app()->getLocale() === 'ar';
+        $page  = ContactPage::first();
+
+        $validated = $request->validate([
+            'first_name' => 'required|string|max:100',
+            'last_name'  => 'nullable|string|max:100',
+            'email'      => 'required|email|max:255',
+            'phone'      => 'nullable|string|max:30',
+            'message'    => 'required|string|min:5',
         ]);
-        ContactMessage::create($request->only('name','email','subject','message'));
-        return back()->with('success', app()->getLocale() === 'ar' ? 'تم إرسال رسالتك بنجاح!' : 'Your message has been sent successfully!');
+
+        Contact::create($validated);
+
+        $successMsg = $isAr
+            ? ($page->success_msg_ar ?? 'تم إرسال رسالتك بنجاح! سنتواصل معك قريباً.')
+            : ($page->success_msg_en ?? 'Your message has been sent successfully!');
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json(['success' => true, 'message' => $successMsg]);
+        }
+        return back()->with('success', $successMsg);
     }
 }
