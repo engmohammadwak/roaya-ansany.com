@@ -66,18 +66,6 @@ class ManageSettings extends Page
                     Forms\Components\TextInput::make('hero_label_en')
                         ->label('Image Label (English)')
                         ->placeholder('Your donation will save many lives'),
-                    Forms\Components\TextInput::make('hero_label_top')
-                        ->label('موضع النص: Top')
-                        ->placeholder('12px')
-                        ->default('12px'),
-                    Forms\Components\TextInput::make('hero_label_left')
-                        ->label('موضع النص: Left')
-                        ->placeholder('0 أو 351px')
-                        ->default('0'),
-                    Forms\Components\TextInput::make('hero_label_right')
-                        ->label('موضع النص: Right')
-                        ->placeholder('0')
-                        ->default('0'),
                     Forms\Components\FileUpload::make('hero_image')
                         ->label('صورة الـ Hero')
                         ->image()
