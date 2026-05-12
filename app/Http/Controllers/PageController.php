@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\TermsOfUse;
+
 class PageController extends Controller
 {
     public function privacy()
@@ -11,6 +13,7 @@ class PageController extends Controller
 
     public function terms()
     {
-        return view('pages.terms');
+        $terms = TermsOfUse::with('sections')->first();
+        return view('pages.terms', compact('terms'));
     }
 }
