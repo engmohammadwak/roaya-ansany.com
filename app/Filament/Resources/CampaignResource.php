@@ -33,7 +33,15 @@ class CampaignResource extends Resource
                 ]),
             ])->columnSpanFull(),
 
-            Forms\Components\FileUpload::make('image')->label('الصورة')->image()->directory('campaigns'),
+            Forms\Components\FileUpload::make('image')
+                ->label('الصورة')
+                ->image()
+                ->disk('public')
+                ->directory('campaigns')
+                ->visibility('public')
+                ->maxSize(5120)
+                ->columnSpanFull(),
+
             Forms\Components\TextInput::make('target_amount')->label('المبلغ المستهدف')->numeric()->required(),
             Forms\Components\TextInput::make('collected_amount')->label('المبلغ المجموع')->numeric()->default(0),
             Forms\Components\DatePicker::make('end_date')->label('تاريخ الانتهاء'),
@@ -45,7 +53,7 @@ class CampaignResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('image')->label('الصورة'),
+                Tables\Columns\ImageColumn::make('image')->label('الصورة')->disk('public'),
                 Tables\Columns\TextColumn::make('title_ar')->label('العنوان')->searchable(),
                 Tables\Columns\TextColumn::make('target_amount')->label('المستهدف')->money('USD'),
                 Tables\Columns\TextColumn::make('collected_amount')->label('المجموع')->money('USD'),
