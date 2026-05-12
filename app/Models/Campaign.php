@@ -22,13 +22,9 @@ class Campaign extends Model
         'end_date'         => 'date',
     ];
 
-    // =====================
-    // Route Model Binding
-    // =====================
-    public function getRouteKeyName(): string
-    {
-        return 'slug';
-    }
+    // NOTE: getRouteKeyName() intentionally removed.
+    // Filament dashboard uses {id} for routing.
+    // Frontend (CampaignController) resolves by slug manually.
 
     // =====================
     // Auto-generate slug
