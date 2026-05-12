@@ -2,16 +2,6 @@
 @php
     $locale = app()->getLocale();
     $isAr   = $locale === 'ar';
-
-    // ApiService returns an array like:
-    // ['data' => [...], 'meta' => ['current_page'=>1,'last_page'=>3,'total'=>27]]
-    // Fallback: if it returns a plain array treat it directly
-    $items       = is_array($campaigns) && isset($campaigns['data']) ? $campaigns['data'] : (is_array($campaigns) ? $campaigns : []);
-    $meta        = is_array($campaigns) && isset($campaigns['meta'])  ? $campaigns['meta']  : [];
-    $currentPage = $meta['current_page'] ?? request('page', 1);
-    $lastPage    = $meta['last_page']    ?? 1;
-    $prevUrl     = $currentPage > 1      ? url($locale . '/campaigns?page=' . ($currentPage - 1)) : null;
-    $nextUrl     = $currentPage < $lastPage ? url($locale . '/campaigns?page=' . ($currentPage + 1)) : null;
 @endphp
 @section('title', ($isAr ? 'الحملات الإنسانية' : 'Humanitarian Campaigns') . ' | ' . config('app.name'))
 
@@ -40,8 +30,8 @@
                 </h1>
                 <p class="color-67">
                     {{ $isAr
-                        ? 'اكتشف الحملات الإنسانية وكن جزءًا من التغيير. تبرع اليوم لتمنح المحتاجين فرصة لحياة أفضل.'
-                        : 'Discover humanitarian campaigns and be part of the change.'
+                        ? 'اكتشف الحملات الإنسانية وكن جزءًا من التغيير. تبرع اليوم لتمنح المحتاجين فرصة لحياة أفضل وتكتب قصة جديدة مليئة بالعطاء.'
+                        : 'Discover humanitarian campaigns and be part of the change. Donate today to give those in need a chance for a better life.'
                     }}
                 </p>
             </div>
@@ -54,48 +44,36 @@
         <div class="container">
             <div class="row g-4">
 
-                @forelse($items as $campaign)
-                    @php
-                        // Support both object and array
-                        $id         = data_get($campaign, 'id');
-                        $title      = $isAr ? data_get($campaign, 'title_ar', data_get($campaign, 'title')) : data_get($campaign, 'title_en', data_get($campaign, 'title'));
-                        $slug       = data_get($campaign, 'slug', $id);
-                        $image      = data_get($campaign, 'image');
-                        $categoryAr = data_get($campaign, 'category_ar', data_get($campaign, 'category', 'اغاثة'));
-                        $categoryEn = data_get($campaign, 'category_en', data_get($campaign, 'category', 'Relief'));
-                        $locationAr = data_get($campaign, 'location_ar', data_get($campaign, 'location', ''));
-                        $locationEn = data_get($campaign, 'location_en', data_get($campaign, 'location', ''));
-                        $raised     = data_get($campaign, 'raised_amount', data_get($campaign, 'raised', 0));
-                        $goal       = data_get($campaign, 'goal_amount',   data_get($campaign, 'goal',   0));
-                        $pct        = ($goal > 0) ? min(100, round(($raised / $goal) * 100)) : 100;
-                    @endphp
+                @forelse($campaigns as $campaign)
                     <div class="col-12 col-md-6 col-lg-4 d-flex flex-column align-items-center" data-aos="zoom-in">
                         <div class="campaign-card">
-                            <a href="{{ url($locale . '/campaigns/' . $slug) }}" class="blog-card">
+                            <a href="{{ url($locale . '/campaigns/' . $campaign->id) }}" class="blog-card">
 
-                                @if($image)
-                                    <img src="{{ Str::startsWith($image, 'http') ? $image : Storage::url($image) }}"
-                                         alt="{{ $title }}" class="img-fluid mb-0">
-                                @endif
+                                <img src="{{ $campaign->image_url }}"
+                                     alt="{{ $campaign->title }}" class="img-fluid mb-0">
 
                                 <div class="categs mt-3">
-                                    <span class="main-color">{{ $isAr ? $categoryAr : $categoryEn }}</span>
+                                    <span class="main-color">اغاثة</span>
                                     <span>.</span>
-                                    <span class="color-67">{{ $isAr ? $locationAr : $locationEn }}</span>
+                                    <span class="color-67">
+                                        @if($campaign->end_date)
+                                            {{ $isAr ? 'ينتهي' : 'Ends' }}: {{ $campaign->end_date->format('d/m/Y') }}
+                                        @endif
+                                    </span>
                                 </div>
 
                                 <div class="title">
-                                    <h3 class="dark-text-color mt-2">{{ $title }}</h3>
+                                    <h3 class="dark-text-color mt-2">{{ $campaign->title }}</h3>
                                 </div>
 
                                 <div class="progress-container mt-4">
                                     <div class="progress-bar gray">
-                                        <div style="width: {{ $pct }}%;" class="progress-fill"></div>
+                                        <div style="width: {{ $campaign->progress_percentage }}%;" class="progress-fill"></div>
                                     </div>
                                 </div>
 
                                 <div class="card-footer mt-3">
-                                    <input type="text" name="amount" id="amount{{ $id }}"
+                                    <input type="text" name="amount" id="amount{{ $campaign->id }}"
                                            class="form-input"
                                            placeholder="{{ $isAr ? 'ادخل مبلغ التبرع' : 'Enter donation amount' }}">
                                     <button type="button" class="btn-donate">
@@ -115,26 +93,26 @@
             </div>
 
             {{-- ===== PAGINATION ===== --}}
-            @if($lastPage > 1)
+            @if($campaigns->hasPages())
                 <div class="d-flex justify-content-center align-items-center gap-2 mt-5 flex-wrap">
 
-                    @if($prevUrl)
-                        <a href="{{ $prevUrl }}" class="btn btn-outline-primary px-4 py-2">
-                            {{ $isAr ? 'السابق' : 'Previous' }}
-                        </a>
-                    @else
+                    @if($campaigns->onFirstPage())
                         <span class="btn btn-light disabled px-4 py-2">
                             {{ $isAr ? 'السابق' : 'Previous' }}
                         </span>
+                    @else
+                        <a href="{{ $campaigns->previousPageUrl() }}" class="btn btn-outline-primary px-4 py-2">
+                            {{ $isAr ? 'السابق' : 'Previous' }}
+                        </a>
                     @endif
 
                     <span class="mx-2 text-muted">
-                        {{ $isAr ? 'صفحة' : 'Page' }} {{ $currentPage }}
-                        {{ $isAr ? 'من' : 'of' }} {{ $lastPage }}
+                        {{ $isAr ? 'صفحة' : 'Page' }} {{ $campaigns->currentPage() }}
+                        {{ $isAr ? 'من' : 'of' }} {{ $campaigns->lastPage() }}
                     </span>
 
-                    @if($nextUrl)
-                        <a href="{{ $nextUrl }}" class="btn btn-outline-primary px-4 py-2">
+                    @if($campaigns->hasMorePages())
+                        <a href="{{ $campaigns->nextPageUrl() }}" class="btn btn-outline-primary px-4 py-2">
                             {{ $isAr ? 'التالي' : 'Next' }}
                         </a>
                     @else

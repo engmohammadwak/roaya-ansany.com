@@ -2,25 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\ApiService;
+use App\Models\Campaign;
 use Illuminate\Http\Request;
 
 class CampaignController extends Controller
 {
-    public function index(Request $request, ApiService $api)
+    public function index(Request $request)
     {
-        $page      = (int) $request->get('page', 1);
-        $campaigns = $api->getProjects($page, 12);
-
-        dd($campaigns); // TODO: remove after debugging
+        $campaigns = Campaign::active()
+            ->orderByDesc('created_at')
+            ->paginate(9);
 
         return view('pages.campaigns', compact('campaigns'));
     }
 
-    public function show(string $locale, string $id, ApiService $api)
+    public function show(string $locale, string $id)
     {
-        $campaign = $api->getProject($id);
-        $related  = $api->getProjects(1, 3);
+        $campaign = Campaign::active()->findOrFail($id);
+        $related  = Campaign::active()
+            ->where('id', '!=', $id)
+            ->latest()
+            ->take(3)
+            ->get();
 
         return view('pages.campaign-single', compact('campaign', 'related'));
     }
