@@ -12,5 +12,10 @@ class BlogPage extends Model {
         'hero_cats_ar','hero_cats_en',
         'hero_sub_ar','hero_sub_en',
         'hero_para_ar','hero_para_en',
+        'hero_image','campaign_id',
     ];
+
+    public function campaign() {
+        return $this->belongsTo(Campaign::class);
+    }
 }

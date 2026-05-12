@@ -3,6 +3,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\BlogPageResource\Pages;
 use App\Models\BlogPage;
+use App\Models\Campaign;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -20,19 +21,43 @@ class BlogPageResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Forms\Components\Section::make('قسم الهيرو (اليسار)')
+
+            Forms\Components\Section::make('صورة الهيرو')
                 ->schema([
-                    Forms\Components\TextInput::make('hero_title_ar')->label('عنوان الصفحة (عربي)'),
-                    Forms\Components\TextInput::make('hero_title_en')->label('عنوان الصفحة (إنجليزي)'),
-                    Forms\Components\TextInput::make('hero_sub_ar')->label('عنوان البطاقة (عربي)'),
-                    Forms\Components\TextInput::make('hero_sub_en')->label('عنوان البطاقة (إنجليزي)'),
-                    Forms\Components\Textarea::make('hero_para_ar')->label('نص البطاقة (عربي)')->rows(3),
-                    Forms\Components\Textarea::make('hero_para_en')->label('نص البطاقة (إنجليزي)')->rows(3),
-                    Forms\Components\TextInput::make('hero_cats_ar')->label('تيجات الهيرو (عربي) — فصل بفاصلة')
+                    Forms\Components\FileUpload::make('hero_image')
+                        ->label('صورة الهيرو (تظهر على اليسار)')
+                        ->image()
+                        ->directory('blog-page')
+                        ->helperText('لو تركتها فارغة يستخدم الصورة الافتراضية')
+                        ->columnSpanFull(),
+                ])->columns(1),
+
+            Forms\Components\Section::make('بطاقة التبرع')
+                ->description('النصوص التي تظهر على اليمين في قسم الهيرو')
+                ->schema([
+                    Forms\Components\TextInput::make('hero_cats_ar')
+                        ->label('تيجات البطاقة (عربي) — فصل بفاصلة')
                         ->helperText('مثال: حكاية,حياة,كرم'),
-                    Forms\Components\TextInput::make('hero_cats_en')->label('تيجات الهيرو (إنجليزي) — فصل بفاصلة')
+                    Forms\Components\TextInput::make('hero_cats_en')
+                        ->label('تيجات البطاقة (إنجليزي)')
                         ->helperText('Example: Story,Life,Generosity'),
+                    Forms\Components\TextInput::make('hero_sub_ar')->label('العنوان الرئيسي (عربي)'),
+                    Forms\Components\TextInput::make('hero_sub_en')->label('العنوان الرئيسي (إنجليزي)'),
+                    Forms\Components\Textarea::make('hero_para_ar')->label('النص (عربي)')->rows(3),
+                    Forms\Components\Textarea::make('hero_para_en')->label('النص (إنجليزي)')->rows(3),
                 ])->columns(2),
+
+            Forms\Components\Section::make('شريط التقدم (الأخضر)')
+                ->description('اختر حملة لتحديد نسبة التقدم والمبلغ الضايل')
+                ->schema([
+                    Forms\Components\Select::make('campaign_id')
+                        ->label('الحملة المرتبطة')
+                        ->options(Campaign::active()->pluck('title_ar','id'))
+                        ->searchable()
+                        ->nullable()
+                        ->helperText('شريط التقدم يعكس نسبة تحصيل هذه الحملة')
+                        ->columnSpanFull(),
+                ])->columns(1),
 
             Forms\Components\Section::make('قسم المقالات')
                 ->schema([

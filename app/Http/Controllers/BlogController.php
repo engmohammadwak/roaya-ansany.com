@@ -10,11 +10,12 @@ class BlogController extends Controller
 
     public function index() {
         $locale   = app()->getLocale();
-        $page     = BlogPage::first();
+        $page     = BlogPage::with('campaign')->first();
+        $campaign = $page?->campaign;
         $posts    = Blog::published()->latest()->take(self::PER_PAGE)->get();
         $total    = Blog::published()->count();
         $hasMore  = $total > self::PER_PAGE;
-        return view('pages.blogs', compact('posts','page','total','hasMore','locale'));
+        return view('pages.blogs', compact('posts','page','campaign','total','hasMore','locale'));
     }
 
     public function loadMore(Request $request) {
@@ -28,22 +29,19 @@ class BlogController extends Controller
         foreach ($posts as $post) {
             $img   = $post->image ? asset('storage/'.$post->image) : asset('website/images/stats-card.png');
             $title = $locale === 'ar' ? $post->title_ar : ($post->title_en ?: $post->title_ar);
-            $date  = $post->published_at ? $post->published_at->format('d/m/Y') :
-                     ($post->created_at ? $post->created_at->format('d/m/Y') : '');
+            $date  = $post->published_at
+                ? $post->published_at->format('d/m/Y')
+                : ($post->created_at ? $post->created_at->format('d/m/Y') : '');
             $slug  = $post->slug;
             $html .= view('partials.blog-card', compact('post','img','title','date','slug','locale'))->render();
         }
 
-        return response()->json([
-            'html'        => $html,
-            'has_more'    => $hasMore,
-            'total_count' => $total,
-        ]);
+        return response()->json(['html' => $html, 'has_more' => $hasMore, 'total_count' => $total]);
     }
 
     public function show($locale, $slug) {
-        $post     = Blog::where('slug', $slug)->where('is_published', true)->firstOrFail();
-        $isAr     = $locale === 'ar';
+        $post = Blog::where('slug', $slug)->where('is_published', true)->firstOrFail();
+        $isAr = $locale === 'ar';
         return view('pages.blog-single', compact('post','isAr'));
     }
 }
