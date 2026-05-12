@@ -2,8 +2,8 @@
 
 @php $locale = app()->getLocale(); @endphp
 
-@section('title', $locale === 'ar' ? 'الرئيسية | مؤسسة رؤيا الإنسانية' : 'Home | Roaya Insanya')
-@section('description', $locale === 'ar' ? 'ساهم في إنقاذ الأرواح ودعم المحتاجين عبر حملات مؤسسة رؤيا الإنسانية.' : 'Help save lives through Roaya Insanya campaigns.')
+@section('title', $locale === 'ar' ? 'الرئيسية' : 'Home')
+@section('description', $locale === 'ar' ? 'ساهم في إنقاذ الأرواح ودعم المحتاجين عبر حملاتنا.' : 'Help save lives through our campaigns.')
 
 @section('content')
 
@@ -112,9 +112,9 @@
 @php
     $cb         = $data['campaign_banner'] ?? [];
     $cbImg      = $cb['image']       ?? 'https://roaya-ansany.com/storage/uploads/pages/94VHn4ZdEJ3QxaD8xMoObV8IGHOyvRDM9jqXGtKV.jpg';
-    $cbTitle    = $cb['title']       ?? ($locale==='ar' ? 'رابطة علماء فلسطين تُشيد بمؤسسة رؤيا الإنسانية' : 'Palestine Scholars praise Roaya Insanya');
-    $cbSubtitle = $cb['subtitle']    ?? ($locale==='ar' ? 'رابطة علماء فلسطين تؤكد التزام مؤسسة رؤيا الإنسانية بالشفافية والضوابط الشرعية في جمع وتوزيع أموال الزكاة' : 'Confirms commitment to transparency and Sharia standards');
-    $cbDesc     = $cb['description'] ?? ($locale==='ar' ? 'أصدرت رابطة علماء فلسطين بيانًا رسميًا أكدت فيه أن الزكاة تُعد من أعظم أركان الإسلام وأهم الأمانات الشرعية.' : 'The Palestine Scholars Association issued an official statement confirming Roaya Insanya commitment.');
+    $cbTitle    = $cb['title']       ?? ($locale==='ar' ? 'رابطة علماء فلسطين تُشيد بمؤسستنا' : 'Palestine Scholars praise us');
+    $cbSubtitle = $cb['subtitle']    ?? ($locale==='ar' ? 'تؤكد الالتزام بالشفافية والضوابط الشرعية' : 'Confirms commitment to transparency and Sharia standards');
+    $cbDesc     = $cb['description'] ?? ($locale==='ar' ? 'أصدرت رابطة علماء فلسطين بيانًا رسميًا أكدت فيه التزامنا.' : 'The Palestine Scholars Association issued an official statement.');
 @endphp
 <section class="main-section">
     <div class="container">
@@ -124,7 +124,6 @@
                     <img src="{{ $cbImg }}" class="img-fluid rounded-3" alt="campaign">
                 </div>
                 <div class="col-md-7 order-1 order-lg-2 ps-lg-5">
-                    {{-- في العربي text-start = يمين --}}
                     <h2 class="section-title mt-4 text-start">{{ $cbTitle }}</h2>
                     <h6 class="main-color mt-2 mb-3 text-start" style="font-size:15px;font-weight:600">{{ $cbSubtitle }}</h6>
                     <p class="color-67 text-start" style="font-size:14px;line-height:1.9">{{ $cbDesc }}</p>
@@ -183,7 +182,7 @@
 </section>
 @endif
 
-{{-- ============ WHY DONATE (with icons) ============ --}}
+{{-- ============ WHY DONATE ============ --}}
 @php
     $whyCards = $data['why_donate'] ?? [];
     $defaultCards = [
@@ -198,7 +197,6 @@
 @endphp
 <section class="main-section why-donate">
     <div class="container">
-        {{-- الهيدر: محاذاة يمين بدل سنتر --}}
         <div class="header text-end" dir="rtl">
             <h6>{{ $locale==='ar'?'لماذا تتبرع لنا؟':'Why donate to us?' }}</h6>
             <h2 class="section-title">{{ $locale==='ar'?'لأننا نهتم بالحالات الأكثر احتياجًا.':'Because we care about those in greatest need.' }}</h2>
@@ -273,7 +271,7 @@
 {{-- ============ WHERE WE WORK ============ --}}
 @php
     $about      = $data['about'] ?? [];
-    $aboutTitle = $about['title']       ?? ($locale==='ar'?'مؤسسة رؤيا الإنسانية':'Roaya Insanya');
+    $aboutTitle = $about['title']       ?? ($locale==='ar'?'من نحن':'About Us');
     $aboutDesc  = $about['description'] ?? ($locale==='ar'?'مؤسسة أهلية غير ربحية.':'Non-profit organization.');
     $aboutImg   = $about['image']       ?? 'https://roaya-ansany.com/storage/uploads/pages/dWfpjiaOmZUcA0BC2wvyPZotctgE6L3TwskmdcsO.jpg';
 @endphp
@@ -309,7 +307,7 @@
         <div class="stats-card">
             <img src="{{ $statsImg }}" class="img-fluid" alt="kids">
             <div class="text-center pt-5">
-                <p class="text-white">{{ $locale==='ar'?'مشاريع رؤيا تقدم لـ':'Roaya projects offer' }}</p>
+                <p class="text-white">{{ $locale==='ar'?'مشاريعنا تقدم لـ':'Our projects offer' }}</p>
                 <h2 class="text-white mt-4 section-title">{{ $statsTitle }}</h2>
             </div>
             <div class="stats mt-5">
@@ -326,7 +324,7 @@
     </div>
 </section>
 
-{{-- ============ DONATION COUNTER (ديناميكي) ============ --}}
+{{-- ============ DONATION COUNTER ============ --}}
 @include('partials.donation-counter', ['donationCounter' => $data['donation_counter'] ?? []])
 
 {{-- ============ SUPPORT ============ --}}
@@ -348,7 +346,7 @@
                 <div class="col-md-5 mb-5"><img class="w-lg-100 img-fluid" src="{{ $supportImg }}" alt="support"></div>
                 <div class="col-md-7">
                     <div class="content">
-                        <h2 class="section-title mb-4">{{ $locale==='ar'?'مؤسسة رؤيا الإنسانية':'Roaya Insanya' }}</h2>
+                        <h2 class="section-title mb-4">{{ $locale==='ar'?'من نحن':'About Us' }}</h2>
                         <p class="muted-color">{{ $locale==='ar'?'مؤسسة خيرية غير ربحية تعمل في المجال الإنساني.':'A non-profit organization in the humanitarian field.' }}</p>
                         <div class="container my-5 text-end" dir="rtl">
                             <div class="row g-3 justify-content-center">
