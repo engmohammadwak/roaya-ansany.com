@@ -20,51 +20,76 @@ class PaymentGatewayResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Forms\Components\Section::make('حالة البوابة')
+
+            // ── Status & Mode ──
+            Forms\Components\Section::make('حالة بوابة Paymob')
+                ->description('تحكم تفعيل البوابة ووضع الاختبار')
                 ->schema([
                     Forms\Components\Grid::make(2)->schema([
                         Forms\Components\Toggle::make('is_active')
-                            ->label('تفعيل بوابة الدفع')
-                            ->helperText('عند التعطيل لا يستطيع الزوار الدفع'),
+                            ->label('تفعيل البوابة')
+                            ->helperText('عند التعطيل تذهب جميع المدفوعات لوضع التست')
+                            ->live(),
                         Forms\Components\Toggle::make('test_mode')
                             ->label('وضع الاختبار (Test Mode)')
-                            ->helperText('في وضع الاختبار يتم قبول الدفع دون بوابة حقيقية')
+                            ->helperText('يقبل الدفع محاكاة دون Paymob — كل عملية تُسجّل بحالة نجاح')
                             ->default(true),
                     ]),
                 ]),
 
-            Forms\Components\Section::make('بيانات Paymob')
-                ->description('احصل على هذه البيانات من لوحة تحكم Paymob')
+            // ── Server / Region ──
+            Forms\Components\Section::make('إعدادات Paymob')
+                ->description('احصل على هذه المفاتيح من Paymob Dashboard → Settings → Account Info')
                 ->schema([
                     Forms\Components\Select::make('base_url')
-                        ->label('الخادم')
+                        ->label('المنطقة / الخادم')
                         ->options([
-                            'https://accept.paymob.com' => 'مصر (EGY)',
-                            'https://oman.paymob.com'   => 'عُمان (OMN)',
-                            'https://ksa.paymob.com'    => 'السعودية (KSA)',
-                            'https://uae.paymob.com'    => 'الإمارات (UAE)',
+                            'https://accept.paymob.com' => 'مصر — accept.paymob.com',
+                            'https://oman.paymob.com'   => 'عُمان — oman.paymob.com',
+                            'https://ksa.paymob.com'    => 'السعودية — ksa.paymob.com',
+                            'https://uae.paymob.com'    => 'الإمارات — uae.paymob.com',
                         ])
                         ->default('https://accept.paymob.com')
                         ->required(),
-                    Forms\Components\Textarea::make('api_key')
-                        ->label('API Key')
-                        ->rows(3)
-                        ->placeholder('ZXlKaGJHY2lPaUpJVXpVeM...')
-                        ->helperText('من لوحة Paymob: Settings → Account Info → API Key'),
-                    Forms\Components\Grid::make(2)->schema([
-                        Forms\Components\TextInput::make('integration_id')
-                            ->label('Integration ID')
-                            ->placeholder('123456'),
-                        Forms\Components\TextInput::make('iframe_id')
-                            ->label('iFrame ID')
-                            ->placeholder('78910'),
+
+                    Forms\Components\Grid::make(1)->schema([
+                        Forms\Components\Textarea::make('secret_key')
+                            ->label('المفتاح السري (Secret Key)')
+                            ->rows(2)
+                            ->placeholder('sk_...')
+                            ->helperText('\u064a\u064f\u0633\u062a\u062e\u062f\u0645 \u0644\u0625\u0646\u0634\u0627\u0621 ا\u0644\u0625\u064a\u062f\u0627\u0639 (Intention API) \u2014 \u0644\u0627 \u062a\u0634\u0627\u0631\u0643\u0647 \u0645\u0639 \u0623\u062d\u062f'),
                     ]),
+
+                    Forms\Components\TextInput::make('public_key')
+                        ->label('المفتاح العام (Public Key)')
+                        ->placeholder('pk_...')
+                        ->helperText('ي\u064f\u0631\u0633\u0644 \u0645\u0639 \u0631ا\u0628\u0637 ا\u0644\u062f\u0641\u0639 ا\u0644\u0645\u0648\u062d\u062f (Unified Checkout)'),
+
+                    Forms\Components\TextInput::make('integration_id')
+                        ->label('Integration ID')
+                        ->placeholder('123456')
+                        ->helperText('من Paymob Dashboard → Developers → Payment Integrations'),
+
                     Forms\Components\TextInput::make('hmac_secret')
                         ->label('HMAC Secret')
                         ->password()
                         ->revealable()
-                        ->placeholder('...'),
+                        ->helperText('ل\u0644\u062a\u062d\u0642\u0642 \u0645\u0646 \u0635\u062d\u0629 Webhook — \u0627\u062e\u062a\u064a\u0627\u0631\u064a'),
                 ]),
+
+            // ── URLs ──
+            Forms\Components\Section::make('روابط الرجوع')
+                ->description('إذا تركتها فارغة يستخدم النظام الروابط التلقائية')
+                ->schema([
+                    Forms\Components\TextInput::make('callback_url')
+                        ->label('Webhook / Notification URL')
+                        ->placeholder('https://yoursite.com/ar/donate/payment/callback')
+                        ->helperText('الرابط الذي يرسل إليه Paymob بعد كل عملية'),
+                    Forms\Components\TextInput::make('redirect_url')
+                        ->label('Redirection URL (بعد الدفع)')
+                        ->placeholder('https://yoursite.com/ar/donate/payment/result')
+                        ->helperText('يُعاد العميل إليه بعد إتمام الدفع'),
+                ])->collapsible(),
         ]);
     }
 
@@ -73,7 +98,7 @@ class PaymentGatewayResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\IconColumn::make('is_active')->label('مفعلة')->boolean(),
-                Tables\Columns\IconColumn::make('test_mode')->label('تست')->boolean(),
+                Tables\Columns\IconColumn::make('test_mode')->label('وضع التست')->boolean(),
                 Tables\Columns\TextColumn::make('base_url')->label('الخادم'),
                 Tables\Columns\TextColumn::make('updated_at')->label('آخر تحديث')->dateTime('Y-m-d H:i'),
             ])
