@@ -8,7 +8,6 @@ use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
 use Livewire\WithFileUploads;
 
 class SiteSettings extends Page
@@ -21,17 +20,27 @@ class SiteSettings extends Page
     protected static ?int    $navigationSort  = 99;
     protected static string  $view            = 'filament.pages.site-settings';
 
-    public array  $data           = [];
-    public        $logo_upload    = null;
-    public        $favicon_upload = null;
+    public array $data           = [];
+    public       $logo_upload    = null;
+    public       $favicon_upload = null;
 
     public function mount(): void
     {
         $keys = [
+            // هوية
             'site_name', 'site_favicon', 'site_logo',
-            'primary_color', 'secondary_color',
+            // ألوان رئيسية
+            'color_primary', 'color_secondary',
+            // ألوان نصوص
+            'color_text_dark', 'color_text_muted', 'color_text_label', 'color_placeholder',
+            // خلفيات
+            'color_bg_body', 'color_bg_light', 'color_bg_card',
+            // خاصة
+            'color_warning', 'color_danger', 'color_step_active',
+            // فوتر
             'footer_description_ar', 'footer_description_en',
-            'footer_copyright_ar', 'footer_copyright_en',
+            'footer_copyright_ar',   'footer_copyright_en',
+            // تواصل
             'contact_phone', 'contact_email', 'whatsapp_number',
         ];
         foreach ($keys as $key) {
@@ -46,7 +55,6 @@ class SiteSettings extends Page
 
     public function save(): void
     {
-        // رفع الشعار لو تم اختياره
         if ($this->logo_upload) {
             $path = $this->logo_upload->store('site', 'public');
             $this->data['site_logo'] = asset('storage/' . $path);
@@ -58,9 +66,12 @@ class SiteSettings extends Page
 
         $keys = [
             'site_name', 'site_favicon', 'site_logo',
-            'primary_color', 'secondary_color',
+            'color_primary', 'color_secondary',
+            'color_text_dark', 'color_text_muted', 'color_text_label', 'color_placeholder',
+            'color_bg_body', 'color_bg_light', 'color_bg_card',
+            'color_warning', 'color_danger', 'color_step_active',
             'footer_description_ar', 'footer_description_en',
-            'footer_copyright_ar', 'footer_copyright_en',
+            'footer_copyright_ar',   'footer_copyright_en',
             'contact_phone', 'contact_email', 'whatsapp_number',
         ];
         foreach ($keys as $key) {
@@ -69,7 +80,6 @@ class SiteSettings extends Page
             }
         }
 
-        // تحديث حساب الأدمن
         $admin = User::first();
         if ($admin) {
             $update = [
