@@ -1,138 +1,86 @@
 @extends('layouts.app')
-@php $locale = app()->getLocale(); @endphp
-@section('title', ($locale==='ar'?'البرامج الإنسانية':'Humanitarian Programs') . ' | مؤسسة رؤيا الإنسانية')
-@section('description', $locale==='ar'?'اكتشف البرامج الإنسانية الشاملة لمؤسسة رؤيا الإنسانية.':'Discover the comprehensive humanitarian programs of Roaya Insanya.')
-
+@php $locale = app()->getLocale(); $isAr = $locale === 'ar'; @endphp
+@section('title', ($isAr ? 'البرامج' : 'Programs') . ' | مؤسسة رؤيا الإنسانية')
+@push('styles')
+<style>
+.programs-hero { background:linear-gradient(135deg,#1a7a4a,#2ecc71); padding:100px 0 60px; color:#fff; text-align:center; }
+.programs-hero h1 { font-size:2.5rem; font-weight:700; }
+.programs-section { padding:70px 0; background:#f8fffe; }
+.filter-tabs { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-bottom:40px; }
+.filter-btn { padding:8px 22px; border-radius:50px; border:2px solid #1a7a4a; color:#1a7a4a; background:#fff; cursor:pointer; font-weight:600; transition:all .3s; font-size:.9rem; }
+.filter-btn.active, .filter-btn:hover { background:#1a7a4a; color:#fff; }
+.program-card { background:#fff; border-radius:16px; overflow:hidden; box-shadow:0 4px 20px rgba(0,0,0,.07); transition:transform .3s; height:100%; }
+.program-card:hover { transform:translateY(-5px); }
+.program-card img { width:100%; height:200px; object-fit:cover; }
+.program-card-body { padding:22px; }
+.program-icon { font-size:2rem; margin-bottom:10px; }
+.program-card-body h4 { font-weight:700; color:#222; margin-bottom:10px; }
+.program-card-body p { color:#666; font-size:.9rem; line-height:1.7; }
+.program-tag { display:inline-block; background:#e8f5ee; color:#1a7a4a; padding:3px 12px; border-radius:20px; font-size:.8rem; font-weight:600; margin-bottom:12px; }
+.breadcrumb-section { background:#f0faf5; padding:12px 0; border-bottom:1px solid #d4edda; }
+.breadcrumb-section a { color:#1a7a4a; text-decoration:none; }
+</style>
+@endpush
 @section('content')
-
-<section class="page-hero-section">
+<div class="breadcrumb-section">
+    <div class="container"><small><a href="{{ url($locale.'/') }}">{{ $isAr?'الرئيسية':'Home' }}</a><span style="margin:0 8px;color:#888">›</span><span class="text-muted">{{ $isAr?'البرامج':'Programs' }}</span></small></div>
+</div>
+<section class="programs-hero">
     <div class="container">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ url($locale) }}">{{ $locale==='ar'?'الرئيسية':'Home' }}</a></li>
-                <li class="breadcrumb-item active">{{ $locale==='ar'?'البرامج':'Programs' }}</li>
-            </ol>
-        </nav>
-        <h1 class="section-title">{{ $locale==='ar'?'البرامج الإنسانية':'Humanitarian Programs' }}</h1>
-        <p class="muted-color mt-2">{{ $locale==='ar'?'برامج شاملة مصممة لتوفير الدعم المستدام وإحداث تأثير دائم.':'Comprehensive programs designed to provide sustainable support and lasting impact.' }}</p>
+        <h1>{{ $isAr ? 'برامجنا' : 'Our Programs' }}</h1>
+        <p style="opacity:.9;margin-top:10px">{{ $isAr?'تعرّف على برامجنا الإنسانية المتنوعة':'Explore our diverse humanitarian programs' }}</p>
     </div>
 </section>
-
-<section class="main-section">
+<section class="programs-section">
     <div class="container">
-
-        {{-- Category Filter --}}
-        @php
-        $categories = [
-            ['key'=>'all',         'label'=>$locale==='ar'?'الكل':'All'],
-            ['key'=>'education',   'label'=>$locale==='ar'?'التعليم':'Education'],
-            ['key'=>'health',      'label'=>$locale==='ar'?'الصحة الطارئة':'Emergency Health'],
-            ['key'=>'cash',        'label'=>$locale==='ar'?'الدعم النقدي':'Cash Support'],
-            ['key'=>'shelter',     'label'=>$locale==='ar'?'المأوى والحماية':'Shelter & Protection'],
-            ['key'=>'water',       'label'=>$locale==='ar'?'المياه والصرف الصحي':'Water & Sanitation'],
-            ['key'=>'psychosocial','label'=>$locale==='ar'?'الدعم النفسي':'Psychosocial Support'],
-        ];
-        $activeCategory = request('category', 'all');
-        @endphp
-
-        <div class="category-filter mb-5">
-            @foreach($categories as $cat)
-            <a href="{{ url($locale.'/programs?category='.$cat['key']) }}"
-               class="category-btn {{ $activeCategory==$cat['key']?'active':'' }}">
-                {{ $cat['label'] }}
-            </a>
+        @if(($isAr ? $categories_ar : $categories_en)->count() > 0)
+        <div class="filter-tabs">
+            <button class="filter-btn active" data-filter="all">{{ $isAr?'الكل':'All' }}</button>
+            @foreach($isAr ? $categories_ar : $categories_en as $cat)
+                <button class="filter-btn" data-filter="{{ Str::slug($cat) }}">{{ $cat }}</button>
             @endforeach
         </div>
-
-        {{-- Programs Grid --}}
-        @if(!empty($programs) && !empty($programs['data']))
-        <div class="row g-4">
-            @foreach($programs['data'] as $prog)
-            @php
-                $pImg    = $prog['image'] ?? $prog['thumbnail'] ?? 'https://roaya-ansany.com/website/images/stats-card.png';
-                $pTitle  = $prog['title'] ?? $prog['name'] ?? '';
-                $pDesc   = $prog['description'] ?? '';
-                $pSlug   = $prog['slug'] ?? $prog['id'] ?? '';
-                $pDate   = isset($prog['created_at']) ? \Carbon\Carbon::parse($prog['created_at'])->format('d-m-Y') : '';
-                $pCat    = $prog['category'] ?? $prog['type'] ?? '';
-                $pGoal   = $prog['goal_amount'] ?? 0;
-                $pRaised = $prog['raised_amount'] ?? 0;
-                $pPct    = $pGoal > 0 ? min(100, round(($pRaised / $pGoal) * 100)) : 0;
-            @endphp
-            <div class="col-lg-4 col-md-6">
-                <div class="program-card h-100">
-                    <div class="program-img-wrap">
-                        <img src="{{ $pImg }}" alt="{{ $pTitle }}" class="program-img">
-                        @if($pCat)<span class="program-badge">{{ $pCat }}</span>@endif
-                        @if($pDate)<span class="program-date-badge">{{ $pDate }}</span>@endif
-                    </div>
-                    <div class="program-body">
-                        <h5 class="program-title">{{ $pTitle }}</h5>
-                        @if($pDesc)<p class="program-desc">{{ Str::limit(strip_tags($pDesc), 100) }}</p>@endif
-                        @if($pGoal > 0)
-                        <div class="progress-container mb-2">
-                            <div class="progress-bar"><div class="progress-fill" style="width:{{ $pPct }}%"></div></div>
-                        </div>
-                        <div class="d-flex justify-content-between mb-3" style="font-size:12px;color:#888">
-                            <span>{{ $locale==='ar'?'تم جمعه':'Raised' }}: ${{ number_format($pRaised) }}</span>
-                            <span class="fw-bold main-color">{{ $pPct }}%</span>
-                            <span>{{ $locale==='ar'?'الهدف':'Goal' }}: ${{ number_format($pGoal) }}</span>
-                        </div>
+        @endif
+        <div class="row g-4" id="programs-grid">
+            @forelse($programs as $program)
+            <div class="col-md-6 col-lg-4 program-item" data-cat="{{ Str::slug($isAr ? $program->category_ar : $program->category_en) }}">
+                <div class="program-card">
+                    @if($program->image)
+                        <img src="{{ Storage::url($program->image) }}" alt="{{ $isAr?$program->title_ar:$program->title_en }}">
+                    @endif
+                    <div class="program-card-body">
+                        @if($program->icon)<div class="program-icon">{{ $program->icon }}</div>@endif
+                        @if($program->category_ar)
+                        <span class="program-tag">{{ $isAr?$program->category_ar:$program->category_en }}</span>
                         @endif
-                        <a href="{{ url($locale.'/campaigns/'.$pSlug) }}" class="btn-donate w-100 text-center d-block">
-                            {{ $locale==='ar'?'تبرع الآن':'Donate Now' }}
-                        </a>
+                        <h4>{{ $isAr?$program->title_ar:$program->title_en }}</h4>
+                        @if($program->description_ar)
+                        <p>{{ $isAr?$program->description_ar:$program->description_en }}</p>
+                        @endif
                     </div>
                 </div>
             </div>
-            @endforeach
+            @empty
+            <div class="col-12 text-center py-5 text-muted">{{ $isAr?'لا توجد برامج حالياً':'No programs available' }}</div>
+            @endforelse
         </div>
-
-        {{-- Pagination --}}
-        @if(!empty($programs['meta']) && $programs['meta']['last_page'] > 1)
-        <div class="d-flex justify-content-center align-items-center mt-5 gap-3">
-            @if($programs['meta']['current_page'] > 1)
-            <a href="{{ url($locale.'/programs?page='.($programs['meta']['current_page']-1)) }}" class="btn-outline">
-                {{ $locale==='ar'?'السابق':'Previous' }}
-            </a>
-            @endif
-            <span class="muted-color">
-                {{ $locale==='ar'?'صفحة':'Page' }} {{ $programs['meta']['current_page'] }} {{ $locale==='ar'?'من':'of' }} {{ $programs['meta']['last_page'] }}
-            </span>
-            @if($programs['meta']['current_page'] < $programs['meta']['last_page'])
-            <a href="{{ url($locale.'/programs?page='.($programs['meta']['current_page']+1)) }}" class="btn-donate">
-                {{ $locale==='ar'?'التالي':'Next' }}
-            </a>
-            @endif
-        </div>
-        @endif
-
-        @else
-        <div class="text-center py-5">
-            <i class="fa-solid fa-folder-open fa-4x main-color mb-4"></i>
-            <h4>{{ $locale==='ar'?'لا توجد برامج حاليًا':'No programs available yet' }}</h4>
-        </div>
+        @if($programs->hasPages())
+        <div class="d-flex justify-content-center mt-5">{{ $programs->links() }}</div>
         @endif
     </div>
 </section>
-
-@push('styles')
-<style>
-.page-hero-section { background:linear-gradient(135deg,#f8fdf4,#eef7e6); padding:60px 0 40px; }
-.page-hero-section .breadcrumb-item a { color:#5a9e2f; text-decoration:none; }
-.category-filter { display:flex; flex-wrap:wrap; gap:10px; }
-.category-btn { padding:8px 20px; border-radius:50px; background:#f0f9e8; color:#5a9e2f; font-size:14px; font-weight:600; text-decoration:none; border:2px solid transparent; transition:all 0.3s; }
-.category-btn:hover, .category-btn.active { background:#5a9e2f; color:white; }
-.program-card { background:white; border-radius:16px; overflow:hidden; border:1px solid #e8f4d9; transition:all 0.3s; }
-.program-card:hover { box-shadow:0 8px 32px rgba(90,158,47,0.15); transform:translateY(-4px); }
-.program-img-wrap { position:relative; overflow:hidden; height:210px; }
-.program-img { width:100%; height:100%; object-fit:cover; transition:transform 0.4s; }
-.program-card:hover .program-img { transform:scale(1.05); }
-.program-badge { position:absolute; top:12px; inset-inline-start:12px; background:#5a9e2f; color:white; font-size:11px; padding:4px 10px; border-radius:20px; }
-.program-date-badge { position:absolute; bottom:12px; inset-inline-end:12px; background:rgba(0,0,0,0.5); color:white; font-size:11px; padding:3px 8px; border-radius:6px; }
-.program-body { padding:20px; }
-.program-title { font-size:15px; font-weight:700; color:#333; line-height:1.5; margin-bottom:8px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
-.program-desc { font-size:13px; color:#777; line-height:1.6; margin-bottom:12px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
-</style>
+@push('scripts')
+<script>
+document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        const filter = this.dataset.filter;
+        document.querySelectorAll('.program-item').forEach(item => {
+            item.style.display = (filter === 'all' || item.dataset.cat === filter) ? '' : 'none';
+        });
+    });
+});
+</script>
 @endpush
 @endsection

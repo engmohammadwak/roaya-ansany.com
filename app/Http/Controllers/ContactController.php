@@ -1,31 +1,24 @@
 <?php
-
 namespace App\Http\Controllers;
-
-use App\Services\ApiService;
+use App\Models\ContactPage;
+use App\Models\ContactMessage;
 use Illuminate\Http\Request;
 
 class ContactController extends Controller
 {
-    public function index()
-    {
-        return view('pages.contact');
+    public function index() {
+        $contact = ContactPage::first();
+        return view('pages.contact', compact('contact'));
     }
 
-    public function store(Request $request, ApiService $api)
-    {
-        $validated = $request->validate([
+    public function send(Request $request) {
+        $request->validate([
             'name'    => 'required|string|max:255',
             'email'   => 'required|email',
-            'message' => 'required|string',
+            'subject' => 'nullable|string|max:255',
+            'message' => 'required|string|min:10',
         ]);
-
-        $result = $api->sendContactMessage($validated);
-
-        if (isset($result['error'])) {
-            return back()->withErrors(['msg' => __('contact.error')])->withInput();
-        }
-
-        return back()->with('success', __('contact.success'));
+        ContactMessage::create($request->only('name','email','subject','message'));
+        return back()->with('success', app()->getLocale() === 'ar' ? 'تم إرسال رسالتك بنجاح!' : 'Your message has been sent successfully!');
     }
 }

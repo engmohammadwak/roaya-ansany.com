@@ -1,142 +1,128 @@
 @extends('layouts.app')
-@php $locale = app()->getLocale(); @endphp
-@section('title', ($locale==='ar'?'اتصل بنا':'Contact Us') . ' | مؤسسة رؤيا الإنسانية')
-@section('description', $locale==='ar'?'تواصل مع مؤسسة رؤيا الإنسانية عبر الهاتف أو البريد الإلكتروني.':'Contact Roaya Insanya Foundation via phone or email.')
-
+@php $locale = app()->getLocale(); $isAr = $locale === 'ar'; @endphp
+@section('title', ($isAr ? 'اتصل بنا' : 'Contact Us') . ' | مؤسسة رؤيا الإنسانية')
+@push('styles')
+<style>
+.contact-hero { background: linear-gradient(135deg,#1a7a4a,#2ecc71); padding:100px 0 60px; color:#fff; text-align:center; }
+.contact-hero h1 { font-size:2.5rem; font-weight:700; }
+.contact-hero p { font-size:1.1rem; opacity:.9; max-width:600px; margin:10px auto 0; }
+.contact-section { padding:70px 0; background:#fff; }
+.info-card { background:#f8fffe; border-radius:16px; padding:30px 25px; text-align:center; height:100%; border-bottom:3px solid #1a7a4a; }
+.info-card .ic-icon { font-size:2.2rem; margin-bottom:12px; }
+.info-card h5 { font-weight:700; color:#1a7a4a; margin-bottom:8px; }
+.info-card p, .info-card a { color:#555; text-decoration:none; font-size:.95rem; }
+.form-card { background:#fff; border-radius:20px; padding:40px; box-shadow:0 8px 40px rgba(0,0,0,.08); }
+.form-card .form-label { font-weight:600; color:#333; }
+.form-card .form-control { border-radius:10px; border:1px solid #ddd; padding:12px 15px; }
+.form-card .form-control:focus { border-color:#1a7a4a; box-shadow:0 0 0 3px rgba(26,122,74,.1); }
+.btn-send { background:#1a7a4a; color:#fff; padding:13px 40px; border-radius:50px; font-weight:700; border:none; width:100%; font-size:1rem; transition:all .3s; }
+.btn-send:hover { background:#15623b; transform:translateY(-2px); }
+.social-links a { display:inline-flex; align-items:center; justify-content:center; width:42px; height:42px; border-radius:50%; background:#1a7a4a; color:#fff; margin:0 5px; text-decoration:none; font-size:1.1rem; transition:all .3s; }
+.social-links a:hover { background:#15623b; transform:translateY(-3px); }
+.breadcrumb-section { background:#f0faf5; padding:12px 0; border-bottom:1px solid #d4edda; }
+.breadcrumb-section a { color:#1a7a4a; text-decoration:none; }
+</style>
+@endpush
 @section('content')
-
-<section class="page-hero-section">
+<div class="breadcrumb-section">
+    <div class="container"><small><a href="{{ url($locale.'/') }}">{{ $isAr?'الرئيسية':'Home' }}</a><span style="margin:0 8px;color:#888">›</span><span class="text-muted">{{ $isAr?'اتصل بنا':'Contact Us' }}</span></small></div>
+</div>
+<section class="contact-hero">
     <div class="container">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ url($locale) }}">{{ $locale==='ar'?'الرئيسية':'Home' }}</a></li>
-                <li class="breadcrumb-item active">{{ $locale==='ar'?'اتصل بنا':'Contact Us' }}</li>
-            </ol>
-        </nav>
-        <h1 class="section-title">{{ $locale==='ar'?'اتصل بنا':'Contact Us' }}</h1>
-        <p class="muted-color mt-2">{{ $locale==='ar'?'نحن هنا لمساعدتك، لا تتردد في التواصل معنا.':'We are here to help you, feel free to reach out.' }}</p>
+        <h1>{{ $isAr ? ($contact?->hero_title_ar ?? 'اتصل بنا') : ($contact?->hero_title_en ?? 'Contact Us') }}</h1>
+        <p>{{ $isAr ? ($contact?->hero_subtitle_ar ?? 'نحن هنا للإجابة على استفساراتك') : ($contact?->hero_subtitle_en ?? 'We are here to answer your inquiries') }}</p>
     </div>
 </section>
-
-<section class="main-section">
+<section class="contact-section">
     <div class="container">
-        <div class="row g-5">
-
-            {{-- Contact Info --}}
-            <div class="col-lg-4">
-                <h4 class="mb-4">{{ $locale==='ar'?'معلومات التواصل':'Contact Information' }}</h4>
-                <div class="contact-info-list">
-                    <div class="contact-info-item">
-                        <div class="contact-icon"><i class="fa-solid fa-phone"></i></div>
-                        <div>
-                            <div class="contact-info-label">{{ $locale==='ar'?'الهاتف':'Phone' }}</div>
-                            <a href="tel:+905398863777" class="contact-info-value">+90 539 886 3777</a>
-                        </div>
-                    </div>
-                    <div class="contact-info-item">
-                        <div class="contact-icon"><i class="fa-solid fa-envelope"></i></div>
-                        <div>
-                            <div class="contact-info-label">{{ $locale==='ar'?'البريد الإلكتروني':'Email' }}</div>
-                            <a href="mailto:info@roaya-ansany.com" class="contact-info-value">info@roaya-ansany.com</a>
-                        </div>
-                    </div>
-                    <div class="contact-info-item">
-                        <div class="contact-icon"><i class="fa-solid fa-location-dot"></i></div>
-                        <div>
-                            <div class="contact-info-label">{{ $locale==='ar'?'العنوان':'Address' }}</div>
-                            <div class="contact-info-value">{{ $locale==='ar'?'تركيا':'Turkey' }}</div>
-                        </div>
-                    </div>
-                    <div class="contact-info-item">
-                        <div class="contact-icon"><i class="fa-brands fa-whatsapp"></i></div>
-                        <div>
-                            <div class="contact-info-label">WhatsApp</div>
-                            <a href="https://api.whatsapp.com/send/?phone=905398863777" target="_blank" class="contact-info-value">+90 539 886 3777</a>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- Social --}}
-                <div class="mt-5">
-                    <h6 class="mb-3">{{ $locale==='ar'?'تابعنا على:':'Follow Us:' }}</h6>
-                    <div class="d-flex gap-3">
-                        <a href="#" class="social-icon-btn"><i class="fa-brands fa-facebook-f"></i></a>
-                        <a href="#" class="social-icon-btn"><i class="fa-brands fa-instagram"></i></a>
-                        <a href="#" class="social-icon-btn"><i class="fa-brands fa-x-twitter"></i></a>
-                        <a href="#" class="social-icon-btn"><i class="fa-brands fa-youtube"></i></a>
-                    </div>
+        @if(session('success'))
+            <div class="alert alert-success rounded-3 mb-4">{{ session('success') }}</div>
+        @endif
+        <div class="row g-4 mb-5">
+            @if($contact?->email)
+            <div class="col-6 col-md-3">
+                <div class="info-card">
+                    <div class="ic-icon">📧</div>
+                    <h5>{{ $isAr?'البريد الإلكتروني':'Email' }}</h5>
+                    <a href="mailto:{{ $contact->email }}">{{ $contact->email }}</a>
                 </div>
             </div>
-
-            {{-- Contact Form --}}
-            <div class="col-lg-8">
-                <div class="contact-form-box">
-                    <h4 class="mb-4">{{ $locale==='ar'?'أرسل لنا رسالة':'Send Us a Message' }}</h4>
-                    @if(session('success'))
-                    <div class="alert alert-success">{{ session('success') }}</div>
-                    @endif
-                    <form action="{{ url($locale.'/contact') }}" method="POST">
+            @endif
+            @if($contact?->phone)
+            <div class="col-6 col-md-3">
+                <div class="info-card">
+                    <div class="ic-icon">📞</div>
+                    <h5>{{ $isAr?'الهاتف':'Phone' }}</h5>
+                    <a href="tel:{{ $contact->phone }}">{{ $contact->phone }}</a>
+                </div>
+            </div>
+            @endif
+            @if($contact?->whatsapp)
+            <div class="col-6 col-md-3">
+                <div class="info-card">
+                    <div class="ic-icon">💬</div>
+                    <h5>{{ $isAr?'واتساب':'WhatsApp' }}</h5>
+                    <a href="https://wa.me/{{ preg_replace('/[^0-9]/','',$contact->whatsapp) }}" target="_blank">{{ $contact->whatsapp }}</a>
+                </div>
+            </div>
+            @endif
+            @if($contact?->address_ar || $contact?->address_en)
+            <div class="col-6 col-md-3">
+                <div class="info-card">
+                    <div class="ic-icon">📍</div>
+                    <h5>{{ $isAr?'العنوان':'Address' }}</h5>
+                    <p>{{ $isAr ? $contact->address_ar : $contact->address_en }}</p>
+                </div>
+            </div>
+            @endif
+        </div>
+        <div class="row g-5 align-items-start">
+            <div class="col-lg-7">
+                <div class="form-card">
+                    <h3 class="mb-4 fw-700" style="color:#1a7a4a">{{ $isAr?'أرسل رسالة':'Send a Message' }}</h3>
+                    <form action="{{ url($locale.'/contact/send') }}" method="POST">
                         @csrf
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label class="form-label">{{ $locale==='ar'?'الاسم الكامل':'Full Name' }} *</label>
-                                <input type="text" name="name" class="form-input w-100 @error('name') is-invalid @enderror"
-                                    value="{{ old('name') }}" placeholder="{{ $locale==='ar'?'أدخل اسمك الكامل':'Enter your full name' }}" required>
-                                @error('name')<div class="text-danger mt-1" style="font-size:13px">{{ $message }}</div>@enderror
+                                <label class="form-label">{{ $isAr?'الاسم الكامل':'Full Name' }} *</label>
+                                <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" required>
+                                @error('name')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">{{ $locale==='ar'?'البريد الإلكتروني':'Email' }} *</label>
-                                <input type="email" name="email" class="form-input w-100 @error('email') is-invalid @enderror"
-                                    value="{{ old('email') }}" placeholder="example@email.com" required>
-                                @error('email')<div class="text-danger mt-1" style="font-size:13px">{{ $message }}</div>@enderror
+                                <label class="form-label">{{ $isAr?'البريد الإلكتروني':'Email' }} *</label>
+                                <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" required>
+                                @error('email')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
                             <div class="col-12">
-                                <label class="form-label">{{ $locale==='ar'?'رقم الهاتف':'Phone Number' }}</label>
-                                <input type="tel" name="phone" class="form-input w-100"
-                                    value="{{ old('phone') }}" placeholder="+970 ..........">
+                                <label class="form-label">{{ $isAr?'الموضوع':'Subject' }}</label>
+                                <input type="text" name="subject" class="form-control" value="{{ old('subject') }}">
                             </div>
                             <div class="col-12">
-                                <label class="form-label">{{ $locale==='ar'?'الموضوع':'Subject' }} *</label>
-                                <input type="text" name="subject" class="form-input w-100 @error('subject') is-invalid @enderror"
-                                    value="{{ old('subject') }}" placeholder="{{ $locale==='ar'?'موضوع الرسالة':'Message subject' }}" required>
-                                @error('subject')<div class="text-danger mt-1" style="font-size:13px">{{ $message }}</div>@enderror
+                                <label class="form-label">{{ $isAr?'الرسالة':'Message' }} *</label>
+                                <textarea name="message" class="form-control @error('message') is-invalid @enderror" rows="5" required>{{ old('message') }}</textarea>
+                                @error('message')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
                             <div class="col-12">
-                                <label class="form-label">{{ $locale==='ar'?'الرسالة':'Message' }} *</label>
-                                <textarea name="message" rows="6" class="form-input w-100 @error('message') is-invalid @enderror"
-                                    placeholder="{{ $locale==='ar'?'اكتب رسالتك هنا...':'Write your message here...' }}" required>{{ old('message') }}</textarea>
-                                @error('message')<div class="text-danger mt-1" style="font-size:13px">{{ $message }}</div>@enderror
-                            </div>
-                            <div class="col-12">
-                                <button type="submit" class="btn-donate px-5">
-                                    <i class="fa-solid fa-paper-plane me-2"></i>
-                                    {{ $locale==='ar'?'إرسال الرسالة':'Send Message' }}
-                                </button>
+                                <button type="submit" class="btn-send">{{ $isAr?'إرسال الرسالة':'Send Message' }}</button>
                             </div>
                         </div>
                     </form>
                 </div>
             </div>
+            <div class="col-lg-5">
+                @if($contact && ($contact->facebook || $contact->twitter || $contact->instagram || $contact->youtube))
+                <div class="info-card mb-4">
+                    <h5 class="mb-3">{{ $isAr?'تابعنا على':'Follow Us' }}</h5>
+                    <div class="social-links">
+                        @if($contact->facebook)<a href="{{ $contact->facebook }}" target="_blank">f</a>@endif
+                        @if($contact->twitter)<a href="{{ $contact->twitter }}" target="_blank">𝕏</a>@endif
+                        @if($contact->instagram)<a href="{{ $contact->instagram }}" target="_blank">📷</a>@endif
+                        @if($contact->youtube)<a href="{{ $contact->youtube }}" target="_blank">▶</a>@endif
+                    </div>
+                </div>
+                @endif
+            </div>
         </div>
     </div>
 </section>
-
-@push('styles')
-<style>
-.page-hero-section { background:linear-gradient(135deg,#f8fdf4,#eef7e6); padding:60px 0 40px; }
-.page-hero-section .breadcrumb-item a { color:#5a9e2f; text-decoration:none; }
-.contact-info-list { display:flex; flex-direction:column; gap:20px; }
-.contact-info-item { display:flex; align-items:flex-start; gap:16px; padding:16px; background:#f8fdf4; border-radius:12px; border:1px solid rgba(90,158,47,0.1); }
-.contact-icon { width:42px; height:42px; background:linear-gradient(135deg,#5a9e2f,#7bc244); border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-.contact-icon i { color:white; font-size:16px; }
-.contact-info-label { font-size:12px; color:#999; margin-bottom:3px; }
-.contact-info-value { font-weight:600; color:#333; text-decoration:none; font-size:14px; }
-.contact-info-value:hover { color:#5a9e2f; }
-.contact-form-box { background:white; border-radius:20px; padding:40px; box-shadow:0 4px 24px rgba(0,0,0,0.07); border:1px solid #e8f4d9; }
-.social-icon-btn { width:40px; height:40px; background:#f8fdf4; border-radius:10px; display:flex; align-items:center; justify-content:center; color:#5a9e2f; border:1px solid rgba(90,158,47,0.2); transition:all 0.3s; }
-.social-icon-btn:hover { background:#5a9e2f; color:white; }
-.form-label { font-size:14px; font-weight:600; color:#444; margin-bottom:6px; display:block; }
-textarea.form-input { resize:none; padding-top:12px; }
-</style>
-@endpush
 @endsection
