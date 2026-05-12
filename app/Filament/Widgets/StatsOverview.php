@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Filament\Widgets;
 
 use App\Models\Blog;
@@ -24,27 +23,37 @@ class StatsOverview extends BaseWidget
             Stat::make('إجمالي التبرعات المُجمَّعة', '$' . number_format($totalRaised, 2))
                 ->description('من أصل $' . number_format($totalGoal, 2) . ' هدف — ' . $percent . '%')
                 ->color('success')
-                ->icon('heroicon-o-currency-dollar'),
+                ->icon('heroicon-o-currency-dollar')
+                ->url(route('filament.admin.resources.campaigns.index'))
+                ->openUrlInNewTab(false),
 
             Stat::make('الحملات المكتملة', $completedCampaigns)
                 ->description('حملة وصلت لهدفها')
                 ->color('primary')
-                ->icon('heroicon-o-check-badge'),
+                ->icon('heroicon-o-check-badge')
+                ->url(route('filament.admin.resources.campaigns.index'))
+                ->openUrlInNewTab(false),
 
             Stat::make('الحملات النشطة', Campaign::active()->count())
                 ->description('حملة نشطة حالياً')
                 ->color('warning')
-                ->icon('heroicon-o-megaphone'),
+                ->icon('heroicon-o-megaphone')
+                ->url(route('filament.admin.resources.campaigns.index'))
+                ->openUrlInNewTab(false),
 
             Stat::make('المقالات المنشورة', Blog::published()->count())
                 ->description('مقالة منشورة')
                 ->color('info')
-                ->icon('heroicon-o-document-text'),
+                ->icon('heroicon-o-document-text')
+                ->url(route('filament.admin.resources.blogs.index'))
+                ->openUrlInNewTab(false),
 
             Stat::make('الرسائل غير المقروءة', Contact::where('is_read', false)->count())
                 ->description('رسالة جديدة في الانتظار')
                 ->color('danger')
-                ->icon('heroicon-o-envelope'),
+                ->icon('heroicon-o-envelope')
+                ->url(route('filament.admin.resources.contacts.index'))
+                ->openUrlInNewTab(false),
         ];
     }
 }
