@@ -11,11 +11,17 @@ class ContactController extends Controller
         return view('pages.contact', compact('contact'));
     }
 
-    public function send(Request $request) {
-        $isAr  = app()->getLocale() === 'ar';
-        $page  = ContactPage::first();
+    // POST /contact  (route name: contact.store)
+    public function store(Request $request) {
+        return $this->send($request);
+    }
 
-        $validated = $request->validate([
+    // POST /contact/send  (route name: contact.send)
+    public function send(Request $request) {
+        $isAr = app()->getLocale() === 'ar';
+        $page = ContactPage::first();
+
+        $request->validate([
             'first_name' => 'required|string|max:100',
             'last_name'  => 'nullable|string|max:100',
             'email'      => 'required|email|max:255',
@@ -23,7 +29,7 @@ class ContactController extends Controller
             'message'    => 'required|string|min:5',
         ]);
 
-        Contact::create($validated);
+        Contact::create($request->only('first_name','last_name','email','phone','message'));
 
         $successMsg = $isAr
             ? ($page->success_msg_ar ?? 'تم إرسال رسالتك بنجاح! سنتواصل معك قريباً.')
