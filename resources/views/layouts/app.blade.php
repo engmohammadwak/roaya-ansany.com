@@ -1,8 +1,8 @@
 @php
     $siteName    = App\Models\Setting::get('site_name',    'مؤسسة رؤيا الإنسانية');
     $siteFavicon = App\Models\Setting::get('site_favicon', 'https://roaya-ansany.com/website/fav/favicon.ico');
-    $primaryColor   = App\Models\Setting::get('primary_color',   '#5a9e2f');
-    $secondaryColor = App\Models\Setting::get('secondary_color', '#8bc34a');
+    $primary   = App\Models\Setting::get('primary_color',   '#9dcc6b');
+    $secondary = App\Models\Setting::get('secondary_color', '#2F7BC1');
 @endphp
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
@@ -12,25 +12,62 @@
     <meta name="description" content="@yield('description', 'ساهم في إنقاذ الأرواح ودعم المحتاجين عبر حملات مؤسسة رؤيا الإنسانية.')">
     <title>@yield('title', $siteName)</title>
 
-    <!-- Favicon -->
     <link rel="icon" href="{{ $siteFavicon }}">
     <link rel="shortcut icon" href="{{ $siteFavicon }}">
     <link rel="apple-touch-icon" href="{{ $siteFavicon }}">
 
-    <!-- Dynamic Colors -->
+    {{-- حقن الألوان الديناميكية — تغطي كل :root في main.css --}}
     <style>
         :root {
-            --primary-color:   {{ $primaryColor }};
-            --secondary-color: {{ $secondaryColor }};
+            --main-color:        {{ $primary }};
+            --main-color-hover:  #fff;
+            --secondary-color:   {{ $secondary }};
+            /* gradient helpers */
+            --grad-primary-15:   color-mix(in srgb, {{ $primary }} 15%, transparent);
+            --grad-secondary-15: color-mix(in srgb, {{ $secondary }} 15%, transparent);
+        }
+        /* gradient overrides — يستبدل كل linear-gradient الثابت */
+        .hero-banner,
+        .stats .change-life,
+        .page-banner.main,
+        .donate-section .campaign-section .donation-card {
+            background: linear-gradient(135deg,
+                color-mix(in srgb, {{ $secondary }} 15%, transparent),
+                color-mix(in srgb, {{ $primary }}   15%, transparent)
+            ) !important;
+        }
+        .stats-card {
+            background: linear-gradient(135deg,
+                color-mix(in srgb, {{ $secondary }} 90%, transparent),
+                color-mix(in srgb, {{ $primary }}   90%, transparent)
+            ) !important;
+        }
+        .main-section .donate {
+            background: linear-gradient(135deg,
+                color-mix(in srgb, {{ $secondary }} 92%, transparent),
+                {{ $primary }}
+            ) !important;
+        }
+        main.campaign .blank-banner {
+            background: linear-gradient(135deg, {{ $primary }}, color-mix(in srgb, {{ $secondary }} 92%, transparent)) !important;
+        }
+        .page-banner.main h1.bg {
+            background: color-mix(in srgb, {{ $primary }} 28%, transparent) !important;
+        }
+        .progress-fill { background-color: {{ $primary }} !important; }
+        .btn-outline-primary {
+            color: {{ $primary }} !important;
+            border-color: {{ $primary }} !important;
+        }
+        .btn-outline-primary:hover {
+            background-color: {{ $primary }} !important;
+            border-color: {{ $primary }} !important;
         }
     </style>
 
-    <!-- Bootstrap RTL -->
     <link href="https://roaya-ansany.com/website/libs/bootstrap/bootstrap.rtl.min.css" rel="stylesheet">
-    <!-- SlimSelect -->
     <link href="https://roaya-ansany.com/website/libs/slimselect/slimselect.css" rel="stylesheet">
-    <!-- Main CSS -->
-    <link rel="stylesheet" href="https://roaya-ansany.com/website/css/main.css?v=1">
+    <link rel="stylesheet" href="https://roaya-ansany.com/website/css/main.css?v=2">
 
     @stack('styles')
 </head>
@@ -44,7 +81,6 @@
 
     @include('partials.footer')
 
-    <!-- Scripts -->
     <script src="https://roaya-ansany.com/website/libs/slimselect/slimselect.js"></script>
     <script src="https://roaya-ansany.com/website/libs/bootstrap/bootstrap.bundle.min.js"></script>
     <script src="https://roaya-ansany.com/website/js/main.js" defer></script>
@@ -94,7 +130,6 @@
     });
     </script>
 
-    <!-- WhatsApp Float (dynamic) -->
     @php $wa = App\Models\Setting::get('whatsapp_number', '905398863777'); @endphp
     <a href="https://api.whatsapp.com/send/?phone={{ $wa }}&text={{ urlencode('مرحباً بك في مؤسسة رؤيا الإنسانية') }}"
        target="_blank" class="whatsapp-float" aria-label="WhatsApp">
