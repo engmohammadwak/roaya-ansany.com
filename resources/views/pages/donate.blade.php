@@ -11,6 +11,7 @@
     ];
     $campaignId   = request('campaign_id', '');
     $campaignName = request('campaign_name', '');
+    $homeUrl      = url($locale);
 @endphp
 @section('title', ($isAr ? 'تبرع الآن' : 'Donate Now') . ' | ' . config('app.name'))
 
@@ -21,10 +22,8 @@
 .donation-card{background:#fff;border:1px solid #eee;border-radius:16px;padding:1.25rem;box-shadow:0 10px 30px rgba(15,23,42,.05);}
 .progress-bar{background:#e2e8f0;border-radius:9999px;height:7px;overflow:hidden}
 .progress-fill{background:#0d6efd;height:100%}
-.btn-details{background:#0f172a;color:#fff;border-radius:999px;text-align:center;padding:.4rem .75rem;display:inline-block;text-decoration:none}
 .muted{opacity:.85;font-size:.65rem}
 html[dir="rtl"] .num-ltr{direction:ltr;text-align:left;}
-/* Brand logo fix */
 #brandLogo{width:15% !important;height:auto;object-fit:contain;background:transparent;}
 /* Payment Modal */
 .pay-modal-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:9999;align-items:center;justify-content:center;}
@@ -42,7 +41,6 @@ html[dir="rtl"] .num-ltr{direction:ltr;text-align:left;}
 @endpush
 
 @section('content')
-{{-- ===== Payment Result Modal ===== --}}
 <div class="pay-modal-overlay" id="payModalOverlay">
   <div class="pay-modal" id="payModal">
     <div class="modal-icon" id="modalIcon">✅</div>
@@ -68,8 +66,6 @@ html[dir="rtl"] .num-ltr{direction:ltr;text-align:left;}
     </div>
 
     <div class="row mt-4 g-4">
-
-      {{-- ===== LEFT: FORM ===== --}}
       <div class="col-md-7 order-2 order-lg-1">
         <div class="donate-form">
           <div class="head d-flex justify-content-between align-items-center">
@@ -194,7 +190,6 @@ html[dir="rtl"] .num-ltr{direction:ltr;text-align:left;}
         </div>
       </div>
 
-      {{-- ===== RIGHT: CARD PREVIEW ===== --}}
       <div class="col-md-5 order-1 order-lg-2">
         <div class="row g-3">
           <div class="col-12 campaign-section">
@@ -204,10 +199,8 @@ html[dir="rtl"] .num-ltr{direction:ltr;text-align:left;}
                   <div class="fw-semibold" style="opacity:.9">{{ $isAr ? 'بطاقة دفع آمنة' : 'Secure Payment Card' }}</div>
                   <div class="small muted">{{ $isAr ? 'رؤيا الإنسانية' : 'Roaya Ansany' }}</div>
                 </div>
-                <img id="brandLogo" alt="brand"
-                  src="{{ asset('website/images/logo.svg') }}">
+                <img id="brandLogo" alt="brand" src="{{ asset('website/images/logo.svg') }}">
               </div>
-
               <div class="mt-5">
                 <div class="preview-number num-ltr" id="pv-number">•••• •••• •••• ••••</div>
                 <div class="d-flex gap-4 mt-3 small">
@@ -221,7 +214,6 @@ html[dir="rtl"] .num-ltr{direction:ltr;text-align:left;}
                   </div>
                 </div>
               </div>
-
               <div class="mt-auto d-flex justify-content-between align-items-end" style="min-height:40px">
                 <div class="small num-ltr" id="pv-amount">{{ $currency }} {{ number_format(request('amount', 50), 2) }}</div>
                 <div class="badge bg-light text-dark" id="pv-currency">{{ $currency }}</div>
@@ -238,8 +230,7 @@ html[dir="rtl"] .num-ltr{direction:ltr;text-align:left;}
           @endif
         </div>
       </div>
-
-    </div>{{-- row --}}
+    </div>
   </div>
 </section>
 @endsection
@@ -248,12 +239,13 @@ html[dir="rtl"] .num-ltr{direction:ltr;text-align:left;}
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
 window.FX_TO_TRY = @json($fxRates);
-window.DEFAULT_CURRENCY = "{{ $currency }}";
-const IS_AR = {{ $isAr ? 'true' : 'false' }};
+const IS_AR    = {{ $isAr ? 'true' : 'false' }};
+const HOME_URL = "{{ $homeUrl }}";
 const PAYMENT_URL = "{{ url($locale.'/donate/payment/3d/form') }}";
 const CSRF = "{{ csrf_token() }}";
 
-// ── Brand logos (inline SVG data URIs to avoid CORS) ──
+let lastPaymentSuccess = false; // ← الفلاق الأساسي
+
 const brandLogos = {
   visa: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 471"><rect width="750" height="471" rx="40" fill="#1A1F71"/><text x="375" y="300" font-size="200" font-family="Arial" font-weight="bold" fill="white" text-anchor="middle">VISA</text></svg>'),
   mc:   'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 471"><circle cx="280" cy="235" r="150" fill="#EB001B"/><circle cx="470" cy="235" r="150" fill="#F79E1B"/><path d="M375 120a150 150 0 0 1 0 230 150 150 0 0 1 0-230z" fill="#FF5F00"/></svg>'),
@@ -287,13 +279,12 @@ function updateFxHint(){
   let txt='TL —';
   if(cur==='TRY'){txt='TL '+amt.toFixed(2);}
   else{
-    const rate=(window.FX_TO_TRY&&window.FX_TO_TRY[cur])?parseFloat(window.FX_TO_TRY[cur]):null;
-    if(rate&&rate>0)txt='TL '+(amt*rate).toFixed(2);
+    const rate=window.FX_TO_TRY[cur]?parseFloat(window.FX_TO_TRY[cur]):null;
+    if(rate)txt='TL '+(amt*rate).toFixed(2);
   }
   $('#fx-eq-val').text(txt);
 }
 
-// ── Card inputs ──
 $('#cc-number').on('input',function(){
   const f=formatCard(this.value);
   this.value=f;
@@ -310,7 +301,7 @@ $('#cc-month,#cc-year').on('input',function(){
   const yy=onlyDigits($('#cc-year').val()).slice(-2);
   $('#cc-month').val(mm);
   $('#cc-year').val(onlyDigits($('#cc-year').val()).slice(0,4));
-  $('#pv-exp').text((mm?mm:'MM')+'/'+(yy?yy:'YY'));
+  $('#pv-exp').text((mm||'MM')+'/'+(yy||'YY'));
 });
 $('input[name="amount"]').on('input',function(){
   const cur=$('#currency').val();
@@ -331,10 +322,9 @@ $(document).on('click','.donate-now-btn',function(){
   $('.donate-now-btn').removeClass('active');
   $(this).addClass('active');
   const amt=parseFloat($(this).data('amount'))||0;
-  $('#amount-input').val(amt.toFixed(2)).trigger('input').trigger('change');
+  $('#amount-input').val(amt.toFixed(2)).trigger('input');
 });
 
-// ── Validation ──
 function validateForm(){
   let ok=true;
   const amt=parseFloat($('input[name="amount"]').val()||'0');
@@ -346,32 +336,32 @@ function validateForm(){
   const mm=parseInt(onlyDigits($('#cc-month').val()),10);
   const yyyy=parseInt(onlyDigits($('#cc-year').val()),10);
   const now=new Date();
-  const validMonth=mm>=1&&mm<=12;
-  const validYear=yyyy>=now.getFullYear()&&yyyy<=now.getFullYear()+15;
-  let notExpired=true;
-  if(validMonth&&validYear){const exp=new Date(yyyy,mm-1,1);notExpired=exp>=new Date(now.getFullYear(),now.getMonth(),1);}
-  if(!(validMonth&&validYear&&notExpired)){ok=false;$('#cc-month')[0].classList.add('is-invalid');$('#cc-year')[0].classList.add('is-invalid');}else{$('#cc-month')[0].classList.remove('is-invalid');$('#cc-year')[0].classList.remove('is-invalid');}
+  const vM=mm>=1&&mm<=12,vY=yyyy>=now.getFullYear()&&yyyy<=now.getFullYear()+15;
+  let notExp=true;
+  if(vM&&vY){const e=new Date(yyyy,mm-1,1);notExp=e>=new Date(now.getFullYear(),now.getMonth(),1);}
+  if(!(vM&&vY&&notExp)){ok=false;$('#cc-month')[0].classList.add('is-invalid');$('#cc-year')[0].classList.add('is-invalid');}else{$('#cc-month')[0].classList.remove('is-invalid');$('#cc-year')[0].classList.remove('is-invalid');}
   const brand=detectBrand(raw);
   const cvv=onlyDigits($('#cc-cvv').val());
-  const need=(brand==='amex')?4:3;
-  if(!(cvv.length===need)){ok=false;$('#cc-cvv')[0].classList.add('is-invalid');}else $('#cc-cvv')[0].classList.remove('is-invalid');
+  if(!(cvv.length===(brand==='amex'?4:3))){ok=false;$('#cc-cvv')[0].classList.add('is-invalid');}else $('#cc-cvv')[0].classList.remove('is-invalid');
   return ok;
 }
 $('#payForm input,#payForm select').on('change keyup blur',validateForm);
 
-// ── Modal helpers ──
+// ── Modal ──
 function showPayModal(success, data){
-  const overlay=$('#payModalOverlay');
+  lastPaymentSuccess = success; // ← حفظ النتيجة
   const modal=$('#payModal');
   modal.removeClass('fail');
   if(success){
     $('#modalIcon').text('✅');
     $('#modalTitle').text(IS_AR?'تم التبرع بنجاح!':'Donation Successful!');
     $('#modalBodyText').text(IS_AR?'شكراً لك، تبرعك وصل وسيُوظَّف في أفضل المشاريع.':'Thank you! Your donation has been received.');
-    $('#modalAmount').text((data.currency||'')+ ' ' +parseFloat(data.amount||0).toFixed(2));
+    $('#modalAmount').text((data.currency||'')+' '+parseFloat(data.amount||0).toFixed(2));
     if(data.campaign_name){
       $('#modalCampaign').text((IS_AR?'لحملة: ':'Campaign: ')+data.campaign_name).show();
     }else{$('#modalCampaign').hide();}
+    // غيّر نص الزر للنجاح
+    $('#modalCloseBtn').text(IS_AR?'العودة للرئيسية':'Go to Home');
   } else {
     modal.addClass('fail');
     $('#modalIcon').text('❌');
@@ -379,15 +369,26 @@ function showPayModal(success, data){
     $('#modalBodyText').text(data.message||(IS_AR?'حدث خطأ، يرجى التحقق من بيانات البطاقة والمحاولة مرة أخرى.':'An error occurred. Please check your card details and try again.'));
     $('#modalAmount').text('');
     $('#modalCampaign').hide();
+    $('#modalCloseBtn').text(IS_AR?'حاول مرة أخرى':'Try Again');
   }
-  overlay.addClass('show');
+  $('#payModalOverlay').addClass('show');
 }
+
 function closePayModal(){
-  $('#payModalOverlay').removeClass('show');
-  $('#submitBtn').prop('disabled',false).removeClass('disabled');
-  $('#submitBtnText').show();
-  $('#submitBtnLoader').hide();
+  if(lastPaymentSuccess){
+    // ✅ نجح → روح للرئيسية
+    window.location.href = HOME_URL;
+  } else {
+    // ❌ فشل → إبق على الصفحة وأعد تفعيل الزر
+    $('#payModalOverlay').removeClass('show');
+    $('#submitBtn').prop('disabled',false);
+    $('#submitBtnText').show();
+    $('#submitBtnLoader').hide();
+    lastPaymentSuccess = false;
+  }
 }
+// ESC أو الضغط خارج الـ modal
+$(document).on('keydown',function(e){if(e.key==='Escape')closePayModal();});
 $('#payModalOverlay').on('click',function(e){if(e.target===this)closePayModal();});
 
 // ── AJAX Submit ──
@@ -403,8 +404,8 @@ $('#payForm').on('submit',function(e){
   $('#submitBtnText').hide();
   $('#submitBtnLoader').show();
 
-  const formData = new FormData(this);
-  formData.append('_token', CSRF);
+  const formData=new FormData(this);
+  formData.append('_token',CSRF);
 
   $.ajax({
     url: PAYMENT_URL,
@@ -414,12 +415,17 @@ $('#payForm').on('submit',function(e){
     contentType: false,
     headers: {'X-Requested-With':'XMLHttpRequest'},
     success: function(res){
-      showPayModal(res.success===true, res);
+      if(res.redirect && res.checkout_url){
+        // Live mode: redirect to Paymob checkout
+        window.location.href = res.checkout_url;
+      } else {
+        showPayModal(res.success===true, res);
+      }
     },
     error: function(xhr){
-      let msg = IS_AR?'حدث خطأ في الاتصال':'Connection error';
-      try{ msg = xhr.responseJSON.message || msg; }catch(e){}
-      showPayModal(false, {message: msg});
+      let msg=IS_AR?'حدث خطأ في الاتصال':'Connection error';
+      try{msg=xhr.responseJSON.message||msg;}catch(e){}
+      showPayModal(false,{message:msg});
     }
   });
 });
