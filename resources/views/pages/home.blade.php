@@ -25,22 +25,16 @@
 @if(!empty($sliderProjects))
 <section class="hero-slider-section" style="position:relative">
 
-    {{-- Label ثابت في أسفل السلايدر بالوسط --}}
     @if($heroLabel)
     <div style="position:absolute;
-                bottom:30px;
-                left:50%;
-                transform:translateX(-50%);
-                z-index:10;
-                background:rgba(255,255,255,0.85);
-                backdrop-filter:blur(4px);
-                padding:8px 20px;
-                border-radius:30px;
+                top:12px;
+                left:351px;
+                right:0;
+                text-align:center;
+                z-index:2;
                 font-size:14px;
-                color:#333;
-                font-weight:600;
-                box-shadow:0 2px 12px rgba(0,0,0,0.12);
-                white-space:nowrap;
+                color:#555;
+                font-weight:500;
                 pointer-events:none;">
         {{ $heroLabel }}
     </div>
@@ -129,17 +123,14 @@
                     </svg>
                     @if($heroLabel)
                     <div style="position:absolute;
-                                bottom:20px;
-                                left:50%;
-                                transform:translateX(-50%);
-                                z-index:10;
+                                top:12px;
+                                left:351px;
+                                right:0;
+                                text-align:center;
+                                z-index:2;
                                 font-size:14px;
                                 color:#555;
-                                font-weight:600;
-                                background:rgba(255,255,255,0.85);
-                                padding:6px 16px;
-                                border-radius:30px;
-                                white-space:nowrap;">
+                                font-weight:500;">
                         {{ $heroLabel }}
                     </div>
                     @endif
