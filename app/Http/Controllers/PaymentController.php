@@ -1,16 +1,23 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Mail\PaymentNotification;
 use App\Models\Donation;
 use App\Models\Campaign;
 use App\Models\PaymobSetting;
+use App\Models\User;
+use Filament\Notifications\Notification;
+use Filament\Notifications\Actions\Action;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class PaymentController extends Controller
 {
+    const ADMIN_EMAIL = 'engmohammadwk@gmail.com';
+
     public function process(Request $request, string $locale)
     {
         $settings = PaymobSetting::current();
@@ -28,18 +35,20 @@ class PaymentController extends Controller
     private function handleTestMode(Request $request)
     {
         $donation = Donation::create([
-            'campaign_id'  => $request->input('campaign_id') ?: null,
-            'name'         => $request->input('name') ?: 'Test User',
-            'email'        => $request->input('email'),
-            'amount'       => $request->input('amount', 0),
-            'currency'     => $request->input('currency', 'USD'),
-            'card_brand'   => $request->input('card_brand', 'unknown'),
-            'description'  => $request->input('description'),
+            'campaign_id'    => $request->input('campaign_id') ?: null,
+            'name'           => $request->input('name') ?: 'Test User',
+            'email'          => $request->input('email'),
+            'amount'         => $request->input('amount', 0),
+            'currency'       => $request->input('currency', 'USD'),
+            'card_brand'     => $request->input('card_brand', 'unknown'),
+            'description'    => $request->input('description'),
             'payment_method' => 'card',
-            'status'       => 'success',
-            'gateway_ref'  => 'TEST-' . strtoupper(Str::random(10)),
-            'gateway_data' => ['test_mode' => true],
+            'status'         => 'success',
+            'gateway_ref'    => 'TEST-' . strtoupper(Str::random(10)),
+            'gateway_data'   => ['test_mode' => true],
         ]);
+
+        $this->sendNotifications($donation, true);
 
         return response()->json([
             'success'       => true,
@@ -154,13 +163,18 @@ class PaymentController extends Controller
 
         if ($donationId) {
             Donation::where('id', $donationId)->update([
-                'status'       => $txnSuccess ? 'success' : 'failed',
+                'status'         => $txnSuccess ? 'success' : 'failed',
                 'transaction_id' => $txnId,
-                'gateway_data' => $request->query(),
+                'gateway_data'   => $request->query(),
             ]);
         }
 
         $donation = $donationId ? Donation::find($donationId) : null;
+
+        // ✅ إرسال الإشعارات بعد تحديث الحالة
+        if ($donation) {
+            $this->sendNotifications($donation->fresh(), $txnSuccess);
+        }
 
         return view('pages.payment-result', [
             'success'      => $txnSuccess,
@@ -220,9 +234,54 @@ class PaymentController extends Controller
                 'transaction_id' => (string) $txnId,
                 'gateway_data'   => $request->all(),
             ]);
+
+            // ✅ إرسال إشعارات الـ webhook
+            $donation = Donation::where('gateway_ref', $specialRef)->first();
+            if ($donation) {
+                $this->sendNotifications($donation->fresh(), $success);
+            }
         }
 
         return response('OK', 200);
+    }
+
+    // ================================================================
+    // مركز الإشعارات
+    // ================================================================
+    private function sendNotifications(Donation $donation, bool $success): void
+    {
+        $amount   = number_format($donation->amount, 2) . ' ' . $donation->currency;
+        $campaign = $this->getCampaignName($donation->campaign_id) ?: 'عامة';
+        $name     = $donation->name ?: 'متبرع';
+
+        // ------ 1) Filament Dashboard Notification ------
+        try {
+            $admin = User::first();
+            if ($admin) {
+                Notification::make()
+                    ->title($success ? "✅ دفع ناجح: {$amount}" : "❌ فشل دفع: {$amount}")
+                    ->body("المتبرع: {$name} | الحملة: {$campaign}")
+                    ->icon($success ? 'heroicon-o-check-circle' : 'heroicon-o-x-circle')
+                    ->iconColor($success ? 'success' : 'danger')
+                    ->actions([
+                        Action::make('view')
+                            ->label('عرض التبرع')
+                            ->url(route('filament.admin.resources.donations.index'))
+                            ->button()
+                    ])
+                    ->sendToDatabase($admin);
+            }
+        } catch (\Throwable $e) {
+            Log::warning('Filament notification failed: ' . $e->getMessage());
+        }
+
+        // ------ 2) Email Notification ------
+        try {
+            Mail::to(self::ADMIN_EMAIL)
+                ->send(new PaymentNotification($donation, $success));
+        } catch (\Throwable $e) {
+            Log::warning('Payment email failed: ' . $e->getMessage());
+        }
     }
 
     private function getCampaignName(?int $id): string
