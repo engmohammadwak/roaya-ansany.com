@@ -34,9 +34,9 @@ Route::prefix('{locale}')
         Route::get('/blogs', [BlogController::class, 'index'])->name('blogs');
         Route::get('/blogs/{slug}', [BlogController::class, 'show'])->name('blogs.show');
 
-        // Campaigns
+        // Campaigns — يستخدم slug بدل id للـ SEO
         Route::get('/campaigns', [CampaignController::class, 'index'])->name('campaigns');
-        Route::get('/campaigns/{id}', [CampaignController::class, 'show'])->name('campaigns.show');
+        Route::get('/campaigns/{slug}', [CampaignController::class, 'show'])->name('campaigns.show');
 
         // Donate
         Route::get('/donate', [DonateController::class, 'index'])->name('donate');

@@ -57,15 +57,21 @@ class CampaignResource extends Resource
                 ->columnSpanFull()
                 ->nullable(),
 
+            // =====================
+            // صورة الحملة
+            // =====================
             Forms\Components\FileUpload::make('image')
                 ->label('صورة الحملة')
                 ->image()
                 ->disk('public')
                 ->directory('campaigns')
                 ->visibility('public')
-                ->imagePreviewHeight('250')     // معاينة الصورة قبل الحفظ
-                ->imageEditor()                 // محرر الصورة
-                ->maxSize(102400)               // 100MB = 100 * 1024 KB
+                ->imagePreviewHeight('280')   // معاينة داخل الداشبورد
+                ->imageEditor()               // محرر اقتصاص
+                ->deletable(true)             // زر X لحذف الصورة
+                ->openable(true)              // زر لفتح الصورة بالحجم الكامل
+                ->downloadable(true)          // زر تحميل
+                ->maxSize(102400)             // 100MB
                 ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp', 'image/gif'])
                 ->columnSpanFull()
                 ->uploadingMessage('جاري رفع الصورة...')
@@ -117,11 +123,16 @@ class CampaignResource extends Resource
                     ->date(),
             ])
             ->actions([
+                // زر عرض في الموقع بالـ slug
                 Tables\Actions\Action::make('view_site')
-                    ->label('عرض')
+                    ->label('عرض في الموقع')
                     ->icon('heroicon-o-eye')
                     ->color('gray')
-                    ->url(fn (Campaign $record) => url('ar/campaigns/' . ($record->slug ?? $record->id)))
+                    ->url(fn (Campaign $record) => $record->slug
+                        ? url('ar/campaigns/' . $record->slug)
+                        : null
+                    )
+                    ->hidden(fn (Campaign $record) => ! $record->slug)
                     ->openUrlInNewTab(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
