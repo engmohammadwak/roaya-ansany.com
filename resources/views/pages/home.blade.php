@@ -11,10 +11,10 @@
     $heroLabel  = $hero['label']       ?? ($locale==='ar' ? 'تبرعك سينقذ الكثير من الأشخاص' : 'Your donation will save many lives');
     $heroImg    = $hero['image']       ?? 'https://roaya-ansany.com/storage/uploads/pages/3PCwY0bnxr9NmLyHvTlL7wlNmBC5ir5vBG5gv0Wz.png';
 
-    // Label position — now from HomeSetting (via HomeController $data)
-    $heroLabelTop   = $data['hero']['label_top']   ?? '12px';
-    $heroLabelLeft  = $data['hero']['label_left']  ?? '0';
-    $heroLabelRight = $data['hero']['label_right'] ?? '0';
+    // Label position — from HomeSetting dashboard
+    $heroLabelTop   = $data['hero']['label_top']   ?? '20px';
+    $heroLabelLeft  = $data['hero']['label_left']  ?? 'auto';
+    $heroLabelRight = $data['hero']['label_right'] ?? '40px';
 @endphp
 
 @section('title', $locale === 'ar' ? 'الرئيسية' : 'Home')
@@ -25,7 +25,29 @@
 {{-- ============ HERO SLIDER ============ --}}
 @php $sliderProjects = array_slice($projects['data'] ?? [], 0, 5); @endphp
 @if(!empty($sliderProjects))
-<section class="hero-slider-section">
+<section class="hero-slider-section" style="position:relative">
+
+    {{-- ✅ Hero Label Overlay — يظهر فوق الـ Slider دايماً، موضعه من الداشبورد --}}
+    @if($heroLabel)
+    <div style="position:absolute;
+                top:{{ $heroLabelTop }};
+                left:{{ $heroLabelLeft }};
+                right:{{ $heroLabelRight }};
+                z-index:10;
+                background:rgba(255,255,255,0.85);
+                backdrop-filter:blur(4px);
+                padding:8px 18px;
+                border-radius:30px;
+                font-size:14px;
+                color:#333;
+                font-weight:600;
+                box-shadow:0 2px 12px rgba(0,0,0,0.12);
+                white-space:nowrap;
+                pointer-events:none;">
+        {{ $heroLabel }}
+    </div>
+    @endif
+
     <div class="hero-swiper swiper">
         <div class="swiper-wrapper">
             @foreach($sliderProjects as $slide)
@@ -108,7 +130,6 @@
                         <path d="M43 0C19.2518 0 0 19.2518 0 43V345C0 368.748 19.2518 388 43 388H398C421.748 388 441 368.748 441 345V115C441 98.9837 428.016 86 412 86H329C312.984 86 300 73.0163 300 57V29C300 12.9837 287.016 0 271 0H43Z" fill="{{ $p }}" fill-opacity="0.15"/>
                     </svg>
                     @if($heroLabel)
-                    {{-- ✅ موضع النص يتحكم به من الداشبورد: Hero Banner > موضع النص فوق الصورة --}}
                     <div style="position:absolute;
                                 top:{{ $heroLabelTop }};
                                 left:{{ $heroLabelLeft }};
