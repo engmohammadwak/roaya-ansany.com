@@ -11,6 +11,7 @@ class HomeSetting extends Model
         'hero_title_ar', 'hero_title_en',
         'hero_description_ar', 'hero_description_en',
         'hero_label_ar', 'hero_label_en',
+        'hero_label_top', 'hero_label_left', 'hero_label_right',
         'hero_image',
         // Campaign Banner
         'cb_title_ar', 'cb_title_en',

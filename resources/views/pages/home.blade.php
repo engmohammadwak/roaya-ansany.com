@@ -11,10 +11,10 @@
     $heroLabel  = $hero['label']       ?? ($locale==='ar' ? 'تبرعك سينقذ الكثير من الأشخاص' : 'Your donation will save many lives');
     $heroImg    = $hero['image']       ?? 'https://roaya-ansany.com/storage/uploads/pages/3PCwY0bnxr9NmLyHvTlL7wlNmBC5ir5vBG5gv0Wz.png';
 
-    // Label position from Setting (controlled from SiteSettings dashboard)
-    $heroLabelTop   = App\Models\Setting::get('hero_label_top',   '12px');
-    $heroLabelLeft  = App\Models\Setting::get('hero_label_left',  '0');
-    $heroLabelRight = App\Models\Setting::get('hero_label_right', '0');
+    // Label position — now from HomeSetting (via HomeController $data)
+    $heroLabelTop   = $data['hero']['label_top']   ?? '12px';
+    $heroLabelLeft  = $data['hero']['label_left']  ?? '0';
+    $heroLabelRight = $data['hero']['label_right'] ?? '0';
 @endphp
 
 @section('title', $locale === 'ar' ? 'الرئيسية' : 'Home')
@@ -108,7 +108,18 @@
                         <path d="M43 0C19.2518 0 0 19.2518 0 43V345C0 368.748 19.2518 388 43 388H398C421.748 388 441 368.748 441 345V115C441 98.9837 428.016 86 412 86H329C312.984 86 300 73.0163 300 57V29C300 12.9837 287.016 0 271 0H43Z" fill="{{ $p }}" fill-opacity="0.15"/>
                     </svg>
                     @if($heroLabel)
-                    <div style="position:absolute;top:{{ $heroLabelTop }};left:{{ $heroLabelLeft }};right:{{ $heroLabelRight }};text-align:center;z-index:2;font-size:14px;color:#555;font-weight:500">{{ $heroLabel }}</div>
+                    {{-- ✅ موضع النص يتحكم به من الداشبورد: Hero Banner > موضع النص فوق الصورة --}}
+                    <div style="position:absolute;
+                                top:{{ $heroLabelTop }};
+                                left:{{ $heroLabelLeft }};
+                                right:{{ $heroLabelRight }};
+                                text-align:center;
+                                z-index:2;
+                                font-size:14px;
+                                color:#555;
+                                font-weight:500">
+                        {{ $heroLabel }}
+                    </div>
                     @endif
                     <img width="510" height="430" src="{{ $heroImg }}" alt="banner" style="position:relative;z-index:1;width:100%;border-radius:20px">
                 </div>

@@ -42,6 +42,33 @@ class HomeSettingResource extends Resource
                                 Forms\Components\TextInput::make('hero_label_en')
                                     ->label('Image Label (English)'),
                             ]),
+
+                            // ======= موضع النص فوق الصورة =======
+                            Forms\Components\Section::make('📍 موضع النص فوق الصورة')
+                                ->description('تحكم بمكان ظهور النص على الصورة — استخدم قيم CSS مثل: 12px, 20%, auto')
+                                ->schema([
+                                    Forms\Components\Grid::make(3)->schema([
+                                        Forms\Components\TextInput::make('hero_label_top')
+                                            ->label('من الأعلى (top)')
+                                            ->placeholder('12px')
+                                            ->default('12px')
+                                            ->helperText('مثال: 12px أو 10%'),
+                                        Forms\Components\TextInput::make('hero_label_left')
+                                            ->label('من اليسار (left)')
+                                            ->placeholder('0'
+                                            )
+                                            ->default('0')
+                                            ->helperText('0 = يمتد للحافة'),
+                                        Forms\Components\TextInput::make('hero_label_right')
+                                            ->label('من اليمين (right)')
+                                            ->placeholder('0')
+                                            ->default('0')
+                                            ->helperText('0 = يمتد للحافة'),
+                                    ]),
+                                ])
+                                ->collapsible()
+                                ->columnSpanFull(),
+
                             Forms\Components\FileUpload::make('hero_image')
                                 ->label('صورة الـ Hero')
                                 ->image()->directory('home/hero')
