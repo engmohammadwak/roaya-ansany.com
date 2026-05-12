@@ -50,10 +50,39 @@ class ManageSettings extends Page
                 ])->columns(2),
 
                 Forms\Components\Section::make('الصفحة الرئيسية - Hero')->schema([
-                    Forms\Components\TextInput::make('hero_title_ar')->label('العنوان الرئيسي بالعربية'),
-                    Forms\Components\TextInput::make('hero_title_en')->label('العنوان الرئيسي بالإنجليزية'),
-                    Forms\Components\TextInput::make('hero_subtitle_ar')->label('العنوان الفرعي بالعربية'),
-                    Forms\Components\TextInput::make('hero_subtitle_en')->label('العنوان الفرعي بالإنجليزية'),
+                    Forms\Components\TextInput::make('hero_title_ar')
+                        ->label('العنوان الرئيسي (عربي)'),
+                    Forms\Components\TextInput::make('hero_title_en')
+                        ->label('Main Title (English)'),
+                    Forms\Components\Textarea::make('hero_desc_ar')
+                        ->label('الوصف (عربي)')
+                        ->rows(2),
+                    Forms\Components\Textarea::make('hero_desc_en')
+                        ->label('Description (English)')
+                        ->rows(2),
+                    Forms\Components\TextInput::make('hero_label_ar')
+                        ->label('النص فوق الصورة (عربي)')
+                        ->placeholder('تبرعك سينقذ الكثير من الأشخاص'),
+                    Forms\Components\TextInput::make('hero_label_en')
+                        ->label('Image Label (English)')
+                        ->placeholder('Your donation will save many lives'),
+                    Forms\Components\TextInput::make('hero_label_top')
+                        ->label('موضع النص: Top')
+                        ->placeholder('12px')
+                        ->default('12px'),
+                    Forms\Components\TextInput::make('hero_label_left')
+                        ->label('موضع النص: Left')
+                        ->placeholder('0 أو 351px')
+                        ->default('0'),
+                    Forms\Components\TextInput::make('hero_label_right')
+                        ->label('موضع النص: Right')
+                        ->placeholder('0')
+                        ->default('0'),
+                    Forms\Components\FileUpload::make('hero_image')
+                        ->label('صورة الـ Hero')
+                        ->image()
+                        ->directory('hero')
+                        ->columnSpanFull(),
                 ])->columns(2),
 
                 Forms\Components\Section::make('من نحن')->schema([
