@@ -9,10 +9,10 @@
     $heroDesc  = $hero['description'] ?? ($locale==='ar' ? 'ملايين المدنيين يواجهون الجوع والتشرد.' : 'Millions face hunger and displacement.');
     $heroImg   = $hero['image']       ?? 'https://roaya-ansany.com/storage/uploads/pages/3PCwY0bnxr9NmLyHvTlL7wlNmBC5ir5vBG5gv0Wz.png';
 
-    // يقرأ مباشرةً من الداشبورد
+    // يقرأ من الداشبورد فقط
     $heroLabel = $locale === 'ar'
-        ? (App\Models\Setting::get('hero_label_ar') ?: 'تبرعك سينقذ الكثير من الأشخاص')
-        : (App\Models\Setting::get('hero_label_en') ?: 'Your donation will save many lives');
+        ? App\Models\Setting::get('hero_label_ar', '')
+        : App\Models\Setting::get('hero_label_en', '');
 @endphp
 
 @section('title', $locale === 'ar' ? 'الرئيسية' : 'Home')
