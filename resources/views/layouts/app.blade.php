@@ -1,6 +1,7 @@
 @php
-    $siteName = App\Models\Setting::get('site_name', 'مؤسسة رؤيا الإنسانية');
-    $favicon  = App\Models\Setting::get('site_favicon', '/website/fav/favicon.ico');
+    $siteName   = App\Models\Setting::get('site_name', 'مؤسسة رؤيا الإنسانية');
+    $faviconRaw = App\Models\Setting::get('site_favicon');
+    $favicon    = $faviconRaw ? asset('storage/' . $faviconRaw) : '/website/fav/favicon.ico';
 
     $p  = App\Models\Setting::get('color_primary',     '#9dcc6b');
     $s  = App\Models\Setting::get('color_secondary',   '#2F7BC1');
