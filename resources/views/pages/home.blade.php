@@ -4,27 +4,21 @@
     $locale = app()->getLocale();
     $p = App\Models\Setting::get('color_primary', '#9dcc6b');
 
-    // Hero data from HomeSetting (via HomeController)
     $hero       = $data['hero'] ?? [];
     $heroTitle  = $hero['title']       ?? ($locale==='ar' ? 'أنقذوا غزة الآن' : 'Save Gaza Now');
     $heroDesc   = $hero['description'] ?? ($locale==='ar' ? 'ملايين المدنيين يواجهون الجوع والتشرد.' : 'Millions face hunger and displacement.');
     $heroLabel  = $hero['label']       ?? ($locale==='ar' ? 'تبرعك سينقذ الكثير من الأشخاص' : 'Your donation will save many lives');
     $heroImg    = $hero['image']       ?? 'https://roaya-ansany.com/storage/uploads/pages/3PCwY0bnxr9NmLyHvTlL7wlNmBC5ir5vBG5gv0Wz.png';
 
-    // Label position — من الداشبورد مباشرةً (بدون قيم ثابتة)
-    $heroLabelTop   = $hero['label_top']   ?? '';
-    $heroLabelLeft  = $hero['label_left']  ?? '';
-    $heroLabelRight = $hero['label_right'] ?? '';
+    // موضع النص — 100% من الداشبورد بدون أي قيمة تلقائية
+    $heroLabelTop   = trim($hero['label_top']   ?? '');
+    $heroLabelLeft  = trim($hero['label_left']  ?? '');
+    $heroLabelRight = trim($hero['label_right'] ?? '');
 
-    // بناء style الموضع ديناميكياً
     $labelStyle = 'position:absolute; z-index:10;';
     if ($heroLabelTop)   $labelStyle .= ' top:'.$heroLabelTop.';';
     if ($heroLabelLeft)  $labelStyle .= ' left:'.$heroLabelLeft.';';
     if ($heroLabelRight) $labelStyle .= ' right:'.$heroLabelRight.';';
-    // توسيط أفقي لو لا يسار ولا يمين محددين
-    if (!$heroLabelLeft && !$heroLabelRight) {
-        $labelStyle .= ' left:50%; transform:translateX(-50%);';
-    }
 @endphp
 
 @section('title', $locale === 'ar' ? 'الرئيسية' : 'Home')
@@ -37,7 +31,6 @@
 @if(!empty($sliderProjects))
 <section class="hero-slider-section" style="position:relative">
 
-    {{-- ✅ Hero Label Overlay — يظهر فوق الـ Slider دايماً، موضعه من الداشبورد --}}
     @if($heroLabel)
     <div style="{{ $labelStyle }}
                 background:rgba(255,255,255,0.85);
@@ -136,7 +129,7 @@
                         <path d="M43 0C19.2518 0 0 19.2518 0 43V345C0 368.748 19.2518 388 43 388H398C421.748 388 441 368.748 441 345V115C441 98.9837 428.016 86 412 86H329C312.984 86 300 73.0163 300 57V29C300 12.9837 287.016 0 271 0H43Z" fill="{{ $p }}" fill-opacity="0.15"/>
                     </svg>
                     @if($heroLabel)
-                    <div style="{{ $labelStyle }}; font-size:14px; color:#555; font-weight:500">
+                    <div style="{{ $labelStyle }} font-size:14px; color:#555; font-weight:500">
                         {{ $heroLabel }}
                     </div>
                     @endif
