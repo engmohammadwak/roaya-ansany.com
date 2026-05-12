@@ -62,46 +62,50 @@
     </button>
     <div x-show="open" x-transition class="px-5 pb-5 pt-3 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700">
 
-        {{-- sticky-only toggle --}}
-        <div class="flex items-center justify-between p-3 mb-4 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700">
+        {{-- sticky toggle --}}
+        <div
+            x-data="{ val: @js($this->data['navbar_sticky_only'] ?? '0') }"
+            x-init="$watch('val', v => @this.set('data.navbar_sticky_only', v ? '1' : '0'))"
+            class="flex items-center justify-between p-3 mb-4 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700">
             <div>
                 <div class="font-medium text-sm">🔒 النافبار Sticky فقط (تظهر عند السكرول)</div>
                 <div class="text-xs text-gray-400 mt-0.5">لو مفعّل — النافبار مخفية في أعلى الصفحة وتظهر بس لما يسكرول</div>
             </div>
-            <label class="relative inline-flex items-center cursor-pointer ms-4">
-                <input type="checkbox" wire:model="data.navbar_sticky_only" value="1"
-                    class="sr-only peer"
-                    {{ Setting::get('navbar_sticky_only','0') === '1' ? 'checked' : '' }}>
-                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer
-                    dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white
-                    after:content-[''] after:absolute after:top-[2px] after:start-[2px]
-                    after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5
-                    after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-            </label>
+            <button type="button" @click="val = !val"
+                :class="val == '1' || val === true ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600'"
+                class="relative ms-4 inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 focus:outline-none flex-shrink-0">
+                <span
+                    :class="val == '1' || val === true ? 'translate-x-5' : 'translate-x-1'"
+                    class="inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform duration-200">
+                </span>
+            </button>
+            <input type="hidden" wire:model="data.navbar_sticky_only" :value="val == '1' || val === true ? '1' : '0'">
         </div>
 
         {{-- روابط on/off --}}
         <div class="space-y-2">
         @foreach([
-            ['key'=>'nav_show_home',     'label'=>'الرئيسية',         'icon'=>'🏠'],
-            ['key'=>'nav_show_about',    'label'=>'من نحن',            'icon'=>'ℹ️'],
-            ['key'=>'nav_show_campaigns','label'=>'الحملات',           'icon'=>'📢'],
-            ['key'=>'nav_show_blogs',    'label'=>'المدونة',           'icon'=>'📝'],
-            ['key'=>'nav_show_contact',  'label'=>'تواصل معنا',        'icon'=>'📞'],
-            ['key'=>'nav_show_privacy',  'label'=>'سياسة الخصوصية',   'icon'=>'🔒'],
+            ['key'=>'nav_show_home',      'label'=>'الرئيسية',        'icon'=>'🏠', 'color'=>'green'],
+            ['key'=>'nav_show_about',     'label'=>'من نحن',          'icon'=>'ℹ️', 'color'=>'green'],
+            ['key'=>'nav_show_campaigns', 'label'=>'الحملات',          'icon'=>'📢', 'color'=>'green'],
+            ['key'=>'nav_show_blogs',     'label'=>'المدونة',          'icon'=>'📝', 'color'=>'green'],
+            ['key'=>'nav_show_contact',   'label'=>'تواصل معنا',      'icon'=>'📞', 'color'=>'green'],
+            ['key'=>'nav_show_privacy',   'label'=>'سياسة الخصوصية', 'icon'=>'🔒', 'color'=>'green'],
         ] as $link)
-        <div class="flex items-center justify-between p-3 rounded-lg border border-gray-200 dark:border-gray-700">
+        <div
+            x-data="{ val: @js($this->data[$link['key']] ?? '1') }"
+            x-init="$watch('val', v => @this.set('data.{{ $link['key'] }}', v ? '1' : '0'))"
+            class="flex items-center justify-between p-3 rounded-lg border border-gray-200 dark:border-gray-700">
             <div class="font-medium text-sm">{{ $link['icon'] }} {{ $link['label'] }}</div>
-            <label class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" wire:model="data.{{ $link['key'] }}" value="1"
-                    class="sr-only peer"
-                    {{ Setting::get($link['key'],'1') === '1' ? 'checked' : '' }}>
-                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer
-                    dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white
-                    after:content-[''] after:absolute after:top-[2px] after:start-[2px]
-                    after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5
-                    after:transition-all dark:border-gray-600 peer-checked:bg-green-500"></div>
-            </label>
+            <button type="button" @click="val = !val"
+                :class="val == '1' || val === true ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-600'"
+                class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 focus:outline-none flex-shrink-0">
+                <span
+                    :class="val == '1' || val === true ? 'translate-x-5' : 'translate-x-1'"
+                    class="inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform duration-200">
+                </span>
+            </button>
+            <input type="hidden" wire:model="data.{{ $link['key'] }}" :value="val == '1' || val === true ? '1' : '0'">
         </div>
         @endforeach
         </div>
