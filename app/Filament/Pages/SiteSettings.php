@@ -42,10 +42,18 @@ class SiteSettings extends Page
             'footer_copyright_ar',   'footer_copyright_en',
             // تواصل
             'contact_phone', 'contact_email', 'whatsapp_number',
+            // نافبار روابط + sticky
+            'navbar_sticky_only',
+            'nav_show_home', 'nav_show_about', 'nav_show_campaigns',
+            'nav_show_blogs', 'nav_show_contact', 'nav_show_privacy',
         ];
+
         foreach ($keys as $key) {
-            $this->data[$key] = Setting::get($key);
+            // مفاتيح الروابط الافتراضي مفعّلة (1)، sticky افتراضي مطفي (0)
+            $default = str_starts_with($key, 'nav_show_') ? '1' : '0';
+            $this->data[$key] = Setting::get($key, $default);
         }
+
         $admin = User::first();
         if ($admin) {
             $this->data['admin_username'] = $admin->name;
@@ -73,10 +81,24 @@ class SiteSettings extends Page
             'footer_description_ar', 'footer_description_en',
             'footer_copyright_ar',   'footer_copyright_en',
             'contact_phone', 'contact_email', 'whatsapp_number',
+            // نافبار روابط + sticky
+            'navbar_sticky_only',
+            'nav_show_home', 'nav_show_about', 'nav_show_campaigns',
+            'nav_show_blogs', 'nav_show_contact', 'nav_show_privacy',
         ];
+
         foreach ($keys as $key) {
             if (array_key_exists($key, $this->data)) {
-                Setting::set($key, $this->data[$key] ?? '');
+                // checkbox غير محدد = null تعني مطفي → احفظ '0'
+                $value = $this->data[$key];
+                if (in_array($key, [
+                    'navbar_sticky_only',
+                    'nav_show_home', 'nav_show_about', 'nav_show_campaigns',
+                    'nav_show_blogs', 'nav_show_contact', 'nav_show_privacy',
+                ])) {
+                    $value = ($value === true || $value === '1' || $value === 1) ? '1' : '0';
+                }
+                Setting::set($key, $value ?? '');
             }
         }
 
