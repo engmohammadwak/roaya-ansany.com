@@ -1,50 +1,98 @@
 <!DOCTYPE html>
-<html dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}" lang="{{ app()->getLocale() }}">
+<html lang="{{ app()->getLocale() }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="@yield('description', __('app.description'))">
-    <title>@yield('title', __('app.name'))</title>
+    <meta name="description" content="@yield('description', 'ساهم في إنقاذ الأرواح ودعم المحتاجين عبر حملات مؤسسة رؤيا الإنسانية.')">
+    <title>@yield('title', 'مؤسسة رؤيا الإنسانية')</title>
 
-    {{-- Favicon --}}
-    <link rel="icon" href="{{ asset('favicon.ico') }}">
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://roaya-ansany.com/website/fav/favicon-96x96.png" sizes="96x96">
+    <link rel="shortcut icon" href="https://roaya-ansany.com/website/fav/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://roaya-ansany.com/website/fav/apple-touch-icon.png">
 
-    {{-- Fonts --}}
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap RTL -->
+    <link href="https://roaya-ansany.com/website/libs/bootstrap/bootstrap.rtl.min.css" rel="stylesheet">
 
-    {{-- Slick Carousel --}}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css">
+    <!-- SlimSelect -->
+    <link href="https://roaya-ansany.com/website/libs/slimselect/slimselect.css" rel="stylesheet">
 
-    {{-- Main CSS from Next.js build --}}
-    <link rel="stylesheet" href="{{ asset('_next/static/css/059c8e1669e0c8e7.css') }}">
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="https://roaya-ansany.com/website/css/main.css?v=1">
 
     @stack('styles')
 </head>
 <body>
 
-    {{-- Navbar --}}
     @include('partials.navbar')
 
-    {{-- Main Content --}}
-    <main id="main-content">
+    <main>
         @yield('content')
     </main>
 
-    {{-- Footer --}}
     @include('partials.footer')
 
-    {{-- Scripts --}}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.js"></script>
+    <!-- Scripts -->
+    <script src="https://roaya-ansany.com/website/libs/slimselect/slimselect.js"></script>
+    <script src="https://roaya-ansany.com/website/libs/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="https://roaya-ansany.com/website/js/main.js" defer></script>
 
-    {{-- Next.js chunks --}}
-    <script src="{{ asset('_next/static/chunks/webpack-d36b50b5fb8708d9.js') }}" defer></script>
-    <script src="{{ asset('_next/static/chunks/framework-945b357d4a851f4b.js') }}" defer></script>
-    <script src="{{ asset('_next/static/chunks/main-37a5d6427119e763.js') }}" defer></script>
-    <script src="{{ asset('_next/static/chunks/pages/_app-08bc2f43e8035b26.js') }}" defer></script>
+    <script>
+    window.addEventListener("scroll", function () {
+        const navbar = document.querySelector(".main-navbar");
+        if (navbar) {
+            if (window.scrollY > 30) navbar.classList.add("scrolled");
+            else navbar.classList.remove("scrolled");
+        }
+    });
+
+    const scrollBtn = document.getElementById("scrollTopBtn");
+    if (scrollBtn) {
+        window.addEventListener("scroll", function () {
+            scrollBtn.style.display = window.scrollY > 250 ? "flex" : "none";
+        });
+        scrollBtn.addEventListener("click", function () {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+    }
+
+    document.addEventListener('click', function (e) {
+        const btn = e.target.closest('.btn-donate');
+        if (!btn) return;
+        e.preventDefault();
+        function findAmount(startEl) {
+            let parent = startEl.parentElement;
+            while (parent && parent !== document.body) {
+                const found = parent.querySelector('input[name="amount"], input.form-input');
+                if (found) return found;
+                parent = parent.parentElement;
+            }
+            return null;
+        }
+        const inp = findAmount(btn);
+        const amount = inp ? inp.value.trim() : '';
+        const base = "{{ url(app()->getLocale() . '/donate') }}";
+        window.location.href = amount ? `${base}?amount=${encodeURIComponent(amount)}` : base;
+    });
+
+    document.addEventListener('input', function (e) {
+        if (e.target.name === 'amount') {
+            let val = e.target.value.replace(/[^0-9.]/g, '');
+            const parts = val.split('.');
+            if (parts.length > 2) val = parts[0] + '.' + parts.slice(1).join('');
+            e.target.value = val;
+        }
+    });
+    </script>
+
+    <!-- WhatsApp Float -->
+    <a href="https://api.whatsapp.com/send/?phone=905398863777&text=مرحباً+بك+في+مؤسسة+رؤيا+الإنسانية" target="_blank" class="whatsapp-float" aria-label="WhatsApp">
+        <svg fill="#fff" width="30px" height="30px" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+            <path d="M26.576 5.363c-2.69-2.69-6.406-4.354-10.511-4.354-8.209 0-14.865 6.655-14.865 14.865 0 2.732 0.737 5.291 2.022 7.491l-0.038-0.070-2.109 7.702 7.879-2.067c2.051 1.139 4.498 1.809 7.102 1.809h0.006c8.209-0.003 14.862-6.659 14.862-14.868 0-4.103-1.662-7.817-4.349-10.507l0 0zM16.062 28.228h-0.005c-2.319 0-4.489-0.64-6.342-1.753l0.056 0.031-0.451-0.267-4.675 1.227 1.247-4.559-0.294-0.467c-1.185-1.862-1.889-4.131-1.889-6.565 0-6.822 5.531-12.353 12.353-12.353s12.353 5.531 12.353 12.353c0 6.822-5.53 12.353-12.353 12.353h-0z"/>
+        </svg>
+    </a>
+
+    <button id="scrollTopBtn" class="scroll-top-float" aria-label="Scroll to top" style="display:none;">↑</button>
 
     @stack('scripts')
 </body>

@@ -1,34 +1,35 @@
 @extends('layouts.app')
-
-@section('title', __('pages.blogs.title'))
+@php $locale = app()->getLocale(); @endphp
+@section('title', ($locale==='ar'?'المدونة':'Blog') . ' | مؤسسة رؤيا الإنسانية')
 
 @section('content')
-<div style="max-width:1200px; margin:40px auto; padding:0 20px;">
-
-    <h1 class="MuiTypography-root" style="margin-bottom:32px;">{{ __('pages.blogs.title') }}</h1>
-
-    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap:24px;">
-        @forelse($blogs['data'] ?? [] as $blog)
-        <div style="border-radius:12px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,.08);">
-            <a href="{{ route('blogs.show', [app()->getLocale(), $blog['slug'] ?? $blog['id']]) }}"
-               style="text-decoration:none; display:block; height:200px; overflow:hidden;">
-                <img src="{{ $blog['image'] ?? '' }}" alt="{{ $blog['title'] ?? '' }}"
-                     style="width:100%; height:200px; object-fit:cover;">
-            </a>
-            <div style="padding:16px;">
-                <a href="{{ route('blogs.show', [app()->getLocale(), $blog['slug'] ?? $blog['id']]) }}"
-                   style="text-decoration:none;">
-                    <h3 style="font-size:16px; margin-bottom:8px;">{{ $blog['title'] ?? '' }}</h3>
-                </a>
-                <p style="color:#888; font-size:14px; line-height:1.6;">
-                    {{ Str::limit(strip_tags($blog['excerpt'] ?? $blog['content'] ?? ''), 120) }}
-                </p>
-                <p style="color:#aaa; font-size:12px; margin-top:8px;">{{ $blog['created_at'] ?? '' }}</p>
+<section class="main-section" style="margin-top:80px;">
+    <div class="container">
+        <h1 class="section-title mb-5">{{ $locale==='ar'?'المدونة':'Blog' }}</h1>
+        <div class="row">
+            @forelse($blogs['data'] ?? [] as $blog)
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100 border-0 shadow-sm" style="border-radius:12px; overflow:hidden;">
+                    @if(!empty($blog['image']))
+                    <a href="{{ url($locale.'/blogs/'.($blog['slug']??$blog['id'])) }}">
+                        <img src="{{ $blog['image'] }}" class="card-img-top" alt="{{ $blog['title']??'' }}" style="height:200px; object-fit:cover;">
+                    </a>
+                    @endif
+                    <div class="card-body">
+                        <a href="{{ url($locale.'/blogs/'.($blog['slug']??$blog['id'])) }}" class="text-decoration-none text-dark">
+                            <h5 class="card-title">{{ $blog['title']??'' }}</h5>
+                        </a>
+                        <p class="muted-color small">{{ Str::limit(strip_tags($blog['excerpt']??$blog['content']??''), 120) }}</p>
+                        <p class="small text-muted">{{ $blog['created_at']??'' }}</p>
+                    </div>
+                </div>
             </div>
+            @empty
+            <div class="col-12 text-center py-5">
+                <p class="muted-color">{{ $locale==='ar'?'لا توجد مقالات حالياً':'No articles available' }}</p>
+            </div>
+            @endforelse
         </div>
-        @empty
-        <p style="text-align:center; color:#888; padding:60px; grid-column:1/-1;">{{ __('blogs.no_blogs') }}</p>
-        @endforelse
     </div>
-</div>
+</section>
 @endsection

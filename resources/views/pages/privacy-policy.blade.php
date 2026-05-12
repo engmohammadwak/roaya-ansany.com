@@ -1,17 +1,22 @@
 @extends('layouts.app')
-
-@section('title', __('pages.privacy.title'))
+@php $locale = app()->getLocale(); @endphp
+@section('title', ($locale==='ar'?'سياسة الخصوصية':'Privacy Policy') . ' | مؤسسة رؤيا الإنسانية')
 
 @section('content')
-<div style="max-width:900px; margin:60px auto; padding:0 20px; line-height:1.9; color:#333;">
-    <h1 style="margin-bottom:32px;">{{ __('pages.privacy.title') }}</h1>
-    <div id="privacy-content">
-        {{-- Content loaded from translations or CMS --}}
-        @if(app()->getLocale() === 'ar')
-            <p>سياسة الخصوصية - يتم تحديث هذا المحتوى من لوحة التحكم.</p>
-        @else
-            <p>Privacy Policy - This content is managed from the admin panel.</p>
-        @endif
+<section class="main-section" style="margin-top:80px;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <h1 class="section-title mb-5">{{ $locale==='ar'?'سياسة الخصوصية':'Privacy Policy' }}</h1>
+                <div class="muted-color" style="line-height:1.9;">
+                    @if($locale==='ar')
+                    <p>نحن في مؤسسة رؤيا الإنسانية نلتزم بحماية خصوصية مستخدمينا ومتبرعينا. تصف هذه السياسة كيفية جمع معلوماتك واستخدامها وحمايتها.</p>
+                    @else
+                    <p>At Roaya Insanya, we are committed to protecting the privacy of our users and donors. This policy describes how we collect, use, and protect your information.</p>
+                    @endif
+                </div>
+            </div>
+        </div>
     </div>
-</div>
+</section>
 @endsection

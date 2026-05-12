@@ -1,16 +1,22 @@
 @extends('layouts.app')
-
-@section('title', __('pages.terms.title'))
+@php $locale = app()->getLocale(); @endphp
+@section('title', ($locale==='ar'?'الشروط والأحكام':'Terms & Conditions') . ' | مؤسسة رؤيا الإنسانية')
 
 @section('content')
-<div style="max-width:900px; margin:60px auto; padding:0 20px; line-height:1.9; color:#333;">
-    <h1 style="margin-bottom:32px;">{{ __('pages.terms.title') }}</h1>
-    <div id="terms-content">
-        @if(app()->getLocale() === 'ar')
-            <p>الشروط والأحكام - يتم تحديث هذا المحتوى من لوحة التحكم.</p>
-        @else
-            <p>Terms and Conditions - This content is managed from the admin panel.</p>
-        @endif
+<section class="main-section" style="margin-top:80px;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <h1 class="section-title mb-5">{{ $locale==='ar'?'الشروط والأحكام':'Terms & Conditions' }}</h1>
+                <div class="muted-color" style="line-height:1.9;">
+                    @if($locale==='ar')
+                    <p>باستخدام موقع مؤسسة رؤيا الإنسانية، فإنك توافق على الشروط والأحكام المنصوص عليها في هذه الصفحة.</p>
+                    @else
+                    <p>By using the Roaya Insanya website, you agree to the terms and conditions outlined on this page.</p>
+                    @endif
+                </div>
+            </div>
+        </div>
     </div>
-</div>
+</section>
 @endsection
