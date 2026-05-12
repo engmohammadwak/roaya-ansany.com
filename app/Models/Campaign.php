@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
 
@@ -25,6 +26,14 @@ class Campaign extends Model
     // NOTE: getRouteKeyName() intentionally removed.
     // Filament dashboard uses {id} for routing.
     // Frontend (CampaignController) resolves by slug manually.
+
+    // =====================
+    // Relationships
+    // =====================
+    public function donations(): HasMany
+    {
+        return $this->hasMany(Donation::class);
+    }
 
     // =====================
     // Auto-generate slug
