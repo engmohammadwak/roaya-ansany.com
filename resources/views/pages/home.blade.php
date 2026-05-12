@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
-@php $locale = app()->getLocale(); @endphp
+@php
+    $locale = app()->getLocale();
+    $p = App\Models\Setting::get('color_primary', '#9dcc6b');
+@endphp
 
 @section('title', $locale === 'ar' ? 'الرئيسية' : 'Home')
 @section('description', $locale === 'ar' ? 'ساهم في إنقاذ الأرواح ودعم المحتاجين عبر حملاتنا.' : 'Help save lives through our campaigns.')
@@ -97,7 +100,7 @@
             <div class="col-md-5">
                 <div class="clipped-image-container" style="position:relative">
                     <svg viewBox="0 0 441 388" preserveAspectRatio="none" style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:0">
-                        <path d="M43 0C19.2518 0 0 19.2518 0 43V345C0 368.748 19.2518 388 43 388H398C421.748 388 441 368.748 441 345V115C441 98.9837 428.016 86 412 86H329C312.984 86 300 73.0163 300 57V29C300 12.9837 287.016 0 271 0H43Z" fill="rgba(139,195,74,0.15)"/>
+                        <path d="M43 0C19.2518 0 0 19.2518 0 43V345C0 368.748 19.2518 388 43 388H398C421.748 388 441 368.748 441 345V115C441 98.9837 428.016 86 412 86H329C312.984 86 300 73.0163 300 57V29C300 12.9837 287.016 0 271 0H43Z" fill="{{ $p }}" fill-opacity="0.15"/>
                     </svg>
                     <div style="position:absolute;top:12px;left:0;right:0;text-align:center;z-index:2;font-size:14px;color:#555;font-weight:500">{{ $heroLabel }}</div>
                     <img width="510" height="430" src="{{ $heroImg }}" alt="banner" style="position:relative;z-index:1;width:100%;border-radius:20px">
@@ -495,8 +498,14 @@
 
 @push('styles')
 <style>
-.why-icon-circle { width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,rgba(139,195,74,0.15),rgba(139,195,74,0.05));display:flex;align-items:center;justify-content:center;margin:0 auto;border:2px solid rgba(139,195,74,0.3); }
-.why-icon-circle i { color:#5a9e2f; }
+.why-icon-circle {
+    width:64px; height:64px; border-radius:50%;
+    background: linear-gradient(135deg, color-mix(in srgb, {{ $p }} 15%, transparent), color-mix(in srgb, {{ $p }} 5%, transparent));
+    display:flex; align-items:center; justify-content:center;
+    margin:0 auto;
+    border: 2px solid color-mix(in srgb, {{ $p }} 30%, transparent);
+}
+.why-icon-circle i { color: color-mix(in srgb, {{ $p }} 70%, #000); }
 .why-icon-wrap { text-align:center; }
 .partner-card { transition:transform 0.2s,box-shadow 0.2s; }
 .partner-card:hover { transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,0.1); }
