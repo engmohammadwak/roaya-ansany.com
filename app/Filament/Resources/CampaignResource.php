@@ -5,11 +5,13 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\CampaignResource\Pages;
 use App\Models\Campaign;
 use Filament\Forms;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Form;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class CampaignResource extends Resource
@@ -57,25 +59,40 @@ class CampaignResource extends Resource
                 ->columnSpanFull()
                 ->nullable(),
 
-            // =====================
-            // صورة الحملة
-            // =====================
-            Forms\Components\FileUpload::make('image')
+            // ================================================
+            // صورة الحملة — تدعم التغيير والحذف بشكل صحيح
+            // ================================================
+            FileUpload::make('image')
                 ->label('صورة الحملة')
                 ->image()
                 ->disk('public')
                 ->directory('campaigns')
                 ->visibility('public')
-                ->imagePreviewHeight('280')   // معاينة داخل الداشبورد
-                ->imageEditor()               // محرر اقتصاص
-                ->deletable(true)             // زر X لحذف الصورة
-                ->openable(true)              // زر لفتح الصورة بالحجم الكامل
-                ->downloadable(true)          // زر تحميل
-                ->maxSize(102400)             // 100MB
+                ->imagePreviewHeight('280')
+                ->imageEditor()
+                ->deletable(true)
+                ->openable(true)
+                ->downloadable(true)
+                ->maxSize(102400)
                 ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp', 'image/gif'])
                 ->columnSpanFull()
                 ->uploadingMessage('جاري رفع الصورة...')
-                ->helperText('الحد الأقصى 100 ميجابايت — JPG, PNG, WEBP, GIF'),
+                ->helperText('الحد الأقصى 100 ميجابايت — JPG, PNG, WEBP, GIF')
+                // القيمة في الـ DB هي string ȁ8campaigns/xxx.jpg’
+                // Filament يحتاجها array للعرض — نحولها لحظة التحميل
+                ->afterStateHydrated(function (FileUpload $component, $state) {
+                    if (is_string($state) && $state !== '') {
+                        $component->state([$state => $state]);
+                    }
+                })
+                // لما يحفظ — نحول من array لـ string
+                ->dehydrateStateUsing(function ($state) {
+                    if (is_array($state) && count($state) > 0) {
+                        return array_values($state)[0];
+                    }
+                    // صورة حُذفت
+                    return null;
+                }),
 
             Forms\Components\TextInput::make('target_amount')
                 ->label('المبلغ المستهدف')
@@ -123,7 +140,6 @@ class CampaignResource extends Resource
                     ->date(),
             ])
             ->actions([
-                // زر عرض في الموقع بالـ slug
                 Tables\Actions\Action::make('view_site')
                     ->label('عرض في الموقع')
                     ->icon('heroicon-o-eye')
