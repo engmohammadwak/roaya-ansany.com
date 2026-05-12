@@ -1,9 +1,38 @@
 @php use App\Models\Setting; @endphp
 <x-filament-panels::page>
 <form wire:submit="save" enctype="multipart/form-data">
-<div class="space-y-6">
+<div class="space-y-3">
 
-    <x-filament::section heading="🌐 هوية الموقع">
+@php
+$sections = [
+    [
+        'id'      => 'identity',
+        'icon'    => '🌐',
+        'heading' => 'هوية الموقع',
+        'open'    => true,
+    ],
+    ['id'=>'colors_main',    'icon'=>'🎨', 'heading'=>'الألوان الرئيسية',    'open'=>true],
+    ['id'=>'colors_text',    'icon'=>'🔤', 'heading'=>'ألوان النصوص',          'open'=>false],
+    ['id'=>'colors_bg',      'icon'=>'🖥️', 'heading'=>'ألوان الخلفيات',        'open'=>false],
+    ['id'=>'colors_special', 'icon'=>'⚠️', 'heading'=>'ألوان خاصة',            'open'=>false],
+    ['id'=>'footer',         'icon'=>'📌', 'heading'=>'محتوى الفوتر',          'open'=>false],
+    ['id'=>'contact',        'icon'=>'📞', 'heading'=>'معلومات التواصل',     'open'=>false],
+    ['id'=>'admin',          'icon'=>'🔐', 'heading'=>'حساب المدير',             'open'=>false],
+];
+@endphp
+
+{{-- =================== هوية الموقع =================== --}}
+<div x-data="{ open: true }" class="rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+    <button type="button" @click="open = !open"
+        class="w-full flex items-center justify-between px-5 py-4 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors">
+        <span class="font-semibold text-base">🌐 هوية الموقع</span>
+        <svg :class="open ? 'rotate-180' : ''"
+            class="w-5 h-5 text-gray-400 transition-transform duration-200"
+            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+        </svg>
+    </button>
+    <div x-show="open" x-transition class="px-5 pb-5 pt-3 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
                 <label class="block text-sm font-medium mb-1">اسم الموقع (عنوان التاب)</label>
@@ -17,7 +46,7 @@
                 @if($logo)
                     <img src="{{ $logo }}" alt="Logo" class="h-16 mb-2 rounded">
                 @else
-                    <div class="h-16 mb-2 flex items-center justify-center bg-gray-100 rounded text-gray-400 text-xs">لا يوجد لوجو — سيستخدم الافتراضي</div>
+                    <div class="h-16 mb-2 flex items-center justify-center bg-gray-100 dark:bg-gray-700 rounded text-gray-400 text-xs">لا يوجد لوجو — سيستخدم الافتراضي</div>
                 @endif
                 <input type="file" wire:model="logo_upload" accept="image/*"
                     class="fi-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-800">
@@ -29,23 +58,31 @@
                 @if($fav)
                     <img src="{{ $fav }}" alt="Favicon" class="h-10 mb-2">
                 @else
-                    <div class="h-10 mb-2 flex items-center justify-center bg-gray-100 rounded text-gray-400 text-xs">لا يوجد فافيكون</div>
+                    <div class="h-10 mb-2 flex items-center justify-center bg-gray-100 dark:bg-gray-700 rounded text-gray-400 text-xs">لا يوجد فافيكون</div>
                 @endif
                 <input type="file" wire:model="favicon_upload" accept="image/*,.ico"
                     class="fi-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-800">
             </div>
         </div>
-    </x-filament::section>
+    </div>
+</div>
 
-    <x-filament::section heading="🎨 الألوان الرئيسية">
-        @php
-        $mainColors = [
+{{-- =================== الألوان الرئيسية =================== --}}
+<div x-data="{ open: true }" class="rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+    <button type="button" @click="open = !open"
+        class="w-full flex items-center justify-between px-5 py-4 bg-white dark:bg-gray-800 hover:bg-gray-50 transition-colors">
+        <span class="font-semibold text-base">🎨 الألوان الرئيسية</span>
+        <svg :class="open ? 'rotate-180' : ''"
+            class="w-5 h-5 text-gray-400 transition-transform duration-200"
+            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+        </svg>
+    </button>
+    <div x-show="open" x-transition class="px-5 pb-5 pt-3 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700 space-y-3">
+        @foreach([
             ['key'=>'color_primary',   'label'=>'اللون الأساسي',  'desc'=>'الأزرار، progress bar، الروابط النشطة'],
             ['key'=>'color_secondary', 'label'=>'اللون الثانوي',  'desc'=>'الغراديانت وبانر الهيرو'],
-        ];
-        @endphp
-        <div class="space-y-3">
-        @foreach($mainColors as $c)
+        ] as $c)
         <div class="flex items-center gap-4 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
             <input type="color" wire:model="data.{{ $c['key'] }}" class="w-14 h-10 rounded border cursor-pointer flex-shrink-0">
             <div class="flex-1">
@@ -56,20 +93,27 @@
                 class="fi-input w-32 rounded-lg border border-gray-300 dark:border-gray-600 px-2 py-1 text-sm bg-white dark:bg-gray-800 font-mono">
         </div>
         @endforeach
-        </div>
-    </x-filament::section>
+    </div>
+</div>
 
-    <x-filament::section heading="🔤 ألوان النصوص">
-        @php
-        $textColors = [
+{{-- =================== ألوان النصوص =================== --}}
+<div x-data="{ open: false }" class="rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+    <button type="button" @click="open = !open"
+        class="w-full flex items-center justify-between px-5 py-4 bg-white dark:bg-gray-800 hover:bg-gray-50 transition-colors">
+        <span class="font-semibold text-base">🔤 ألوان النصوص</span>
+        <svg :class="open ? 'rotate-180' : ''"
+            class="w-5 h-5 text-gray-400 transition-transform duration-200"
+            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+        </svg>
+    </button>
+    <div x-show="open" x-transition class="px-5 pb-5 pt-3 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700 space-y-3">
+        @foreach([
             ['key'=>'color_text_dark',   'label'=>'نص غامق (العناوين)',    'desc'=>'العناوين الرئيسية h1 h2 h3'],
             ['key'=>'color_text_muted',  'label'=>'نص رمادي (الوصف)',      'desc'=>'الفقرات والوصف'],
             ['key'=>'color_text_label',  'label'=>'نص التسميات',           'desc'=>'#444C4E — لون التسميات والليبلات'],
             ['key'=>'color_placeholder', 'label'=>'لون البلسهولدر',         'desc'=>'نص حقول الإدخال قبل الكتابة'],
-        ];
-        @endphp
-        <div class="space-y-3">
-        @foreach($textColors as $c)
+        ] as $c)
         <div class="flex items-center gap-4 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
             <input type="color" wire:model="data.{{ $c['key'] }}" class="w-14 h-10 rounded border cursor-pointer flex-shrink-0">
             <div class="flex-1">
@@ -80,19 +124,26 @@
                 class="fi-input w-32 rounded-lg border border-gray-300 dark:border-gray-600 px-2 py-1 text-sm bg-white dark:bg-gray-800 font-mono">
         </div>
         @endforeach
-        </div>
-    </x-filament::section>
+    </div>
+</div>
 
-    <x-filament::section heading="🖥️ ألوان الخلفيات">
-        @php
-        $bgColors = [
+{{-- =================== الخلفيات =================== --}}
+<div x-data="{ open: false }" class="rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+    <button type="button" @click="open = !open"
+        class="w-full flex items-center justify-between px-5 py-4 bg-white dark:bg-gray-800 hover:bg-gray-50 transition-colors">
+        <span class="font-semibold text-base">🖥️ ألوان الخلفيات</span>
+        <svg :class="open ? 'rotate-180' : ''"
+            class="w-5 h-5 text-gray-400 transition-transform duration-200"
+            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+        </svg>
+    </button>
+    <div x-show="open" x-transition class="px-5 pb-5 pt-3 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700 space-y-3">
+        @foreach([
             ['key'=>'color_bg_body',  'label'=>'خلفية الصفحة',         'desc'=>'لون خلفية body كاملاً'],
             ['key'=>'color_bg_light', 'label'=>'خلفية فاتحة (الأقسام)', 'desc'=>'أقسام support section وغيرها'],
             ['key'=>'color_bg_card',  'label'=>'خلفية الكروت',          'desc'=>'why-donate-card وكروت التبرع'],
-        ];
-        @endphp
-        <div class="space-y-3">
-        @foreach($bgColors as $c)
+        ] as $c)
         <div class="flex items-center gap-4 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
             <input type="color" wire:model="data.{{ $c['key'] }}" class="w-14 h-10 rounded border cursor-pointer flex-shrink-0">
             <div class="flex-1">
@@ -103,19 +154,26 @@
                 class="fi-input w-32 rounded-lg border border-gray-300 dark:border-gray-600 px-2 py-1 text-sm bg-white dark:bg-gray-800 font-mono">
         </div>
         @endforeach
-        </div>
-    </x-filament::section>
+    </div>
+</div>
 
-    <x-filament::section heading="⚠️ ألوان خاصة">
-        @php
-        $specialColors = [
+{{-- =================== ألوان خاصة =================== --}}
+<div x-data="{ open: false }" class="rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+    <button type="button" @click="open = !open"
+        class="w-full flex items-center justify-between px-5 py-4 bg-white dark:bg-gray-800 hover:bg-gray-50 transition-colors">
+        <span class="font-semibold text-base">⚠️ ألوان خاصة</span>
+        <svg :class="open ? 'rotate-180' : ''"
+            class="w-5 h-5 text-gray-400 transition-transform duration-200"
+            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+        </svg>
+    </button>
+    <div x-show="open" x-transition class="px-5 pb-5 pt-3 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700 space-y-3">
+        @foreach([
             ['key'=>'color_warning',     'label'=>'لون التحذير',          'desc'=>'برتقالي — رسائل التحذير'],
             ['key'=>'color_danger',      'label'=>'لون الخطر',            'desc'=>'أحمر — + وإشارات الخطر'],
             ['key'=>'color_step_active', 'label'=>'لون الخطوة النشطة',    'desc'=>'دائرة رقم الخطوة المحددة'],
-        ];
-        @endphp
-        <div class="space-y-3">
-        @foreach($specialColors as $c)
+        ] as $c)
         <div class="flex items-center gap-4 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
             <input type="color" wire:model="data.{{ $c['key'] }}" class="w-14 h-10 rounded border cursor-pointer flex-shrink-0">
             <div class="flex-1">
@@ -126,10 +184,21 @@
                 class="fi-input w-32 rounded-lg border border-gray-300 dark:border-gray-600 px-2 py-1 text-sm bg-white dark:bg-gray-800 font-mono">
         </div>
         @endforeach
-        </div>
-    </x-filament::section>
+    </div>
+</div>
 
-    <x-filament::section heading="📌 محتوى الفوتر">
+{{-- =================== الفوتر =================== --}}
+<div x-data="{ open: false }" class="rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+    <button type="button" @click="open = !open"
+        class="w-full flex items-center justify-between px-5 py-4 bg-white dark:bg-gray-800 hover:bg-gray-50 transition-colors">
+        <span class="font-semibold text-base">📌 محتوى الفوتر</span>
+        <svg :class="open ? 'rotate-180' : ''"
+            class="w-5 h-5 text-gray-400 transition-transform duration-200"
+            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+        </svg>
+    </button>
+    <div x-show="open" x-transition class="px-5 pb-5 pt-3 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
                 <label class="block text-sm font-medium mb-1">وصف الفوتر (عربي)</label>
@@ -152,9 +221,21 @@
                     class="fi-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-800">
             </div>
         </div>
-    </x-filament::section>
+    </div>
+</div>
 
-    <x-filament::section heading="📞 معلومات التواصل">
+{{-- =================== التواصل =================== --}}
+<div x-data="{ open: false }" class="rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+    <button type="button" @click="open = !open"
+        class="w-full flex items-center justify-between px-5 py-4 bg-white dark:bg-gray-800 hover:bg-gray-50 transition-colors">
+        <span class="font-semibold text-base">📞 معلومات التواصل</span>
+        <svg :class="open ? 'rotate-180' : ''"
+            class="w-5 h-5 text-gray-400 transition-transform duration-200"
+            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+        </svg>
+    </button>
+    <div x-show="open" x-transition class="px-5 pb-5 pt-3 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
                 <label class="block text-sm font-medium mb-1">رقم الهاتف</label>
@@ -173,9 +254,21 @@
                 <p class="text-xs text-gray-400 mt-1">بدون + مثال: 905398863777</p>
             </div>
         </div>
-    </x-filament::section>
+    </div>
+</div>
 
-    <x-filament::section heading="🔐 حساب المدير">
+{{-- =================== حساب المدير =================== --}}
+<div x-data="{ open: false }" class="rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+    <button type="button" @click="open = !open"
+        class="w-full flex items-center justify-between px-5 py-4 bg-white dark:bg-gray-800 hover:bg-gray-50 transition-colors">
+        <span class="font-semibold text-base">🔐 حساب المدير</span>
+        <svg :class="open ? 'rotate-180' : ''"
+            class="w-5 h-5 text-gray-400 transition-transform duration-200"
+            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+        </svg>
+    </button>
+    <div x-show="open" x-transition class="px-5 pb-5 pt-3 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
                 <label class="block text-sm font-medium mb-1">اسم المستخدم</label>
@@ -193,9 +286,11 @@
                     class="fi-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-800">
             </div>
         </div>
-    </x-filament::section>
-
+    </div>
 </div>
+
+</div>{{-- end space-y-3 --}}
+
 <div class="mt-6 flex justify-end">
     <x-filament::button type="submit" size="lg" color="success">
         💾 حفظ كل الإعدادات
