@@ -124,9 +124,10 @@
                     <img src="{{ $cbImg }}" class="img-fluid rounded-3" alt="campaign">
                 </div>
                 <div class="col-md-7 order-1 order-lg-2 ps-lg-5">
-                    <h2 class="section-title mt-4">{{ $cbTitle }}</h2>
-                    <h6 class="main-color mt-2 mb-3" style="font-size:15px;font-weight:600">{{ $cbSubtitle }}</h6>
-                    <p class="color-67" style="font-size:14px;line-height:1.9">{{ $cbDesc }}</p>
+                    {{-- في العربي text-start = يمين --}}
+                    <h2 class="section-title mt-4 text-start">{{ $cbTitle }}</h2>
+                    <h6 class="main-color mt-2 mb-3 text-start" style="font-size:15px;font-weight:600">{{ $cbSubtitle }}</h6>
+                    <p class="color-67 text-start" style="font-size:14px;line-height:1.9">{{ $cbDesc }}</p>
                     <form action="#" class="mt-4">
                         <div class="row">
                             <div class="col-9"><input type="text" name="amount" class="form-input gray w-100" placeholder="{{ $locale==='ar'?'ادخل المبلغ':'Enter amount' }}"></div>
@@ -197,7 +198,8 @@
 @endphp
 <section class="main-section why-donate">
     <div class="container">
-        <div class="header">
+        {{-- الهيدر: محاذاة يمين بدل سنتر --}}
+        <div class="header text-end" dir="rtl">
             <h6>{{ $locale==='ar'?'لماذا تتبرع لنا؟':'Why donate to us?' }}</h6>
             <h2 class="section-title">{{ $locale==='ar'?'لأننا نهتم بالحالات الأكثر احتياجًا.':'Because we care about those in greatest need.' }}</h2>
         </div>
@@ -379,7 +381,7 @@
     $defaultPartners = [
         ['name'=>($locale==='ar'?'هيئة الزكاة الفلسطينية':'Palestinian Zakat Authority'), 'icon'=>'fa-hand-holding-dollar','color'=>'#e8f4fd'],
         ['name'=>($locale==='ar'?'معهد الأمل للأيتام':'Al-Amal Institute for Orphans'),  'icon'=>'fa-children',           'color'=>'#edf7ee'],
-        ['name'=>($locale==='ar'?'وزارة التنمية الإجتماعية':'Ministry of Social Development'),'icon'=>'fa-building-columns',   'color'=>'#fdf3e7'],
+        ['name'=>($locale==='ar'?'وزارة التنمية الاجتماعية':'Ministry of Social Development'),'icon'=>'fa-building-columns',   'color'=>'#fdf3e7'],
     ];
     if (empty($partners)) $partners = $defaultPartners;
 @endphp
@@ -482,7 +484,7 @@
         <div class="donate overflow-hidden">
             <div class="content">
                 <h2 class="main-title text-white mb-4">{{ $locale==='ar'?'تبرّع الآن — أنقذ حياة':'Donate Now — Save Lives' }}</h2>
-                <p>{{ $locale==='ar'?'تبرّعك، مهما كان صغيراً، يصنع تأثيرًا دائمًا.':'Your contribution, no matter how small, makes a lasting impact.' }}</p>
+                <p>{{ $locale==='ar'?'تبرّعك، مهما كان صغيرًا، يصنع تأثيرًا دائمًا.':'Your contribution, no matter how small, makes a lasting impact.' }}</p>
                 <div class="mt-4 holder">
                     <input type="text" name="amount" class="form-input" placeholder="{{ $locale==='ar'?'ادخل المبلغ':'Enter amount' }}">
                     <button type="button" class="btn-donate">{{ $locale==='ar'?'تبرع':'Donate' }}</button>
