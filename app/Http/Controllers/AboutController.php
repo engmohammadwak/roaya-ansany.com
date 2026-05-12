@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\ApiService;
+use App\Models\AboutPage;
+use App\Models\AboutWorkField;
 
 class AboutController extends Controller
 {
-    public function index(ApiService $api)
+    public function index()
     {
-        $data = $api->getAboutData();
-
-        return view('pages.about', compact('data'));
+        $about = AboutPage::first();
+        $workFields = AboutWorkField::orderBy('sort_order')->get();
+        return view('pages.about', compact('about', 'workFields'));
     }
 }

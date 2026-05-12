@@ -1,177 +1,235 @@
 @extends('layouts.app')
-@php $locale = app()->getLocale(); @endphp
-@section('title', ($locale==='ar'?'من نحن':'About Us') . ' | مؤسسة رؤيا الإنسانية')
-@section('description', $locale==='ar'?'تعرّف على مؤسسة رؤيا الإنسانية، رسالتنا، رؤيتنا، وأهدافنا الإنسانية.':'Learn about Roaya Insanya Foundation, our mission, vision and goals.')
+@php $locale = app()->getLocale(); $isAr = $locale === 'ar'; @endphp
+@section('title', ($isAr ? 'من نحن' : 'About Us') . ' | مؤسسة رؤيا الإنسانية')
+
+@push('styles')
+<style>
+.about-hero {
+    background: linear-gradient(135deg, #1a7a4a 0%, #2ecc71 100%);
+    padding: 100px 0 60px;
+    color: #fff;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+.about-hero h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; }
+.about-hero p  { font-size: 1.15rem; opacity: .9; max-width: 650px; margin: 0 auto; }
+
+.stats-section { background: #f8fffe; padding: 50px 0; }
+.stat-card { text-align: center; padding: 30px 20px; }
+.stat-card .stat-number { font-size: 2.5rem; font-weight: 800; color: #1a7a4a; }
+.stat-card .stat-label  { color: #555; font-size: .95rem; margin-top: 5px; }
+
+.mvg-section { padding: 60px 0; }
+.mvg-card {
+    border-radius: 16px;
+    padding: 35px 30px;
+    height: 100%;
+    border-top: 4px solid;
+    box-shadow: 0 4px 20px rgba(0,0,0,.06);
+    transition: transform .3s;
+}
+.mvg-card:hover { transform: translateY(-4px); }
+.mvg-card.mission { border-color: #1a7a4a; }
+.mvg-card.vision  { border-color: #f39c12; }
+.mvg-card.goal    { border-color: #3498db; }
+.mvg-card .mvg-icon { font-size: 2.5rem; margin-bottom: 15px; }
+.mvg-card h3 { font-size: 1.3rem; font-weight: 700; margin-bottom: 12px; color: #222; }
+.mvg-card p  { color: #555; line-height: 1.8; }
+
+.about-content { padding: 60px 0; background: #fff; }
+.about-content img { border-radius: 20px; width: 100%; object-fit: cover; max-height: 420px; box-shadow: 0 8px 30px rgba(0,0,0,.1); }
+.about-content .about-text { font-size: 1.05rem; line-height: 2; color: #444; }
+
+.work-fields { padding: 60px 0; background: #f8fffe; }
+.work-fields .section-title { text-align: center; font-size: 1.8rem; font-weight: 700; color: #1a7a4a; margin-bottom: 40px; }
+.field-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 30px 25px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,.06);
+    transition: transform .3s, box-shadow .3s;
+    height: 100%;
+}
+.field-card:hover { transform: translateY(-5px); box-shadow: 0 8px 30px rgba(26,122,74,.15); }
+.field-card .field-icon { font-size: 2.8rem; margin-bottom: 15px; }
+.field-card h4 { font-weight: 700; color: #222; margin-bottom: 10px; }
+.field-card p  { color: #666; font-size: .9rem; line-height: 1.7; }
+
+.about-cta { background: linear-gradient(135deg, #1a7a4a, #27ae60); padding: 60px 0; text-align: center; color: #fff; }
+.about-cta h2 { font-size: 2rem; font-weight: 700; margin-bottom: 15px; }
+.about-cta p  { opacity: .9; margin-bottom: 30px; }
+.btn-cta {
+    background: #fff;
+    color: #1a7a4a;
+    padding: 14px 40px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: all .3s;
+    display: inline-block;
+}
+.btn-cta:hover { background: #f0fff4; color: #1a7a4a; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.2); }
+
+.breadcrumb-section { background: #f0faf5; padding: 12px 0; border-bottom: 1px solid #d4edda; }
+.breadcrumb-section a { color: #1a7a4a; text-decoration: none; }
+.breadcrumb-section span { color: #888; margin: 0 8px; }
+</style>
+@endpush
 
 @section('content')
 
-{{-- Page Hero --}}
-<section class="page-hero-section">
+{{-- Breadcrumb --}}
+<div class="breadcrumb-section">
     <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-8">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ url($locale) }}">{{ $locale==='ar'?'الرئيسية':'Home' }}</a></li>
-                        <li class="breadcrumb-item active">{{ $locale==='ar'?'من نحن':'About Us' }}</li>
-                    </ol>
-                </nav>
-                <h1 class="section-title">{{ $locale==='ar'?'من نحن':'About Us' }}</h1>
-                <p class="muted-color mt-3">{{ $locale==='ar'?'مؤسسة أهلية غير ربحية تعمل على نشر الخير وتقديم العون للمحتاجين.':'A non-profit foundation working to spread goodness and support those in need.' }}</p>
-            </div>
-        </div>
+        <small>
+            <a href="{{ url($locale.'/') }}">{{ $isAr ? 'الرئيسية' : 'Home' }}</a>
+            <span>›</span>
+            <span class="text-muted">{{ $isAr ? 'من نحن' : 'About Us' }}</span>
+        </small>
     </div>
+</div>
+
+{{-- Hero --}}
+<section class="about-hero">
+    @if($about?->hero_image)
+    <div style="position:absolute;inset:0;z-index:0;">
+        <img src="{{ Storage::url($about->hero_image) }}" alt="" style="width:100%;height:100%;object-fit:cover;opacity:.25;">
+    </div>
+    <div style="position:relative;z-index:1;">
+    @endif
+    <div class="container">
+        <h1>{{ $isAr ? ($about?->hero_title_ar ?? 'من نحن') : ($about?->hero_title_en ?? 'About Us') }}</h1>
+        @if($isAr ? $about?->hero_subtitle_ar : $about?->hero_subtitle_en)
+            <p>{{ $isAr ? $about->hero_subtitle_ar : $about->hero_subtitle_en }}</p>
+        @endif
+    </div>
+    @if($about?->hero_image) </div> @endif
 </section>
 
-{{-- About Intro --}}
-<section class="main-section">
+{{-- Stats --}}
+@if($about)
+<section class="stats-section">
     <div class="container">
-        <div class="row align-items-center g-5">
-            <div class="col-lg-6">
-                <h6 class="main-color">{{ $locale==='ar'?'تعرّف علينا':'Who We Are' }}</h6>
-                <h2 class="section-title mb-4">{{ $locale==='ar'?'مؤسسة رؤيا الإنسانية':'Roaya Insanya Foundation' }}</h2>
-                <p class="muted-color" style="line-height:2">
-                    {{ $locale==='ar'
-                        ? 'مؤسسة رؤيا الإنسانية هي مؤسسة أهلية غير ربحية تعمل في إطار القوانين التركية، وتُعنى بتقديم خدمات إنسانية وإغاثية تستهدف الفئات الأكثر هشاشة في مناطق النزاع والكوارث.'
-                        : 'Roaya Insanya is a non-profit organization operating under Turkish law, providing humanitarian and relief services targeting the most vulnerable groups in conflict and disaster zones.'
-                    }}
-                </p>
-                <p class="muted-color" style="line-height:2">
-                    {{ $locale==='ar'
-                        ? 'نسعى إلى أن يكون كل تبرع أثرًا حقيقيًا يصل مباشرةً إلى المحتاجين بكل شفافية ومسؤولية.'
-                        : 'We strive for every donation to create a real impact, reaching those in need with full transparency and responsibility.'
-                    }}
-                </p>
-                <div class="row mt-4 g-3">
-                    <div class="col-6">
-                        <div class="about-stat-card">
-                            <div class="about-stat-num main-color">+50,000</div>
-                            <div class="about-stat-label">{{ $locale==='ar'?'مستفيد':'Beneficiaries' }}</div>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="about-stat-card">
-                            <div class="about-stat-num main-color">+200</div>
-                            <div class="about-stat-label">{{ $locale==='ar'?'مشروع منجز':'Completed Projects' }}</div>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="about-stat-card">
-                            <div class="about-stat-num main-color">+10</div>
-                            <div class="about-stat-label">{{ $locale==='ar'?'دولة نعمل بها':'Countries' }}</div>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="about-stat-card">
-                            <div class="about-stat-num main-color">+5</div>
-                            <div class="about-stat-label">{{ $locale==='ar'?'سنوات خبرة':'Years of Experience' }}</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <img src="https://roaya-ansany.com/storage/uploads/pages/dWfpjiaOmZUcA0BC2wvyPZotctgE6L3TwskmdcsO.jpg"
-                     class="img-fluid rounded-4" alt="about roaya" style="box-shadow:0 10px 40px rgba(90,158,47,0.2)">
-            </div>
-        </div>
-    </div>
-</section>
-
-{{-- Mission & Vision --}}
-<section class="main-section" style="background:#f8fdf4">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h6 class="main-color">{{ $locale==='ar'?'هويتنا':'Our Identity' }}</h6>
-            <h2 class="section-title">{{ $locale==='ar'?'رسالتنا ورؤيتنا وهدفنا':'Mission, Vision & Goal' }}</h2>
-        </div>
-        <div class="row g-4">
-            <div class="col-lg-4">
-                <div class="mv-card">
-                    <div class="mv-icon"><i class="fa-solid fa-bullseye fa-2x main-color"></i></div>
-                    <h4 class="mt-3 mb-2">{{ $locale==='ar'?'هدفنا':'Our Goal' }}</h4>
-                    <p class="muted-color">{{ $locale==='ar'?'الوصول إلى الفئات المستحقة وذوي الدخل المحدود لتحقيق الاكتفاء الذاتي وبناء مصادر دخل مستقلة.':'Reaching deserving groups and low-income families to achieve self-sufficiency and build independent income sources.' }}</p>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="mv-card featured">
-                    <div class="mv-icon"><i class="fa-solid fa-envelope-open-text fa-2x"></i></div>
-                    <h4 class="mt-3 mb-2">{{ $locale==='ar'?'رسالتنا':'Our Mission' }}</h4>
-                    <p>{{ $locale==='ar'?'تقديم المساعدة الإنسانية والإغاثية للفئات الأكثر هشاشة في مناطق النزاع والأزمات الإنسانية بكل شفافية ومسؤولية.':'Providing humanitarian and relief assistance to the most vulnerable groups in conflict and crisis areas with full transparency and accountability.' }}</p>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="mv-card">
-                    <div class="mv-icon"><i class="fa-solid fa-eye fa-2x main-color"></i></div>
-                    <h4 class="mt-3 mb-2">{{ $locale==='ar'?'رؤيتنا':'Our Vision' }}</h4>
-                    <p class="muted-color">{{ $locale==='ar'?'التنمية والريادة في العمل الإنساني وأن نكون المرجع الأول للمتبرعين الراغبين في إحداث فرق حقيقي.':'Development and leadership in humanitarian work, becoming the primary reference for donors seeking to make a real difference.' }}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-{{-- Fields of Work --}}
-<section class="main-section">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h6 class="main-color">{{ $locale==='ar'?'مجالات العمل':'Fields of Work' }}</h6>
-            <h2 class="section-title">{{ $locale==='ar'?'المجالات والمشاريع المدعومة بالتبرعات':'Donation-Supported Fields & Projects' }}</h2>
-        </div>
-        <div class="row g-4">
+        <div class="row">
             @foreach([
-                ['icon'=>'fa-house-crack',    'title'=>($locale==='ar'?'إعادة الإعمار':'Reconstruction'),            'desc'=>($locale==='ar'?'بناء وترميم المنازل والمرافق المدمرة.':'Building and restoring destroyed homes and facilities.')],
-                ['icon'=>'fa-bowl-food',       'title'=>($locale==='ar'?'الأمن الغذائي':'Food Security'),              'desc'=>($locale==='ar'?'توزيع طرود غذائية ووجبات ساخنة للأسر المحتاجة.':'Distributing food packages and hot meals to needy families.')],
-                ['icon'=>'fa-droplet',         'title'=>($locale==='ar'?'مياه وصرف صحي':'Water & Sanitation'),        'desc'=>($locale==='ar'?'حفر الآبار وتوفير المياه النظيفة.':'Well drilling and providing clean water.')],
-                ['icon'=>'fa-child-reaching',  'title'=>($locale==='ar'?'كفالة الأيتام':'Orphan Sponsorship'),         'desc'=>($locale==='ar'?'رعاية الأيتام وكفالتهم تعليميًا وصحيًا.':'Caring for orphans educationally and medically.')],
-                ['icon'=>'fa-book-open',       'title'=>($locale==='ar'?'التعليم':'Education'),                       'desc'=>($locale==='ar'?'دعم المدارس وبناء الفصول الدراسية.':'Supporting schools and building classrooms.')],
-                ['icon'=>'fa-heart-pulse',     'title'=>($locale==='ar'?'الصحة الطارئة':'Emergency Health'),          'desc'=>($locale==='ar'?'توفير الأدوية والرعاية الصحية العاجلة.':'Providing medicines and urgent healthcare.')],
-            ] as $field)
-            <div class="col-lg-4 col-md-6">
+                [$about->stat1_number, $isAr ? $about->stat1_label_ar : $about->stat1_label_en],
+                [$about->stat2_number, $isAr ? $about->stat2_label_ar : $about->stat2_label_en],
+                [$about->stat3_number, $isAr ? $about->stat3_label_ar : $about->stat3_label_en],
+                [$about->stat4_number, $isAr ? $about->stat4_label_ar : $about->stat4_label_en],
+            ] as [$num, $label])
+                @if($num)
+                <div class="col-6 col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-number">{{ $num }}</div>
+                        <div class="stat-label">{{ $label }}</div>
+                    </div>
+                </div>
+                @endif
+            @endforeach
+        </div>
+    </div>
+</section>
+@endif
+
+{{-- Mission / Vision / Goal --}}
+@if($about && ($about->mission_ar || $about->vision_ar || $about->goal_ar))
+<section class="mvg-section">
+    <div class="container">
+        <div class="row g-4">
+            @if($isAr ? $about->mission_ar : $about->mission_en)
+            <div class="col-md-4">
+                <div class="mvg-card mission">
+                    <div class="mvg-icon">🎯</div>
+                    <h3>{{ $isAr ? 'رسالتنا' : 'Our Mission' }}</h3>
+                    <p>{{ $isAr ? $about->mission_ar : $about->mission_en }}</p>
+                </div>
+            </div>
+            @endif
+            @if($isAr ? $about->vision_ar : $about->vision_en)
+            <div class="col-md-4">
+                <div class="mvg-card vision">
+                    <div class="mvg-icon">🌟</div>
+                    <h3>{{ $isAr ? 'رؤيتنا' : 'Our Vision' }}</h3>
+                    <p>{{ $isAr ? $about->vision_ar : $about->vision_en }}</p>
+                </div>
+            </div>
+            @endif
+            @if($isAr ? $about->goal_ar : $about->goal_en)
+            <div class="col-md-4">
+                <div class="mvg-card goal">
+                    <div class="mvg-icon">💡</div>
+                    <h3>{{ $isAr ? 'هدفنا' : 'Our Goal' }}</h3>
+                    <p>{{ $isAr ? $about->goal_ar : $about->goal_en }}</p>
+                </div>
+            </div>
+            @endif
+        </div>
+    </div>
+</section>
+@endif
+
+{{-- About Text + Image --}}
+@if($about && ($about->about_text_ar || $about->about_image))
+<section class="about-content">
+    <div class="container">
+        <div class="row align-items-center g-5 {{ $isAr ? 'flex-row-reverse' : '' }}">
+            @if($about->about_image)
+            <div class="col-lg-5">
+                <img src="{{ Storage::url($about->about_image) }}" alt="{{ $isAr ? 'من نحن' : 'About Us' }}">
+            </div>
+            @endif
+            <div class="col-lg-{{ $about->about_image ? '7' : '12' }}">
+                <div class="about-text">
+                    {!! $isAr ? $about->about_text_ar : $about->about_text_en !!}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@endif
+
+{{-- Work Fields --}}
+@if($workFields->count())
+<section class="work-fields">
+    <div class="container">
+        <h2 class="section-title">{{ $isAr ? 'مجالات عملنا' : 'Our Work Areas' }}</h2>
+        <div class="row g-4">
+            @foreach($workFields as $field)
+            <div class="col-6 col-md-4 col-lg-3">
                 <div class="field-card">
-                    <div class="field-icon"><i class="fa-solid {{ $field['icon'] }} fa-xl main-color"></i></div>
-                    <h5 class="mt-3 mb-2">{{ $field['title'] }}</h5>
-                    <p class="muted-color mb-0">{{ $field['desc'] }}</p>
+                    @if($field->icon)
+                        <div class="field-icon">{{ $field->icon }}</div>
+                    @endif
+                    <h4>{{ $isAr ? $field->title_ar : $field->title_en }}</h4>
+                    @if($isAr ? $field->description_ar : $field->description_en)
+                        <p>{{ $isAr ? $field->description_ar : $field->description_en }}</p>
+                    @endif
                 </div>
             </div>
             @endforeach
         </div>
     </div>
 </section>
+@endif
 
 {{-- CTA --}}
-<section class="main-section">
+<section class="about-cta">
     <div class="container">
-        <div class="donate overflow-hidden">
-            <div class="content">
-                <h2 class="main-title text-white mb-4">{{ $locale==='ar'?'انضم إلينا وكن جزءًا من رحلة العطاء':'Join Us & Be Part of the Giving Journey' }}</h2>
-                <p>{{ $locale==='ar'?'تبرعك مهما صغر يصنع أثرًا لا يُنسى.':'Your donation, no matter how small, creates an unforgettable impact.' }}</p>
-                <div class="mt-4 holder">
-                    <input type="text" name="amount" class="form-input" placeholder="{{ $locale==='ar'?'ادخل المبلغ':'Enter amount' }}">
-                    <button type="button" class="btn-donate">{{ $locale==='ar'?'تبرع الآن':'Donate Now' }}</button>
-                </div>
-            </div>
-            <img src="https://roaya-ansany.com/website/images/donate-child.svg" class="d-none d-lg-block" alt="donate">
-        </div>
+        <h2>{{ $isAr ? 'انضم إلينا اليوم' : 'Join Us Today' }}</h2>
+        <p>{{ $isAr ? 'ساهم معنا في صنع فارق حقيقي في حياة المحتاجين' : 'Help us make a real difference in the lives of those in need' }}</p>
+        @if($about?->cta_url)
+        <a href="{{ $about->cta_url }}" class="btn-cta">
+            {{ $isAr ? ($about->cta_text_ar ?? 'تبرع الآن') : ($about->cta_text_en ?? 'Donate Now') }}
+        </a>
+        @else
+        <a href="{{ url($locale.'/campaigns') }}" class="btn-cta">
+            {{ $isAr ? 'تبرع الآن' : 'Donate Now' }}
+        </a>
+        @endif
     </div>
 </section>
 
-@push('styles')
-<style>
-.page-hero-section { background: linear-gradient(135deg,#f8fdf4,#eef7e6); padding: 60px 0 40px; }
-.page-hero-section .breadcrumb-item a { color: #5a9e2f; text-decoration: none; }
-.about-stat-card { background:#f8fdf4; border-radius:12px; padding:20px; text-align:center; border:1px solid rgba(90,158,47,0.15); }
-.about-stat-num { font-size:1.8rem; font-weight:800; }
-.about-stat-label { font-size:13px; color:#888; margin-top:4px; }
-.mv-card { background:#f8fdf4; border-radius:20px; padding:35px 25px; text-align:center; height:100%; border:2px solid transparent; transition:all 0.3s; }
-.mv-card:hover { border-color:#5a9e2f; transform:translateY(-4px); }
-.mv-card.featured { background:linear-gradient(135deg,#5a9e2f,#7bc244); color:white; }
-.mv-card.featured p, .mv-card.featured h4 { color:white; }
-.mv-icon { width:70px; height:70px; border-radius:50%; background:rgba(90,158,47,0.1); display:flex; align-items:center; justify-content:center; margin:0 auto; }
-.mv-card.featured .mv-icon { background:rgba(255,255,255,0.2); }
-.mv-card.featured .mv-icon i { color:white; }
-.field-card { background:white; border:1px solid #e8f4d9; border-radius:16px; padding:30px 25px; height:100%; transition:all 0.3s; }
-.field-card:hover { border-color:#5a9e2f; box-shadow:0 8px 24px rgba(90,158,47,0.15); transform:translateY(-3px); }
-.field-icon { width:56px; height:56px; background:#f0f9e8; border-radius:12px; display:flex; align-items:center; justify-content:center; }
-</style>
-@endpush
 @endsection
