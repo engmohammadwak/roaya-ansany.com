@@ -64,48 +64,50 @@
 
         {{-- sticky toggle --}}
         <div
-            x-data="{ val: @js($this->data['navbar_sticky_only'] ?? '0') }"
+            x-data="{ val: @js(($this->data['navbar_sticky_only'] ?? '0') === '1') }"
             x-init="$watch('val', v => @this.set('data.navbar_sticky_only', v ? '1' : '0'))"
             class="flex items-center justify-between p-3 mb-4 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700">
             <div>
                 <div class="font-medium text-sm">🔒 النافبار Sticky فقط (تظهر عند السكرول)</div>
                 <div class="text-xs text-gray-400 mt-0.5">لو مفعّل — النافبار مخفية في أعلى الصفحة وتظهر بس لما يسكرول</div>
             </div>
+            {{-- ✅ لا class ثابت لللون — كله عبر :class --}}
             <button type="button" @click="val = !val"
-                :class="val == '1' || val === true ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600'"
-                class="relative ms-4 inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 focus:outline-none flex-shrink-0">
+                :class="val ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600'"
+                class="relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full transition-colors duration-200 focus:outline-none">
                 <span
-                    :class="val == '1' || val === true ? 'translate-x-5' : 'translate-x-1'"
+                    :class="val ? 'translate-x-5' : 'translate-x-1'"
                     class="inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform duration-200">
                 </span>
             </button>
-            <input type="hidden" wire:model="data.navbar_sticky_only" :value="val == '1' || val === true ? '1' : '0'">
+            <input type="hidden" wire:model="data.navbar_sticky_only" :value="val ? '1' : '0'">
         </div>
 
         {{-- روابط on/off --}}
         <div class="space-y-2">
         @foreach([
-            ['key'=>'nav_show_home',      'label'=>'الرئيسية',        'icon'=>'🏠', 'color'=>'green'],
-            ['key'=>'nav_show_about',     'label'=>'من نحن',          'icon'=>'ℹ️', 'color'=>'green'],
-            ['key'=>'nav_show_campaigns', 'label'=>'الحملات',          'icon'=>'📢', 'color'=>'green'],
-            ['key'=>'nav_show_blogs',     'label'=>'المدونة',          'icon'=>'📝', 'color'=>'green'],
-            ['key'=>'nav_show_contact',   'label'=>'تواصل معنا',      'icon'=>'📞', 'color'=>'green'],
-            ['key'=>'nav_show_privacy',   'label'=>'سياسة الخصوصية', 'icon'=>'🔒', 'color'=>'green'],
+            ['key'=>'nav_show_home',      'label'=>'الرئيسية',        'icon'=>'🏠'],
+            ['key'=>'nav_show_about',     'label'=>'من نحن',          'icon'=>'ℹ️'],
+            ['key'=>'nav_show_campaigns', 'label'=>'الحملات',          'icon'=>'📢'],
+            ['key'=>'nav_show_blogs',     'label'=>'المدونة',          'icon'=>'📝'],
+            ['key'=>'nav_show_contact',   'label'=>'تواصل معنا',      'icon'=>'📞'],
+            ['key'=>'nav_show_privacy',   'label'=>'سياسة الخصوصية', 'icon'=>'🔒'],
         ] as $link)
         <div
-            x-data="{ val: @js($this->data[$link['key']] ?? '1') }"
+            x-data="{ val: @js(($this->data[$link['key']] ?? '1') === '1') }"
             x-init="$watch('val', v => @this.set('data.{{ $link['key'] }}', v ? '1' : '0'))"
             class="flex items-center justify-between p-3 rounded-lg border border-gray-200 dark:border-gray-700">
             <div class="font-medium text-sm">{{ $link['icon'] }} {{ $link['label'] }}</div>
+            {{-- ✅ لا class ثابت لللون — كله عبر :class --}}
             <button type="button" @click="val = !val"
-                :class="val == '1' || val === true ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-600'"
-                class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 focus:outline-none flex-shrink-0">
+                :class="val ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-600'"
+                class="relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full transition-colors duration-200 focus:outline-none">
                 <span
-                    :class="val == '1' || val === true ? 'translate-x-5' : 'translate-x-1'"
+                    :class="val ? 'translate-x-5' : 'translate-x-1'"
                     class="inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform duration-200">
                 </span>
             </button>
-            <input type="hidden" wire:model="data.{{ $link['key'] }}" :value="val == '1' || val === true ? '1' : '0'">
+            <input type="hidden" wire:model="data.{{ $link['key'] }}" :value="val ? '1' : '0'">
         </div>
         @endforeach
         </div>
