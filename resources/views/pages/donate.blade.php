@@ -9,6 +9,8 @@
         'USD' => '45.39', 'EUR' => '53.37', 'GBP' => '61.58',
         'CAD' => '33.15', 'OMR' => '118.06', 'AUD' => '32.79', 'TRY' => '1.00'
     ];
+    $campaignId   = request('campaign_id', '');
+    $campaignName = request('campaign_name', '');
 @endphp
 @section('title', ($isAr ? 'تبرع الآن' : 'Donate Now') . ' | ' . config('app.name'))
 
@@ -22,10 +24,38 @@
 .btn-details{background:#0f172a;color:#fff;border-radius:999px;text-align:center;padding:.4rem .75rem;display:inline-block;text-decoration:none}
 .muted{opacity:.85;font-size:.65rem}
 html[dir="rtl"] .num-ltr{direction:ltr;text-align:left;}
+/* Brand logo fix */
+#brandLogo{width:15% !important;height:auto;object-fit:contain;background:transparent;}
+/* Payment Modal */
+.pay-modal-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:9999;align-items:center;justify-content:center;}
+.pay-modal-overlay.show{display:flex;}
+.pay-modal{background:#fff;border-radius:20px;padding:2.5rem 2rem;max-width:420px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(15,23,42,.18);position:relative;}
+.pay-modal .modal-icon{font-size:3.5rem;margin-bottom:1rem;}
+.pay-modal .modal-title{font-size:1.4rem;font-weight:700;margin-bottom:.5rem;}
+.pay-modal .modal-body-text{color:#64748b;font-size:.95rem;margin-bottom:1.5rem;}
+.pay-modal .modal-campaign{background:#f0fdf4;border-radius:10px;padding:.75rem 1rem;color:#166534;font-weight:600;font-size:.9rem;margin-bottom:1.5rem;}
+.pay-modal.fail .modal-campaign{background:#fef2f2;color:#991b1b;}
+.pay-modal .btn-modal-close{border-radius:999px;padding:.55rem 2rem;font-weight:600;}
+.pay-modal .modal-amount{font-size:1.6rem;font-weight:800;color:#0d6efd;margin-bottom:.25rem;}
+.pay-modal.fail .modal-amount{color:#dc2626;}
 </style>
 @endpush
 
 @section('content')
+{{-- ===== Payment Result Modal ===== --}}
+<div class="pay-modal-overlay" id="payModalOverlay">
+  <div class="pay-modal" id="payModal">
+    <div class="modal-icon" id="modalIcon">✅</div>
+    <div class="modal-amount" id="modalAmount"></div>
+    <div class="modal-title" id="modalTitle"></div>
+    <div class="modal-body-text" id="modalBodyText"></div>
+    <div class="modal-campaign" id="modalCampaign" style="display:none"></div>
+    <button class="btn btn-donate-now btn-modal-close w-100" id="modalCloseBtn" onclick="closePayModal()">
+      {{ $isAr ? 'حسناً' : 'OK' }}
+    </button>
+  </div>
+</div>
+
 <section class="donate-section first-container">
   <div class="container">
     <div class="breadcrumbs mt-4 mb-4">
@@ -48,8 +78,11 @@ html[dir="rtl"] .num-ltr{direction:ltr;text-align:left;}
           </div>
           <p class="dark-text-color mt-3">{{ $isAr ? 'اختر مبلغ التبرع الخاص بك' : 'Choose your donation amount' }}</p>
 
-          <form method="POST" action="{{ url($locale.'/donate/payment/3d/form') }}" id="payForm" novalidate>
+          <form id="payForm" novalidate>
             @csrf
+            <input type="hidden" name="campaign_id"   value="{{ $campaignId }}">
+            <input type="hidden" name="campaign_name" value="{{ $campaignName }}">
+            <input type="hidden" name="card_brand"    id="card_brand_input" value="unknown">
 
             <div class="amounts gap-2 d-flex flex-wrap mt-3">
               @foreach($amounts as $a)
@@ -136,7 +169,7 @@ html[dir="rtl"] .num-ltr{direction:ltr;text-align:left;}
               <div class="col-md-12 mb-3">
                 <label class="form-label">{{ $isAr ? 'الوصف' : 'Description' }}</label>
                 <input type="text" class="form-control form-input"
-                  name="description" id="cc-desc" value="">
+                  name="description" id="cc-desc" value="{{ $campaignName }}">
               </div>
             </div>
 
@@ -149,9 +182,12 @@ html[dir="rtl"] .num-ltr{direction:ltr;text-align:left;}
                   {{ $isAr ? 'كاملة' : '' }}
                 </label>
               </div>
-              <input type="hidden" name="recaptcha_token" id="recaptcha_token">
               <button class="btn btn-donate-now px-4 ms-auto" type="submit" id="submitBtn">
-                {{ $isAr ? 'ادفع الآن' : 'Pay Now' }}
+                <span id="submitBtnText">{{ $isAr ? 'ادفع الآن' : 'Pay Now' }}</span>
+                <span id="submitBtnLoader" style="display:none">
+                  <span class="spinner-border spinner-border-sm me-1"></span>
+                  {{ $isAr ? 'جارٍ المعالجة...' : 'Processing...' }}
+                </span>
               </button>
             </div>
           </form>
@@ -168,7 +204,7 @@ html[dir="rtl"] .num-ltr{direction:ltr;text-align:left;}
                   <div class="fw-semibold" style="opacity:.9">{{ $isAr ? 'بطاقة دفع آمنة' : 'Secure Payment Card' }}</div>
                   <div class="small muted">{{ $isAr ? 'رؤيا الإنسانية' : 'Roaya Ansany' }}</div>
                 </div>
-                <img id="brandLogo" style="width:15% !important" alt="brand"
+                <img id="brandLogo" alt="brand"
                   src="{{ asset('website/images/logo.svg') }}">
               </div>
 
@@ -192,6 +228,14 @@ html[dir="rtl"] .num-ltr{direction:ltr;text-align:left;}
               </div>
             </div>
           </div>
+          @if($campaignName)
+          <div class="col-12">
+            <div class="donation-card p-3">
+              <div class="small text-muted mb-1">{{ $isAr ? 'تبرعك لـ' : 'Donating to' }}</div>
+              <div class="fw-bold">{{ $campaignName }}</div>
+            </div>
+          </div>
+          @endif
         </div>
       </div>
 
@@ -205,6 +249,17 @@ html[dir="rtl"] .num-ltr{direction:ltr;text-align:left;}
 <script>
 window.FX_TO_TRY = @json($fxRates);
 window.DEFAULT_CURRENCY = "{{ $currency }}";
+const IS_AR = {{ $isAr ? 'true' : 'false' }};
+const PAYMENT_URL = "{{ url($locale.'/donate/payment/3d/form') }}";
+const CSRF = "{{ csrf_token() }}";
+
+// ── Brand logos (inline SVG data URIs to avoid CORS) ──
+const brandLogos = {
+  visa: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 471"><rect width="750" height="471" rx="40" fill="#1A1F71"/><text x="375" y="300" font-size="200" font-family="Arial" font-weight="bold" fill="white" text-anchor="middle">VISA</text></svg>'),
+  mc:   'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 471"><circle cx="280" cy="235" r="150" fill="#EB001B"/><circle cx="470" cy="235" r="150" fill="#F79E1B"/><path d="M375 120a150 150 0 0 1 0 230 150 150 0 0 1 0-230z" fill="#FF5F00"/></svg>'),
+  amex: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 471"><rect width="750" height="471" rx="40" fill="#2E77BC"/><text x="375" y="310" font-size="160" font-family="Arial" font-weight="bold" fill="white" text-anchor="middle">AMEX</text></svg>'),
+  unknown: '{{ asset("website/images/logo.svg") }}'
+};
 
 function onlyDigits(s){return(s||'').replace(/\D+/g,'');}
 function formatCard(num){num=onlyDigits(num).slice(0,19);return num.replace(/(.{4})/g,'$1 ').trim();}
@@ -226,13 +281,6 @@ function detectBrand(num){
   if(/^3[47]/.test(num))return 'amex';
   return 'unknown';
 }
-const brandLogos={
-  visa:'https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg',
-  mc:'https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg',
-  amex:'https://upload.wikimedia.org/wikipedia/commons/3/30/American_Express_logo.svg',
-  unknown:'{{ asset('website/images/logo.svg') }}'
-};
-
 function updateFxHint(){
   const cur=($('#currency').val()||'TRY').toUpperCase();
   const amt=parseFloat($('#amount-input').val()||'0')||0;
@@ -245,15 +293,17 @@ function updateFxHint(){
   $('#fx-eq-val').text(txt);
 }
 
+// ── Card inputs ──
 $('#cc-number').on('input',function(){
   const f=formatCard(this.value);
   this.value=f;
   $('#pv-number').text(f||'•••• •••• •••• ••••');
   const brand=detectBrand(f);
-  $('#brandLogo').attr('src',brandLogos[brand]||brandLogos.unknown);
+  $('#brandLogo').attr('src',brandLogos[brand]);
+  $('#card_brand_input').val(brand);
 });
 $('#cc-name').on('input',function(){
-  $('#pv-name').text(this.value||'{{ $isAr ? "اسم حامل البطاقة" : "Cardholder Name" }}');
+  $('#pv-name').text(this.value||(IS_AR?'اسم حامل البطاقة':'Cardholder Name'));
 });
 $('#cc-month,#cc-year').on('input',function(){
   const mm=onlyDigits($('#cc-month').val()).slice(0,2);
@@ -284,6 +334,7 @@ $(document).on('click','.donate-now-btn',function(){
   $('#amount-input').val(amt.toFixed(2)).trigger('input').trigger('change');
 });
 
+// ── Validation ──
 function validateForm(){
   let ok=true;
   const amt=parseFloat($('input[name="amount"]').val()||'0');
@@ -308,23 +359,68 @@ function validateForm(){
 }
 $('#payForm input,#payForm select').on('change keyup blur',validateForm);
 
-const RECAPTCHA_SITE_KEY='{{ config("services.recaptcha.site_key","6LeoNGcsAAAAAIqn8NMLUB0l3vyX_-SAu1w1Ki-s") }}';
+// ── Modal helpers ──
+function showPayModal(success, data){
+  const overlay=$('#payModalOverlay');
+  const modal=$('#payModal');
+  modal.removeClass('fail');
+  if(success){
+    $('#modalIcon').text('✅');
+    $('#modalTitle').text(IS_AR?'تم التبرع بنجاح!':'Donation Successful!');
+    $('#modalBodyText').text(IS_AR?'شكراً لك، تبرعك وصل وسيُوظَّف في أفضل المشاريع.':'Thank you! Your donation has been received.');
+    $('#modalAmount').text((data.currency||'')+ ' ' +parseFloat(data.amount||0).toFixed(2));
+    if(data.campaign_name){
+      $('#modalCampaign').text((IS_AR?'لحملة: ':'Campaign: ')+data.campaign_name).show();
+    }else{$('#modalCampaign').hide();}
+  } else {
+    modal.addClass('fail');
+    $('#modalIcon').text('❌');
+    $('#modalTitle').text(IS_AR?'لم يتم الدفع':'Payment Failed');
+    $('#modalBodyText').text(data.message||(IS_AR?'حدث خطأ، يرجى التحقق من بيانات البطاقة والمحاولة مرة أخرى.':'An error occurred. Please check your card details and try again.'));
+    $('#modalAmount').text('');
+    $('#modalCampaign').hide();
+  }
+  overlay.addClass('show');
+}
+function closePayModal(){
+  $('#payModalOverlay').removeClass('show');
+  $('#submitBtn').prop('disabled',false).removeClass('disabled');
+  $('#submitBtnText').show();
+  $('#submitBtnLoader').hide();
+}
+$('#payModalOverlay').on('click',function(e){if(e.target===this)closePayModal();});
+
+// ── AJAX Submit ──
 $('#payForm').on('submit',function(e){
   e.preventDefault();
-  if(!$('#confirmData').is(':checked')){alert('{{ $isAr ? "يرجى الموافقة على سياسات التبرع أولاً" : "Please accept donation policies first" }}');return;}
+  if(!$('#confirmData').is(':checked')){
+    alert(IS_AR?'يرجى الموافقة على سياسات التبرع أولاً':'Please accept donation policies first');
+    return;
+  }
   if(!validateForm())return;
-  $('#submitBtn').prop('disabled',true).addClass('disabled');
-  if(typeof grecaptcha==='undefined'){alert('reCAPTCHA not loaded');$('#submitBtn').prop('disabled',false).removeClass('disabled');return;}
-  grecaptcha.ready(function(){
-    grecaptcha.execute(RECAPTCHA_SITE_KEY,{action:'donate'})
-      .then(function(token){
-        document.getElementById('recaptcha_token').value=token;
-        document.getElementById('payForm').submit();
-      })
-      .catch(function(){
-        $('#submitBtn').prop('disabled',false).removeClass('disabled');
-        alert('reCAPTCHA failed');
-      });
+
+  $('#submitBtn').prop('disabled',true);
+  $('#submitBtnText').hide();
+  $('#submitBtnLoader').show();
+
+  const formData = new FormData(this);
+  formData.append('_token', CSRF);
+
+  $.ajax({
+    url: PAYMENT_URL,
+    method: 'POST',
+    data: formData,
+    processData: false,
+    contentType: false,
+    headers: {'X-Requested-With':'XMLHttpRequest'},
+    success: function(res){
+      showPayModal(res.success===true, res);
+    },
+    error: function(xhr){
+      let msg = IS_AR?'حدث خطأ في الاتصال':'Connection error';
+      try{ msg = xhr.responseJSON.message || msg; }catch(e){}
+      showPayModal(false, {message: msg});
+    }
   });
 });
 
