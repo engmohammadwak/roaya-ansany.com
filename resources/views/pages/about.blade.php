@@ -1,81 +1,189 @@
 @extends('layouts.app')
-@php $locale = app()->getLocale(); $isAr = $locale === 'ar'; @endphp
-@section('title', ($isAr ? 'من نحن' : 'About Us') . ' | مؤسسة رؤيا الإنسانية')
+@php
+    $locale = app()->getLocale();
+    $isAr   = $locale === 'ar';
+@endphp
+@section('title', ($isAr ? 'من نحن' : 'About Us') . ' | ' . config('app.name'))
 
 @push('styles')
 <style>
+/* ===== HERO ===== */
 .about-hero {
-    background: linear-gradient(135deg, #1a7a4a 0%, #2ecc71 100%);
-    padding: 100px 0 60px;
-    color: #fff;
-    text-align: center;
-    position: relative;
+    background: linear-gradient(135deg, #1a7a4a 0%, #0d4d2e 100%);
+    padding: 80px 0 0;
     overflow: hidden;
+    position: relative;
 }
-.about-hero h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; }
-.about-hero p  { font-size: 1.15rem; opacity: .9; max-width: 650px; margin: 0 auto; }
-
-.stats-section { background: #f8fffe; padding: 50px 0; }
-.stat-card { text-align: center; padding: 30px 20px; }
-.stat-card .stat-number { font-size: 2.5rem; font-weight: 800; color: #1a7a4a; }
-.stat-card .stat-label  { color: #555; font-size: .95rem; margin-top: 5px; }
-
-.mvg-section { padding: 60px 0; }
-.mvg-card {
-    border-radius: 16px;
-    padding: 35px 30px;
-    height: 100%;
-    border-top: 4px solid;
-    box-shadow: 0 4px 20px rgba(0,0,0,.06);
-    transition: transform .3s;
+.about-hero::before {
+    content: '';
+    position: absolute;
+    width: 500px; height: 500px;
+    background: rgba(255,255,255,.05);
+    border-radius: 50%;
+    top: -150px; left: -100px;
 }
-.mvg-card:hover { transform: translateY(-4px); }
-.mvg-card.mission { border-color: #1a7a4a; }
-.mvg-card.vision  { border-color: #f39c12; }
-.mvg-card.goal    { border-color: #3498db; }
-.mvg-card .mvg-icon { font-size: 2.5rem; margin-bottom: 15px; }
-.mvg-card h3 { font-size: 1.3rem; font-weight: 700; margin-bottom: 12px; color: #222; }
-.mvg-card p  { color: #555; line-height: 1.8; }
-
-.about-content { padding: 60px 0; background: #fff; }
-.about-content img { border-radius: 20px; width: 100%; object-fit: cover; max-height: 420px; box-shadow: 0 8px 30px rgba(0,0,0,.1); }
-.about-content .about-text { font-size: 1.05rem; line-height: 2; color: #444; }
-
-.work-fields { padding: 60px 0; background: #f8fffe; }
-.work-fields .section-title { text-align: center; font-size: 1.8rem; font-weight: 700; color: #1a7a4a; margin-bottom: 40px; }
-.field-card {
-    background: #fff;
-    border-radius: 16px;
-    padding: 30px 25px;
-    text-align: center;
-    box-shadow: 0 4px 20px rgba(0,0,0,.06);
-    transition: transform .3s, box-shadow .3s;
-    height: 100%;
-}
-.field-card:hover { transform: translateY(-5px); box-shadow: 0 8px 30px rgba(26,122,74,.15); }
-.field-card .field-icon { font-size: 2.8rem; margin-bottom: 15px; }
-.field-card h4 { font-weight: 700; color: #222; margin-bottom: 10px; }
-.field-card p  { color: #666; font-size: .9rem; line-height: 1.7; }
-
-.about-cta { background: linear-gradient(135deg, #1a7a4a, #27ae60); padding: 60px 0; text-align: center; color: #fff; }
-.about-cta h2 { font-size: 2rem; font-weight: 700; margin-bottom: 15px; }
-.about-cta p  { opacity: .9; margin-bottom: 30px; }
-.btn-cta {
-    background: #fff;
-    color: #1a7a4a;
-    padding: 14px 40px;
-    border-radius: 50px;
-    font-weight: 700;
-    font-size: 1rem;
-    text-decoration: none;
-    transition: all .3s;
+.about-hero-tag {
     display: inline-block;
+    background: rgba(255,255,255,.15);
+    color: #fff;
+    padding: 6px 18px;
+    border-radius: 50px;
+    font-size: .85rem;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
 }
-.btn-cta:hover { background: #f0fff4; color: #1a7a4a; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.2); }
+.about-hero h1 {
+    color: #fff;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 800;
+    line-height: 1.4;
+    margin-bottom: 20px;
+}
+.about-hero h1 span.accent { color: #7fffb8; }
+.about-hero p.lead-text {
+    color: rgba(255,255,255,.85);
+    font-size: 1.05rem;
+    line-height: 1.9;
+    max-width: 600px;
+    margin-bottom: 40px;
+}
+.about-hero-imgs {
+    position: relative;
+    height: 340px;
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+}
+.about-hero-imgs img {
+    border-radius: 16px 16px 0 0;
+    object-fit: cover;
+    flex: 1;
+}
+.about-hero-imgs img:nth-child(1) { height: 240px; }
+.about-hero-imgs img:nth-child(2) { height: 300px; }
+.about-hero-imgs img:nth-child(3) { height: 200px; }
 
+/* ===== MVG SECTION ===== */
+.mvg-section { padding: 80px 0; background: #f8fffe; }
+.mvg-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 32px;
+    height: 100%;
+    box-shadow: 0 4px 24px rgba(0,0,0,.07);
+    border-top: 4px solid #1a7a4a;
+    transition: transform .3s, box-shadow .3s;
+}
+.mvg-card:hover { transform: translateY(-6px); box-shadow: 0 12px 40px rgba(26,122,74,.15); }
+.mvg-icon {
+    width: 54px; height: 54px;
+    background: linear-gradient(135deg, #1a7a4a, #2ecc71);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 18px;
+    font-size: 1.5rem;
+    color: #fff;
+}
+.mvg-card h3 {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #1a7a4a;
+    margin-bottom: 14px;
+}
+.mvg-card ul { padding: 0; margin: 0; list-style: none; }
+.mvg-card ul li {
+    color: #555;
+    line-height: 1.8;
+    font-size: .95rem;
+    padding: {{ $isAr ? '5px 22px 5px 0' : '5px 0 5px 22px' }};
+    position: relative;
+}
+.mvg-card ul li::before {
+    content: '✓';
+    color: #1a7a4a;
+    font-weight: 700;
+    position: absolute;
+    {{ $isAr ? 'right: 0' : 'left: 0' }}: 0;
+}
+.mvg-card p { color: #555; line-height: 1.9; font-size: .95rem; }
+
+/* ===== WORK FIELDS ===== */
+.fields-section { padding: 80px 0; background: #fff; }
+.section-header { margin-bottom: 50px; }
+.section-header .section-tag {
+    display: inline-block;
+    background: #e8f5ee;
+    color: #1a7a4a;
+    padding: 5px 16px;
+    border-radius: 50px;
+    font-size: .83rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    letter-spacing: .5px;
+}
+.section-header h2 {
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    font-weight: 800;
+    color: #111;
+}
+.section-header p { color: #666; font-size: 1rem; max-width: 560px; margin: 10px 0 0; }
+.field-card {
+    background: #f8fffe;
+    border-radius: 18px;
+    padding: 28px 24px;
+    text-align: center;
+    transition: all .3s;
+    cursor: default;
+    border: 2px solid transparent;
+    height: 100%;
+}
+.field-card:hover {
+    background: #fff;
+    border-color: #1a7a4a;
+    transform: translateY(-5px);
+    box-shadow: 0 10px 32px rgba(26,122,74,.12);
+}
+.field-icon {
+    font-size: 2.4rem;
+    margin-bottom: 14px;
+    display: block;
+}
+.field-card h4 { font-weight: 700; color: #1a7a4a; font-size: 1rem; margin-bottom: 8px; }
+.field-card p { color: #666; font-size: .88rem; line-height: 1.7; margin: 0; }
+
+/* ===== STATS ===== */
+.stats-section {
+    background: linear-gradient(135deg, #1a7a4a, #0d4d2e);
+    padding: 60px 0;
+}
+.stat-item { text-align: center; color: #fff; padding: 20px; }
+.stat-num {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 900;
+    color: #7fffb8;
+    display: block;
+    line-height: 1;
+    margin-bottom: 8px;
+}
+.stat-label { font-size: .95rem; opacity: .85; }
+.stat-divider {
+    width: 1px;
+    background: rgba(255,255,255,.2);
+    align-self: stretch;
+    margin: 20px 0;
+}
+
+/* breadcrumb */
 .breadcrumb-section { background: #f0faf5; padding: 12px 0; border-bottom: 1px solid #d4edda; }
 .breadcrumb-section a { color: #1a7a4a; text-decoration: none; }
-.breadcrumb-section span { color: #888; margin: 0 8px; }
+
+@media(max-width:767px) {
+    .about-hero-imgs { height: 180px; gap: 6px; }
+    .about-hero-imgs img:nth-child(1) { height: 130px; }
+    .about-hero-imgs img:nth-child(2) { height: 160px; }
+    .about-hero-imgs img:nth-child(3) { height: 110px; }
+    .stat-divider { display: none; }
+}
 </style>
 @endpush
 
@@ -86,126 +194,144 @@
     <div class="container">
         <small>
             <a href="{{ url($locale.'/') }}">{{ $isAr ? 'الرئيسية' : 'Home' }}</a>
-            <span>›</span>
+            <span style="margin: 0 8px; color: #888">›</span>
             <span class="text-muted">{{ $isAr ? 'من نحن' : 'About Us' }}</span>
         </small>
     </div>
 </div>
 
-{{-- Hero --}}
+{{-- HERO --}}
 <section class="about-hero">
-    @if($about?->hero_image)
-    <div style="position:absolute;inset:0;z-index:0;">
-        <img src="{{ Storage::url($about->hero_image) }}" alt="" style="width:100%;height:100%;object-fit:cover;opacity:.25;">
-    </div>
-    <div style="position:relative;z-index:1;">
-    @endif
     <div class="container">
-        <h1>{{ $isAr ? ($about?->hero_title_ar ?? 'من نحن') : ($about?->hero_title_en ?? 'About Us') }}</h1>
-        @if($isAr ? $about?->hero_subtitle_ar : $about?->hero_subtitle_en)
-            <p>{{ $isAr ? $about->hero_subtitle_ar : $about->hero_subtitle_en }}</p>
-        @endif
+        <div class="row align-items-end">
+            <div class="col-lg-6 pb-5 pb-lg-0">
+                <span class="about-hero-tag">{{ $isAr ? 'من نحن' : 'About Us' }}</span>
+                <h1>
+                    <span class="accent">{{ $isAr ? ($about?->hero_title_highlight_ar ?? 'أمل لفلسطين:') : ($about?->hero_title_highlight_en ?? 'Hope for Palestine:') }}</span><br>
+                    {{ $isAr ? ($about?->hero_title_ar ?? 'مؤسسة خيرية عالمية تمكّن المحتاجين') : ($about?->hero_title_en ?? 'A global charity that empowers those in need') }}
+                </h1>
+                <p class="lead-text">
+                    {{ $isAr
+                        ? ($about?->hero_description_ar ?? 'منصة خيرية إنسانية دولية تقوم بإنشاء حملات تبرع وتنفيذ مشاريع خيرية مخصصة للمناطق المحتاجة، بهدف تمكين الفئات المستحقة وتعزيز التنمية والتقدم.')
+                        : ($about?->hero_description_en ?? 'An international humanitarian charity platform creating donation campaigns and implementing charitable projects to empower those in need and promote development.')
+                    }}
+                </p>
+            </div>
+            <div class="col-lg-6">
+                <div class="about-hero-imgs">
+                    @if($about?->hero_image_1)
+                        <img src="{{ Storage::url($about->hero_image_1) }}" alt="">
+                        <img src="{{ Storage::url($about->hero_image_1) }}" alt="">
+                        <img src="{{ Storage::url($about->hero_image_1) }}" alt="">
+                    @else
+                        <img src="https://placehold.co/300x240/1a7a4a/fff?text=1" alt="">
+                        <img src="https://placehold.co/300x300/15623b/fff?text=2" alt="">
+                        <img src="https://placehold.co/300x200/0d4d2e/fff?text=3" alt="">
+                    @endif
+                </div>
+            </div>
+        </div>
     </div>
-    @if($about?->hero_image) </div> @endif
 </section>
 
-{{-- Stats --}}
-@if($about)
+{{-- STATS --}}
 <section class="stats-section">
     <div class="container">
-        <div class="row">
-            @foreach([
-                [$about->stat1_number, $isAr ? $about->stat1_label_ar : $about->stat1_label_en],
-                [$about->stat2_number, $isAr ? $about->stat2_label_ar : $about->stat2_label_en],
-                [$about->stat3_number, $isAr ? $about->stat3_label_ar : $about->stat3_label_en],
-                [$about->stat4_number, $isAr ? $about->stat4_label_ar : $about->stat4_label_en],
-            ] as [$num, $label])
-                @if($num)
-                <div class="col-6 col-md-3">
-                    <div class="stat-card">
-                        <div class="stat-number">{{ $num }}</div>
-                        <div class="stat-label">{{ $label }}</div>
-                    </div>
+        <div class="row justify-content-center align-items-center">
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <span class="stat-num">{{ $about?->stat_projects ?? '500' }}+</span>
+                    <span class="stat-label">{{ $isAr ? 'مشروع منجز' : 'Projects Completed' }}</span>
                 </div>
-                @endif
-            @endforeach
+            </div>
+            <div class="col-auto d-none d-md-block stat-divider"></div>
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <span class="stat-num">{{ $about?->stat_beneficiaries ?? '10K' }}+</span>
+                    <span class="stat-label">{{ $isAr ? 'مستفيد' : 'Beneficiaries' }}</span>
+                </div>
+            </div>
+            <div class="col-auto d-none d-md-block stat-divider"></div>
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <span class="stat-num">{{ $about?->stat_countries ?? '20' }}+</span>
+                    <span class="stat-label">{{ $isAr ? 'دولة نعمل فيها' : 'Countries' }}</span>
+                </div>
+            </div>
+            <div class="col-auto d-none d-md-block stat-divider"></div>
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <span class="stat-num">{{ $about?->stat_donors ?? '5K' }}+</span>
+                    <span class="stat-label">{{ $isAr ? 'متبرع' : 'Donors' }}</span>
+                </div>
+            </div>
         </div>
     </div>
 </section>
-@endif
 
-{{-- Mission / Vision / Goal --}}
-@if($about && ($about->mission_ar || $about->vision_ar || $about->goal_ar))
+{{-- MISSION / VISION / GOAL --}}
 <section class="mvg-section">
     <div class="container">
+        <div class="section-header text-{{ $isAr ? 'end' : 'start' }}">
+            <span class="section-tag">{{ $isAr ? 'قيمنا' : 'Our Values' }}</span>
+            <h2>{{ $isAr ? 'رؤيتنا ورسالتنا وهدفنا' : 'Our Vision, Mission & Goal' }}</h2>
+        </div>
         <div class="row g-4">
-            @if($isAr ? $about->mission_ar : $about->mission_en)
+            {{-- MISSION --}}
             <div class="col-md-4">
-                <div class="mvg-card mission">
+                <div class="mvg-card">
                     <div class="mvg-icon">🎯</div>
-                    <h3>{{ $isAr ? 'رسالتنا' : 'Our Mission' }}</h3>
-                    <p>{{ $isAr ? $about->mission_ar : $about->mission_en }}</p>
+                    <h3>{{ $isAr ? ($about?->mission_title_ar ?? 'رسالتنا') : ($about?->mission_title_en ?? 'Our Mission') }}</h3>
+                    <p>{{ $isAr ? ($about?->mission_text_ar ?? 'الوصول إلى الفئات المستحقة وذوي الدخل المحدود لتحقيق الاكتفاء الذاتي وبناء مصادر دخل مستقلة.') : ($about?->mission_text_en ?? 'Reaching those in need to achieve self-sufficiency and build independent income sources.') }}</p>
                 </div>
             </div>
-            @endif
-            @if($isAr ? $about->vision_ar : $about->vision_en)
+            {{-- VISION --}}
             <div class="col-md-4">
-                <div class="mvg-card vision">
+                <div class="mvg-card">
+                    <div class="mvg-icon">👁️</div>
+                    <h3>{{ $isAr ? ($about?->vision_title_ar ?? 'رؤيتنا') : ($about?->vision_title_en ?? 'Our Vision') }}</h3>
+                    <p>{{ $isAr ? ($about?->vision_text_ar ?? 'التنمية والريادة في العمل الإنساني على المستوى الدولي.') : ($about?->vision_text_en ?? 'Development and leadership in international humanitarian work.') }}</p>
+                </div>
+            </div>
+            {{-- GOAL --}}
+            <div class="col-md-4">
+                <div class="mvg-card">
                     <div class="mvg-icon">🌟</div>
-                    <h3>{{ $isAr ? 'رؤيتنا' : 'Our Vision' }}</h3>
-                    <p>{{ $isAr ? $about->vision_ar : $about->vision_en }}</p>
-                </div>
-            </div>
-            @endif
-            @if($isAr ? $about->goal_ar : $about->goal_en)
-            <div class="col-md-4">
-                <div class="mvg-card goal">
-                    <div class="mvg-icon">💡</div>
-                    <h3>{{ $isAr ? 'هدفنا' : 'Our Goal' }}</h3>
-                    <p>{{ $isAr ? $about->goal_ar : $about->goal_en }}</p>
-                </div>
-            </div>
-            @endif
-        </div>
-    </div>
-</section>
-@endif
-
-{{-- About Text + Image --}}
-@if($about && ($about->about_text_ar || $about->about_image))
-<section class="about-content">
-    <div class="container">
-        <div class="row align-items-center g-5 {{ $isAr ? 'flex-row-reverse' : '' }}">
-            @if($about->about_image)
-            <div class="col-lg-5">
-                <img src="{{ Storage::url($about->about_image) }}" alt="{{ $isAr ? 'من نحن' : 'About Us' }}">
-            </div>
-            @endif
-            <div class="col-lg-{{ $about->about_image ? '7' : '12' }}">
-                <div class="about-text">
-                    {!! $isAr ? $about->about_text_ar : $about->about_text_en !!}
+                    <h3>{{ $isAr ? ($about?->goal_title_ar ?? 'هدفنا') : ($about?->goal_title_en ?? 'Our Goal') }}</h3>
+                    <ul>
+                        @if($about?->goal_points_ar)
+                            @foreach(json_decode($isAr ? $about->goal_points_ar : $about->goal_points_en, true) ?? [] as $point)
+                                <li>{{ $point }}</li>
+                            @endforeach
+                        @else
+                            <li>{{ $isAr ? 'بناء شراكات فعالة مع المنظمات الإنسانية.' : 'Build effective partnerships with humanitarian organizations.' }}</li>
+                            <li>{{ $isAr ? 'تحقيق الاكتفاء الذاتي لعائلات المحتاجين.' : 'Achieve self-sufficiency for families in need.' }}</li>
+                            <li>{{ $isAr ? 'تطوير المشاريع الخدمية من مدارس ومستشفيات.' : 'Develop service projects like schools and hospitals.' }}</li>
+                        @endif
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
 </section>
-@endif
 
-{{-- Work Fields --}}
-@if($workFields->count())
-<section class="work-fields">
+{{-- WORK FIELDS --}}
+@if($workFields->count() > 0)
+<section class="fields-section">
     <div class="container">
-        <h2 class="section-title">{{ $isAr ? 'مجالات عملنا' : 'Our Work Areas' }}</h2>
+        <div class="section-header text-{{ $isAr ? 'end' : 'start' }}">
+            <span class="section-tag">{{ $isAr ? 'مجالاتنا' : 'Our Fields' }}</span>
+            <h2>{{ $isAr ? 'مجالات التبرع' : 'Donation Fields' }}</h2>
+            <p>{{ $isAr ? 'المجالات والمشاريع التي سيتم دعمها من خلال التبرعات.' : 'Fields and projects that will be supported through donations.' }}</p>
+        </div>
         <div class="row g-4">
             @foreach($workFields as $field)
             <div class="col-6 col-md-4 col-lg-3">
                 <div class="field-card">
-                    @if($field->icon)
-                        <div class="field-icon">{{ $field->icon }}</div>
-                    @endif
+                    <span class="field-icon">{{ $field->icon ?? '🌿' }}</span>
                     <h4>{{ $isAr ? $field->title_ar : $field->title_en }}</h4>
-                    @if($isAr ? $field->description_ar : $field->description_en)
-                        <p>{{ $isAr ? $field->description_ar : $field->description_en }}</p>
+                    @if($field->description_ar)
+                    <p>{{ $isAr ? $field->description_ar : $field->description_en }}</p>
                     @endif
                 </div>
             </div>
@@ -214,22 +340,5 @@
     </div>
 </section>
 @endif
-
-{{-- CTA --}}
-<section class="about-cta">
-    <div class="container">
-        <h2>{{ $isAr ? 'انضم إلينا اليوم' : 'Join Us Today' }}</h2>
-        <p>{{ $isAr ? 'ساهم معنا في صنع فارق حقيقي في حياة المحتاجين' : 'Help us make a real difference in the lives of those in need' }}</p>
-        @if($about?->cta_url)
-        <a href="{{ $about->cta_url }}" class="btn-cta">
-            {{ $isAr ? ($about->cta_text_ar ?? 'تبرع الآن') : ($about->cta_text_en ?? 'Donate Now') }}
-        </a>
-        @else
-        <a href="{{ url($locale.'/campaigns') }}" class="btn-cta">
-            {{ $isAr ? 'تبرع الآن' : 'Donate Now' }}
-        </a>
-        @endif
-    </div>
-</section>
 
 @endsection
