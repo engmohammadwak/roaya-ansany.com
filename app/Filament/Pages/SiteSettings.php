@@ -27,30 +27,25 @@ class SiteSettings extends Page
     public function mount(): void
     {
         $keys = [
-            // هوية
             'site_name', 'site_favicon', 'site_logo',
-            // ألوان رئيسية
             'color_primary', 'color_secondary',
-            // ألوان نصوص
             'color_text_dark', 'color_text_muted', 'color_text_label', 'color_placeholder',
-            // خلفيات
             'color_bg_body', 'color_bg_light', 'color_bg_card',
-            // خاصة
             'color_warning', 'color_danger', 'color_step_active',
-            // فوتر
             'footer_description_ar', 'footer_description_en',
             'footer_copyright_ar',   'footer_copyright_en',
-            // تواصل
             'contact_phone', 'contact_email', 'whatsapp_number',
-            // نافبار روابط + sticky
+            // نافبار
+            'navbar_links_enabled',
             'navbar_sticky_only',
-            'nav_show_home', 'nav_show_about', 'nav_show_campaigns',
-            'nav_show_blogs', 'nav_show_contact', 'nav_show_privacy',
         ];
 
         foreach ($keys as $key) {
-            // مفاتيح الروابط الافتراضي مفعّلة (1)، sticky افتراضي مطفي (0)
-            $default = str_starts_with($key, 'nav_show_') ? '1' : '0';
+            $default = match($key) {
+                'navbar_links_enabled' => '1',
+                'navbar_sticky_only'   => '0',
+                default                => '',
+            };
             $this->data[$key] = Setting::get($key, $default);
         }
 
@@ -81,21 +76,16 @@ class SiteSettings extends Page
             'footer_description_ar', 'footer_description_en',
             'footer_copyright_ar',   'footer_copyright_en',
             'contact_phone', 'contact_email', 'whatsapp_number',
-            // نافبار روابط + sticky
+            'navbar_links_enabled',
             'navbar_sticky_only',
-            'nav_show_home', 'nav_show_about', 'nav_show_campaigns',
-            'nav_show_blogs', 'nav_show_contact', 'nav_show_privacy',
         ];
+
+        $boolKeys = ['navbar_links_enabled', 'navbar_sticky_only'];
 
         foreach ($keys as $key) {
             if (array_key_exists($key, $this->data)) {
-                // checkbox غير محدد = null تعني مطفي → احفظ '0'
                 $value = $this->data[$key];
-                if (in_array($key, [
-                    'navbar_sticky_only',
-                    'nav_show_home', 'nav_show_about', 'nav_show_campaigns',
-                    'nav_show_blogs', 'nav_show_contact', 'nav_show_privacy',
-                ])) {
+                if (in_array($key, $boolKeys)) {
                     $value = ($value === true || $value === '1' || $value === 1) ? '1' : '0';
                 }
                 Setting::set($key, $value ?? '');

@@ -50,66 +50,79 @@
 </div>
 
 {{-- =================== روابط النافبار =================== --}}
-<div x-data="{ open: true }" class="rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
-    <button type="button" @click="open = !open"
-        class="w-full flex items-center justify-between px-5 py-4 bg-white dark:bg-gray-800 hover:bg-gray-50 transition-colors">
+{{--
+    toggle واحد بس:
+    navbar_links_enabled = 1  => كل روابط النافبار تظهر في كل الصفحات
+    navbar_links_enabled = 0  => كل الروابط مخفية
+    navbar_sticky_only   = 1  => النافبار تظهر فقط عند السكرول
+--}}
+<div
+    x-data="{
+        linksOn:  @js(($this->data['navbar_links_enabled'] ?? '1') === '1'),
+        stickyOn: @js(($this->data['navbar_sticky_only']  ?? '0') === '1')
+    }"
+    x-init="
+        $watch('linksOn',  v => @this.set('data.navbar_links_enabled', v ? '1' : '0'));
+        $watch('stickyOn', v => @this.set('data.navbar_sticky_only',   v ? '1' : '0'));
+    "
+    class="rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+
+    {{-- Header --}}
+    <div class="px-5 py-4 bg-white dark:bg-gray-800 flex items-center justify-between">
         <span class="font-semibold text-base">🔗 روابط النافبار</span>
-        <svg :class="open ? 'rotate-180' : ''"
-            class="w-5 h-5 text-gray-400 transition-transform duration-200"
-            fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-        </svg>
-    </button>
-    <div x-show="open" x-transition class="px-5 pb-5 pt-3 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700">
+        {{-- سلايدر ON/OFF لكل الصفحات --}}
+        <div class="flex items-center gap-3">
+            <span x-text="linksOn ? 'مفعّل' : 'مخفي'"
+                  :class="linksOn ? 'text-green-600 dark:text-green-400' : 'text-gray-400'"
+                  class="text-sm font-medium"></span>
+            <button type="button" @click="linksOn = !linksOn"
+                :class="linksOn ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-600'"
+                class="relative inline-flex h-7 w-14 flex-shrink-0 items-center rounded-full transition-colors duration-300 focus:outline-none">
+                <span
+                    :class="linksOn ? 'translate-x-7' : 'translate-x-1'"
+                    class="inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform duration-300">
+                </span>
+            </button>
+        </div>
+    </div>
 
-        {{-- sticky toggle --}}
-        <div
-            x-data="{ val: @js(($this->data['navbar_sticky_only'] ?? '0') === '1') }"
-            x-init="$watch('val', v => @this.set('data.navbar_sticky_only', v ? '1' : '0'))"
-            class="flex items-center justify-between p-3 mb-4 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700">
+    {{-- Hidden inputs → Livewire --}}
+    <input type="hidden" wire:model="data.navbar_links_enabled" :value="linksOn  ? '1' : '0'">
+    <input type="hidden" wire:model="data.navbar_sticky_only"   :value="stickyOn ? '1' : '0'">
+
+    {{-- Body — يظهر فقط لو linksOn --}}
+    <div x-show="linksOn" x-transition
+         class="px-5 pb-5 pt-3 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700 space-y-3">
+
+        {{-- الروابط الموجودة — عرض فقط (info) --}}
+        <p class="text-xs text-gray-400">✅ الروابط التالية ستظهر في النافبار على جميع الصفحات:</p>
+        <div class="flex flex-wrap gap-2">
+            @foreach(['🏠 الرئيسية','ℹ️ من نحن','📢 الحملات','📝 المدونة','📞 تواصل معنا','🔒 سياسة الخصوصية'] as $lbl)
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-700">
+                {{ $lbl }}
+            </span>
+            @endforeach
+        </div>
+
+        {{-- Sticky toggle --}}
+        <div class="flex items-center justify-between p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700">
             <div>
-                <div class="font-medium text-sm">🔒 النافبار Sticky فقط (تظهر عند السكرول)</div>
-                <div class="text-xs text-gray-400 mt-0.5">لو مفعّل — النافبار مخفية في أعلى الصفحة وتظهر بس لما يسكرول</div>
+                <div class="font-medium text-sm">🔒 Sticky فقط (تظهر عند السكرول)</div>
+                <div class="text-xs text-gray-400 mt-0.5">النافبار مخفية في أعلى الصفحة وتظهر لما يسكرول</div>
             </div>
-            {{-- ✅ لا class ثابت لللون — كله عبر :class --}}
-            <button type="button" @click="val = !val"
-                :class="val ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600'"
-                class="relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full transition-colors duration-200 focus:outline-none">
-                <span
-                    :class="val ? 'translate-x-5' : 'translate-x-1'"
-                    class="inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform duration-200">
-                </span>
-            </button>
-            <input type="hidden" wire:model="data.navbar_sticky_only" :value="val ? '1' : '0'">
-        </div>
-
-        {{-- روابط on/off --}}
-        <div class="space-y-2">
-        @foreach([
-            ['key'=>'nav_show_home',      'label'=>'الرئيسية',        'icon'=>'🏠'],
-            ['key'=>'nav_show_about',     'label'=>'من نحن',          'icon'=>'ℹ️'],
-            ['key'=>'nav_show_campaigns', 'label'=>'الحملات',          'icon'=>'📢'],
-            ['key'=>'nav_show_blogs',     'label'=>'المدونة',          'icon'=>'📝'],
-            ['key'=>'nav_show_contact',   'label'=>'تواصل معنا',      'icon'=>'📞'],
-            ['key'=>'nav_show_privacy',   'label'=>'سياسة الخصوصية', 'icon'=>'🔒'],
-        ] as $link)
-        <div
-            x-data="{ val: @js(($this->data[$link['key']] ?? '1') === '1') }"
-            x-init="$watch('val', v => @this.set('data.{{ $link['key'] }}', v ? '1' : '0'))"
-            class="flex items-center justify-between p-3 rounded-lg border border-gray-200 dark:border-gray-700">
-            <div class="font-medium text-sm">{{ $link['icon'] }} {{ $link['label'] }}</div>
-            {{-- ✅ لا class ثابت لللون — كله عبر :class --}}
-            <button type="button" @click="val = !val"
-                :class="val ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-600'"
-                class="relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full transition-colors duration-200 focus:outline-none">
-                <span
-                    :class="val ? 'translate-x-5' : 'translate-x-1'"
-                    class="inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform duration-200">
-                </span>
-            </button>
-            <input type="hidden" wire:model="data.{{ $link['key'] }}" :value="val ? '1' : '0'">
-        </div>
-        @endforeach
+            <div class="flex items-center gap-2">
+                <span x-text="stickyOn ? 'ON' : 'OFF'"
+                      :class="stickyOn ? 'text-blue-600' : 'text-gray-400'"
+                      class="text-xs font-bold"></span>
+                <button type="button" @click="stickyOn = !stickyOn"
+                    :class="stickyOn ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600'"
+                    class="relative inline-flex h-7 w-14 flex-shrink-0 items-center rounded-full transition-colors duration-300 focus:outline-none">
+                    <span
+                        :class="stickyOn ? 'translate-x-7' : 'translate-x-1'"
+                        class="inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform duration-300">
+                    </span>
+                </button>
+            </div>
         </div>
     </div>
 </div>
