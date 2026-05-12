@@ -11,7 +11,7 @@ class DonationMonthlyChart extends ChartWidget
     protected static ?string $heading      = '📅 التبرعات الشهرية (آخر 12 شهر)';
     protected static ?int    $sort         = 3;
     protected static string  $color        = 'success';
-    protected int | string   $columnSpan   = 'full';
+    protected int | string | array $columnSpan = 'full';
 
     protected function getData(): array
     {

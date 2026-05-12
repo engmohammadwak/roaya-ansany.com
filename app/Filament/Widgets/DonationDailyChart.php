@@ -11,7 +11,7 @@ class DonationDailyChart extends ChartWidget
     protected static ?string $heading    = '📈 التبرعات اليومية (آخر 30 يوم)';
     protected static ?int    $sort       = 4;
     protected static string  $color      = 'info';
-    protected int | string   $columnSpan = 'full';
+    protected int | string | array $columnSpan = 'full';
 
     protected function getData(): array
     {
