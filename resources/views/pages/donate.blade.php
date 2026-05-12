@@ -5,7 +5,10 @@
     $currency = session('currency', 'USD');
     $amounts  = [50, 100, 200, 500, 1000];
     $currencies = ['TRY','USD','EUR','GBP','CAD','OMR','AUD'];
-    $fxRates = \App\Models\Setting::getFxRates() ?? [];
+    $fxRates = [
+        'USD' => '45.39', 'EUR' => '53.37', 'GBP' => '61.58',
+        'CAD' => '33.15', 'OMR' => '118.06', 'AUD' => '32.79', 'TRY' => '1.00'
+    ];
 @endphp
 @section('title', ($isAr ? 'تبرع الآن' : 'Donate Now') . ' | ' . config('app.name'))
 
@@ -48,7 +51,6 @@ html[dir="rtl"] .num-ltr{direction:ltr;text-align:left;}
           <form method="POST" action="{{ url($locale.'/donate/payment/3d/form') }}" id="payForm" novalidate>
             @csrf
 
-            {{-- Quick amounts --}}
             <div class="amounts gap-2 d-flex flex-wrap mt-3">
               @foreach($amounts as $a)
               <div>
@@ -251,7 +253,7 @@ $('#cc-number').on('input',function(){
   $('#brandLogo').attr('src',brandLogos[brand]||brandLogos.unknown);
 });
 $('#cc-name').on('input',function(){
-  $('#pv-name').text(this.value||'{{ $isAr ? 'اسم حامل البطاقة' : 'Cardholder Name' }}');
+  $('#pv-name').text(this.value||'{{ $isAr ? "اسم حامل البطاقة" : "Cardholder Name" }}');
 });
 $('#cc-month,#cc-year').on('input',function(){
   const mm=onlyDigits($('#cc-month').val()).slice(0,2);
@@ -306,10 +308,10 @@ function validateForm(){
 }
 $('#payForm input,#payForm select').on('change keyup blur',validateForm);
 
-const RECAPTCHA_SITE_KEY='{{ config('services.recaptcha.site_key','6LeoNGcsAAAAAIqn8NMLUB0l3vyX_-SAu1w1Ki-s') }}';
+const RECAPTCHA_SITE_KEY='{{ config("services.recaptcha.site_key","6LeoNGcsAAAAAIqn8NMLUB0l3vyX_-SAu1w1Ki-s") }}';
 $('#payForm').on('submit',function(e){
   e.preventDefault();
-  if(!$('#confirmData').is(':checked')){alert('{{ $isAr ? 'يرجى الموافقة على سياسات التبرع أولاً' : 'Please accept donation policies first' }}');return;}
+  if(!$('#confirmData').is(':checked')){alert('{{ $isAr ? "يرجى الموافقة على سياسات التبرع أولاً" : "Please accept donation policies first" }}');return;}
   if(!validateForm())return;
   $('#submitBtn').prop('disabled',true).addClass('disabled');
   if(typeof grecaptcha==='undefined'){alert('reCAPTCHA not loaded');$('#submitBtn').prop('disabled',false).removeClass('disabled');return;}
