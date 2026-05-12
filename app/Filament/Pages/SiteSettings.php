@@ -4,27 +4,26 @@ namespace App\Filament\Pages;
 
 use App\Models\Setting;
 use App\Models\User;
-use Filament\Forms\Components\ColorPicker;
-use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Tabs;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use Livewire\WithFileUploads;
 
 class SiteSettings extends Page
 {
-    protected static ?string $navigationIcon = 'heroicon-o-cog-6-tooth';
-    protected static ?string $navigationLabel = 'إعدادات الموقع';
-    protected static ?string $title = 'إعدادات الموقع';
-    protected static ?int $navigationSort = 99;
-    protected static string $view = 'filament.pages.site-settings';
+    use WithFileUploads;
 
-    public array $data = [];
+    protected static ?string $navigationIcon  = 'heroicon-o-cog-6-tooth';
+    protected static ?string $navigationLabel = 'إعدادات الموقع';
+    protected static ?string $title           = 'إعدادات الموقع';
+    protected static ?int    $navigationSort  = 99;
+    protected static string  $view            = 'filament.pages.site-settings';
+
+    public array  $data           = [];
+    public        $logo_upload    = null;
+    public        $favicon_upload = null;
 
     public function mount(): void
     {
@@ -34,14 +33,10 @@ class SiteSettings extends Page
             'footer_description_ar', 'footer_description_en',
             'footer_copyright_ar', 'footer_copyright_en',
             'contact_phone', 'contact_email', 'whatsapp_number',
-            'admin_username', 'admin_email',
         ];
-
         foreach ($keys as $key) {
             $this->data[$key] = Setting::get($key);
         }
-
-        // Admin user info
         $admin = User::first();
         if ($admin) {
             $this->data['admin_username'] = $admin->name;
@@ -51,6 +46,16 @@ class SiteSettings extends Page
 
     public function save(): void
     {
+        // رفع الشعار لو تم اختياره
+        if ($this->logo_upload) {
+            $path = $this->logo_upload->store('site', 'public');
+            $this->data['site_logo'] = asset('storage/' . $path);
+        }
+        if ($this->favicon_upload) {
+            $path = $this->favicon_upload->store('site', 'public');
+            $this->data['site_favicon'] = asset('storage/' . $path);
+        }
+
         $keys = [
             'site_name', 'site_favicon', 'site_logo',
             'primary_color', 'secondary_color',
@@ -58,14 +63,13 @@ class SiteSettings extends Page
             'footer_copyright_ar', 'footer_copyright_en',
             'contact_phone', 'contact_email', 'whatsapp_number',
         ];
-
         foreach ($keys as $key) {
-            if (isset($this->data[$key]) && $this->data[$key] !== null) {
-                Setting::set($key, $this->data[$key]);
+            if (array_key_exists($key, $this->data)) {
+                Setting::set($key, $this->data[$key] ?? '');
             }
         }
 
-        // Update admin credentials
+        // تحديث حساب الأدمن
         $admin = User::first();
         if ($admin) {
             $update = [

@@ -1,13 +1,27 @@
-@php $locale = app()->getLocale(); @endphp
+@php
+    $locale      = app()->getLocale();
+    $siteLogo    = App\Models\Setting::get('site_logo');
+    $siteName    = App\Models\Setting::get('site_name', 'رؤيا');
+    $footerDescAr = App\Models\Setting::get('footer_description_ar', 'رؤيا هي منصة عطاء مخصصة للأشخاص الذين يهتمون بالأثر الحقيقي لعطائهم.');
+    $footerDescEn = App\Models\Setting::get('footer_description_en', 'Roaya is a giving platform dedicated to people who care about the real impact of their giving.');
+    $copyrightAr  = App\Models\Setting::get('footer_copyright_ar', 'جميع الحقوق محفوظة © مؤسسة رؤيا الإنسانية ' . date('Y'));
+    $copyrightEn  = App\Models\Setting::get('footer_copyright_en', 'All Rights Reserved © Roaya Insanya ' . date('Y'));
+    $phone        = App\Models\Setting::get('contact_phone', '+905398863777');
+    $email        = App\Models\Setting::get('contact_email', 'roaya.ansany@gmail.com');
+@endphp
 <footer class="footer mt-5 border-top pt-3">
     <div class="container overflow-hidden">
         <div class="row gy-4">
             <div class="col-md-4">
                 <a href="{{ url($locale) }}">
-                    <img width="134" height="113" src="https://roaya-ansany.com/website/images/logo.svg" alt="رؤيا" class="footer-logo mb-2">
+                    @if($siteLogo)
+                        <img src="{{ $siteLogo }}" alt="{{ $siteName }}" class="footer-logo mb-2" style="max-height:80px;">
+                    @else
+                        <img width="134" height="113" src="https://roaya-ansany.com/website/images/logo.svg" alt="{{ $siteName }}" class="footer-logo mb-2">
+                    @endif
                 </a>
                 <p class="footer-about muted-color">
-                    {{ $locale === 'ar' ? 'رؤيا هي منصة عطاء مخصصة للأشخاص الذين يهتمون بالأثر الحقيقي لعطائهم.' : 'Roaya is a giving platform dedicated to people who care about the real impact of their giving.' }}
+                    {{ $locale === 'ar' ? $footerDescAr : $footerDescEn }}
                 </p>
                 <div class="social-icons mt-4">
                     <a href="https://www.facebook.com/profile.php?id=61568018236938" target="_blank">
@@ -45,13 +59,13 @@
                         <p class="mb-3">
                             <img class="me-3" src="https://roaya-ansany.com/website/images/phone.svg" alt="phone">
                             <span class="muted-color" dir="ltr">
-                                <a class="link-offset-2 link-underline link-underline-opacity-0 link-secondary" href="tel:+905398863777">+905398863777</a>
+                                <a class="link-offset-2 link-underline link-underline-opacity-0 link-secondary" href="tel:{{ $phone }}">{{ $phone }}</a>
                             </span>
                         </p>
                         <p class="mb-3">
                             <img class="me-3" src="https://roaya-ansany.com/website/images/message.svg" alt="message">
                             <span class="muted-color">
-                                <a class="link-offset-2 link-underline link-underline-opacity-0 link-secondary" href="mailto:roaya.ansany@gmail.com">roaya.ansany@gmail.com</a>
+                                <a class="link-offset-2 link-underline link-underline-opacity-0 link-secondary" href="mailto:{{ $email }}">{{ $email }}</a>
                             </span>
                         </p>
                     </div>
@@ -63,7 +77,7 @@
     <div class="footer-bottom mt-4 py-3 border-top">
         <div class="container">
             <p class="m-0 text-center text-lg-start muted-color">
-                {{ $locale === 'ar' ? 'جميع الحقوق محفوظة © مؤسسة رؤيا الإنسانية ' . date('Y') : 'All Rights Reserved © Roaya Insanya ' . date('Y') }}
+                {{ $locale === 'ar' ? $copyrightAr : $copyrightEn }}
             </p>
         </div>
     </div>

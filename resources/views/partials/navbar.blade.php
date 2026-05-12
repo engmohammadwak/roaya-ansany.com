@@ -1,9 +1,18 @@
-@php $locale = app()->getLocale(); $otherLocale = $locale === 'ar' ? 'en' : 'ar'; @endphp
+@php
+    $locale      = app()->getLocale();
+    $otherLocale = $locale === 'ar' ? 'en' : 'ar';
+    $siteLogo    = App\Models\Setting::get('site_logo');
+    $siteName    = App\Models\Setting::get('site_name', 'رؤيا');
+@endphp
 <header>
 <nav class="navbar navbar-expand-lg py-2 fixed-top main-navbar" aria-label="Main Navigation">
     <div class="container position-relative">
         <a class="navbar-brand d-flex align-items-center" href="{{ url($locale) }}">
-            <img src="https://roaya-ansany.com/website/images/logo.svg" alt="روايا انساني" class="me-2">
+            @if($siteLogo)
+                <img src="{{ $siteLogo }}" alt="{{ $siteName }}" class="me-2" style="max-height:50px;">
+            @else
+                <img src="https://roaya-ansany.com/website/images/logo.svg" alt="{{ $siteName }}" class="me-2">
+            @endif
         </a>
 
         <div class="d-flex align-items-center">
@@ -42,7 +51,6 @@
                     <a class="nav-link" href="{{ url($locale.'/privacy-policy') }}">{{ $locale === 'ar' ? 'سياسة الخصوصية' : 'Privacy Policy' }}</a>
                 </li>
             </ul>
-
             <div class="d-flex justify-content-center align-items-center">
                 <div class="language-switcher me-3">
                     <a href="{{ url($otherLocale) }}" class="lang-value">{{ $locale === 'ar' ? 'English' : 'العربية' }}</a>
