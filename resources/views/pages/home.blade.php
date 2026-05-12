@@ -4,11 +4,15 @@
     $locale = app()->getLocale();
     $p = App\Models\Setting::get('color_primary', '#9dcc6b');
 
-    $hero       = $data['hero'] ?? [];
-    $heroTitle  = $hero['title']       ?? ($locale==='ar' ? 'أنقذوا غزة الآن' : 'Save Gaza Now');
-    $heroDesc   = $hero['description'] ?? ($locale==='ar' ? 'ملايين المدنيين يواجهون الجوع والتشرد.' : 'Millions face hunger and displacement.');
-    $heroLabel  = $hero['label']       ?? ($locale==='ar' ? 'تبرعك سينقذ الكثير من الأشخاص' : 'Your donation will save many lives');
-    $heroImg    = $hero['image']       ?? 'https://roaya-ansany.com/storage/uploads/pages/3PCwY0bnxr9NmLyHvTlL7wlNmBC5ir5vBG5gv0Wz.png';
+    $hero      = $data['hero'] ?? [];
+    $heroTitle = $hero['title']       ?? ($locale==='ar' ? 'أنقذوا غزة الآن' : 'Save Gaza Now');
+    $heroDesc  = $hero['description'] ?? ($locale==='ar' ? 'ملايين المدنيين يواجهون الجوع والتشرد.' : 'Millions face hunger and displacement.');
+    $heroImg   = $hero['image']       ?? 'https://roaya-ansany.com/storage/uploads/pages/3PCwY0bnxr9NmLyHvTlL7wlNmBC5ir5vBG5gv0Wz.png';
+
+    // يقرأ مباشرةً من الداشبورد
+    $heroLabel = $locale === 'ar'
+        ? (App\Models\Setting::get('hero_label_ar') ?: 'تبرعك سينقذ الكثير من الأشخاص')
+        : (App\Models\Setting::get('hero_label_en') ?: 'Your donation will save many lives');
 @endphp
 
 @section('title', $locale === 'ar' ? 'الرئيسية' : 'Home')
