@@ -1,99 +1,187 @@
 @extends('layouts.app')
-@php $locale = app()->getLocale(); @endphp
-@section('title', ($locale==='ar'?'المدونة':'Blog') . ' | مؤسسة رؤيا الإنسانية')
-@section('description', $locale==='ar'?'اقرأ آخر مقالات ومدونات مؤسسة رؤيا الإنسانية.':'Read the latest articles and blogs from Roaya Insanya.')
+@php
+    $isAr       = $locale === 'ar';
+    $p          = $page; // BlogPage model
+    $heroCats   = $p ? explode(',', $isAr ? ($p->hero_cats_ar ?? '') : ($p->hero_cats_en ?? '')) : [];
+    $heroSub    = $p ? ($isAr ? $p->hero_sub_ar : $p->hero_sub_en) : '';
+    $heroPara   = $p ? ($isAr ? $p->hero_para_ar : $p->hero_para_en) : '';
+    $secLabel   = $p ? ($isAr ? $p->section_label_ar : $p->section_label_en) : 'مدوّنات رؤيا';
+    $secTitle   = $p ? ($isAr ? $p->section_title_ar : $p->section_title_en) : 'رؤيا: حكايات تصنع اللحظة';
+@endphp
+@section('title', ($isAr ? 'المدونة' : 'Blog') . ' | ' . config('app.name'))
+@section('description', $isAr
+    ? 'تابع مقالات وقصص مؤسسة رؤيا الإنسانية الملهمة حول العمل الخيري والتأثير الإنساني.'
+    : 'Follow inspiring articles and stories from Roaya Insanya about charitable work.')
 
 @section('content')
 
-<section class="page-hero-section">
-    <div class="container">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ url($locale) }}">{{ $locale==='ar'?'الرئيسية':'Home' }}</a></li>
-                <li class="breadcrumb-item active">{{ $locale==='ar'?'المدونة':'Blog' }}</li>
-            </ol>
-        </nav>
-        <h1 class="section-title">{{ $locale==='ar'?'المدونة':'Blog' }}</h1>
-        <p class="muted-color mt-2">{{ $locale==='ar'?'رؤى ملهمة وقصص إنسانية من الميدان.':'Inspiring insights and human stories from the field.' }}</p>
-    </div>
-</section>
-
-<section class="main-section">
-    <div class="container">
-        @if(!empty($blogs) && !empty($blogs['data']))
-        <div class="row g-4">
-            @foreach($blogs['data'] as $blog)
-            @php
-                $bImg   = $blog['image'] ?? $blog['thumbnail'] ?? 'https://roaya-ansany.com/website/images/stats-card.png';
-                $bTitle = $blog['title'] ?? $blog['name'] ?? '';
-                $bExc   = $blog['excerpt'] ?? $blog['description'] ?? '';
-                $bDate  = isset($blog['created_at']) ? \Carbon\Carbon::parse($blog['created_at'])->translatedFormat('d M Y') : '';
-                $bSlug  = $blog['slug'] ?? $blog['id'] ?? '';
-                $bCat   = $blog['category'] ?? '';
-            @endphp
-            <div class="col-lg-4 col-md-6">
-                <div class="blog-card h-100">
-                    <div class="blog-img-wrap">
-                        <img src="{{ $bImg }}" alt="{{ $bTitle }}" class="blog-img">
-                        @if($bCat)<span class="blog-badge">{{ $bCat }}</span>@endif
+{{-- ── Hero ── --}}
+<div class="first-container">
+    <section>
+        <div class="container">
+            <div class="page-banner secound mt-3">
+                <div class="row">
+                    {{-- Left: bg image --}}
+                    <div class="col-md-6 bg-header" style="background-image: url('{{ asset('website/images/blogs-bg.svg') }}');">
+                        <div class="breadcrumbs mt-4 mb-4">
+                            <a href="{{ url($locale) }}">
+                                <img class="me-2" src="{{ asset('website/images/home.svg') }}" alt="home">
+                                {{ $isAr ? 'الرئيسية' : 'Home' }}
+                            </a>
+                            <span>/</span>
+                            <a href="#" class="active">{{ $isAr ? 'مدوناتنا' : 'Our Blog' }}</a>
+                        </div>
                     </div>
-                    <div class="blog-body">
-                        @if($bDate)<div class="blog-date"><i class="fa-regular fa-calendar me-1"></i>{{ $bDate }}</div>@endif
-                        <h5 class="blog-title">{{ $bTitle }}</h5>
-                        @if($bExc)<p class="blog-excerpt">{{ Str::limit(strip_tags($bExc), 110) }}</p>@endif
-                        <a href="{{ url($locale.'/blogs/'.$bSlug) }}" class="blog-read-more">
-                            {{ $locale==='ar'?'اقرأ المزيد':'Read More' }}
-                            <i class="fa-solid {{ $locale==='ar'?'fa-arrow-left':'fa-arrow-right' }} ms-1"></i>
-                        </a>
+
+                    {{-- Right: content --}}
+                    <div class="col-md-6">
+                        <div class="stats">
+                            <div class="change-life">
+                                @if(count(array_filter($heroCats)))
+                                <div class="categs mb-4">
+                                    @foreach($heroCats as $cat)
+                                        @if(trim($cat))
+                                        <div class="categ">{{ trim($cat) }}</div>
+                                        @endif
+                                    @endforeach
+                                </div>
+                                @endif
+
+                                <h1 class="section-title mb-4">
+                                    {{ $heroSub ?: ($isAr ? 'غيّر حياة شخص اليوم بتبرعك' : 'Change a life today with your donation') }}
+                                </h1>
+
+                                <p>{{ $heroPara ?: ($isAr ? 'اكتشف قصص المتبرعين والحملات التي تُحدث فرقًا حقيقيًا. انضم إلينا وكن جزءًا من التغيير.' : 'Discover stories of donors and campaigns that make a real difference. Join us.') }}</p>
+
+                                <form action="{{ url($locale.'/donate') }}" class="mt-5">
+                                    <div class="row">
+                                        <div class="col-8 col-lg-9">
+                                            <input type="text" name="amount" class="form-input w-100" placeholder="{{ $isAr ? 'ادخل المبلغ' : 'Enter amount' }}">
+                                        </div>
+                                        <div class="col-4 col-lg-3">
+                                            <button type="submit" class="btn-donate w-100">{{ $isAr ? 'تبرع الآن' : 'Donate Now' }}</button>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="progress-container mt-4">
+                                                <div class="progress-bar">
+                                                    <div style="width: 100%;" class="progress-fill"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{-- ── Posts Section ── --}}
+    <section class="main-section">
+        <div class="container">
+            <div class="blogs">
+                <h6 class="mb-4 text-center">{{ $secLabel }}</h6>
+                <h2 class="section-title mb-4 text-center">{{ $secTitle }}</h2>
+
+                <div class="row mt-5">
+                    <div id="news-list-section">
+                        <div id="news-container" class="row row-gap-4 winners_row">
+                            @foreach($posts as $post)
+                                @php
+                                    $img   = $post->image ? asset('storage/'.$post->image) : asset('website/images/stats-card.png');
+                                    $title = $isAr ? $post->title_ar : ($post->title_en ?: $post->title_ar);
+                                    $date  = $post->published_at ? $post->published_at->format('d/m/Y') : $post->created_at->format('d/m/Y');
+                                    $slug  = $post->slug;
+                                @endphp
+                                @include('partials.blog-card', compact('post','img','title','date','slug','locale'))
+                            @endforeach
+                        </div>
+
+                        <div class="row justify-content-center mt-4">
+                            <div class="col-auto text-center" id="news-load-wrap" {{ $hasMore ? '' : 'style=display:none' }}>
+                                <p id="news-count-display" class="text-muted mb-3"></p>
+                                <div id="news-loading-spinner" class="spinner-border text-primary d-none" role="status">
+                                    <span class="visually-hidden">{{ $isAr ? 'جارٍ التحميل...' : 'Loading...' }}</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            @endforeach
         </div>
+    </section>
+</div>
 
-        {{-- Pagination --}}
-        @if(!empty($blogs['meta']) && $blogs['meta']['last_page'] > 1)
-        <div class="d-flex justify-content-center mt-5">
-            <nav>
-                <ul class="pagination">
-                    @for($p = 1; $p <= $blogs['meta']['last_page']; $p++)
-                    <li class="page-item {{ $blogs['meta']['current_page'] == $p ? 'active' : '' }}">
-                        <a class="page-link" href="{{ url($locale.'/blogs?page='.$p) }}">{{ $p }}</a>
-                    </li>
-                    @endfor
-                </ul>
-            </nav>
-        </div>
-        @endif
-
-        @else
-        <div class="text-center py-5">
-            <i class="fa-regular fa-newspaper fa-4x main-color mb-4"></i>
-            <h4>{{ $locale==='ar'?'لا توجد مقالات حاليًا':'No articles available yet' }}</h4>
-            <p class="muted-color">{{ $locale==='ar'?'تابعنا قريبًا لأحدث المقالات والأخبار.':'Stay tuned for the latest articles and news.' }}</p>
-        </div>
-        @endif
-    </div>
-</section>
-
-@push('styles')
-<style>
-.page-hero-section { background:linear-gradient(135deg,#f8fdf4,#eef7e6); padding:60px 0 40px; }
-.page-hero-section .breadcrumb-item a { color:#5a9e2f; text-decoration:none; }
-.blog-card { background:white; border-radius:16px; overflow:hidden; border:1px solid #e8f4d9; transition:all 0.3s; }
-.blog-card:hover { box-shadow:0 8px 32px rgba(90,158,47,0.15); transform:translateY(-4px); }
-.blog-img-wrap { position:relative; overflow:hidden; height:200px; }
-.blog-img { width:100%; height:100%; object-fit:cover; transition:transform 0.4s; }
-.blog-card:hover .blog-img { transform:scale(1.05); }
-.blog-badge { position:absolute; top:12px; inset-inline-start:12px; background:#5a9e2f; color:white; font-size:11px; padding:4px 10px; border-radius:20px; }
-.blog-body { padding:20px; }
-.blog-date { font-size:12px; color:#999; margin-bottom:8px; }
-.blog-title { font-size:16px; font-weight:700; color:#333; line-height:1.5; margin-bottom:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
-.blog-excerpt { font-size:14px; color:#777; line-height:1.7; margin-bottom:15px; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
-.blog-read-more { color:#5a9e2f; font-size:14px; font-weight:600; text-decoration:none; }
-.blog-read-more:hover { text-decoration:underline; }
-.pagination .page-link { color:#5a9e2f; border-color:#e8f4d9; }
-.pagination .page-item.active .page-link { background:#5a9e2f; border-color:#5a9e2f; color:white; }
-</style>
-@endpush
 @endsection
+
+@push('scripts')
+<script>
+(function () {
+    let offset       = {{ count($posts) }};
+    const perPage    = 8;
+    let total        = {{ $total }};
+    let hasMore      = {{ $hasMore ? 'true' : 'false' }};
+    let isLoading    = false;
+    const container  = document.getElementById('news-container');
+    const spinner    = document.getElementById('news-loading-spinner');
+    const countEl    = document.getElementById('news-count-display');
+    const wrapEl     = document.getElementById('news-load-wrap');
+    const isAr       = {{ $isAr ? 'true' : 'false' }};
+    const loadUrl    = "{{ url($locale.'/blogs/load-more') }}";
+
+    function updateCount() {
+        const loaded = container.children.length;
+        if (loaded < total) {
+            countEl.textContent = isAr
+                ? `عرض ${loaded} من ${total} مقالات المدونة`
+                : `Showing ${loaded} of ${total} articles`;
+        } else {
+            countEl.textContent = isAr
+                ? `عرض جميع ${total} مقالات المدونة`
+                : `Showing all ${total} articles`;
+            wrapEl && (wrapEl.style.display = 'none');
+        }
+    }
+
+    function loadMore() {
+        if (isLoading || !hasMore) return;
+        isLoading = true;
+        spinner && spinner.classList.remove('d-none');
+
+        fetch(`${loadUrl}?offset=${offset}`, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(r => r.json())
+        .then(res => {
+            if (res.html) {
+                container.insertAdjacentHTML('beforeend', res.html);
+                offset += perPage;
+            }
+            if (res.total_count) total = res.total_count;
+            hasMore = !!res.has_more;
+            updateCount();
+            spinner && spinner.classList.add('d-none');
+            isLoading = false;
+            if (!hasMore && wrapEl) wrapEl.style.display = 'none';
+            if (typeof AOS !== 'undefined') AOS.refreshHard();
+        })
+        .catch(() => {
+            spinner && spinner.classList.add('d-none');
+            isLoading = false;
+        });
+    }
+
+    updateCount();
+
+    window.addEventListener('scroll', function () {
+        if (!hasMore) return;
+        if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 300) {
+            loadMore();
+        }
+    });
+})();
+</script>
+@endpush
