@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Campaign;
-use App\Models\Setting;
+use App\Services\ApiService;
 
 class DonateController extends Controller
 {
-    public function index()
+    public function index(ApiService $api)
     {
-        $campaigns = Campaign::active()->get();
-        $settings = Setting::getAllSettings();
-        return view('pages.donate', compact('campaigns', 'settings'));
+        $projects = $api->getProjects(1, 20);
+
+        return view('pages.donate', compact('projects'));
     }
 }

@@ -1,50 +1,50 @@
 <!DOCTYPE html>
-<html
-    dir="{{ app()->getLocale() == 'ar' ? 'rtl' : 'ltr' }}"
-    lang="{{ app()->getLocale() }}"
->
+<html dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}" lang="{{ app()->getLocale() }}">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', __('general.site_name')) - {{ Setting::get('site_name_' . app()->getLocale()) }}</title>
-    <link rel="icon" href="{{ asset('storage/' . Setting::get('favicon', '')) }}">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="@yield('description', __('app.description'))">
+    <title>@yield('title', __('app.name'))</title>
 
-    {{-- Bootstrap CSS --}}
-    @if(app()->getLocale() == 'ar')
-        <link rel="stylesheet" href="{{ asset('website/libs/bootstrap/bootstrap.rtl.min.css') }}">
-    @else
-        <link rel="stylesheet" href="{{ asset('website/libs/bootstrap/bootstrap.min.css') }}">
-    @endif
+    {{-- Favicon --}}
+    <link rel="icon" href="{{ asset('favicon.ico') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
 
-    {{-- SlimSelect CSS --}}
-    <link rel="stylesheet" href="{{ asset('website/libs/slimselect/slimselect.css') }}">
+    {{-- Fonts --}}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    {{-- Main CSS --}}
-    <link rel="stylesheet" href="{{ asset('website/css/main.css') }}">
-    @if(app()->getLocale() == 'ar')
-        <link rel="stylesheet" href="{{ asset('website/css/main.rtl.css') }}">
-    @endif
+    {{-- Slick Carousel --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css">
+
+    {{-- Main CSS from Next.js build --}}
+    <link rel="stylesheet" href="{{ asset('_next/static/css/059c8e1669e0c8e7.css') }}">
 
     @stack('styles')
 </head>
-<body class="locale-{{ app()->getLocale() }}">
+<body>
 
+    {{-- Navbar --}}
     @include('partials.navbar')
 
-    <main>
+    {{-- Main Content --}}
+    <main id="main-content">
         @yield('content')
     </main>
 
+    {{-- Footer --}}
     @include('partials.footer')
 
-    {{-- Bootstrap JS --}}
-    <script src="{{ asset('website/libs/bootstrap/bootstrap.bundle.min.js') }}"></script>
+    {{-- Scripts --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.js"></script>
 
-    {{-- SlimSelect JS --}}
-    <script src="{{ asset('website/libs/slimselect/slimselect.js') }}"></script>
-
-    {{-- Main JS --}}
-    <script src="{{ asset('website/js/main.js') }}"></script>
+    {{-- Next.js chunks --}}
+    <script src="{{ asset('_next/static/chunks/webpack-d36b50b5fb8708d9.js') }}" defer></script>
+    <script src="{{ asset('_next/static/chunks/framework-945b357d4a851f4b.js') }}" defer></script>
+    <script src="{{ asset('_next/static/chunks/main-37a5d6427119e763.js') }}" defer></script>
+    <script src="{{ asset('_next/static/chunks/pages/_app-08bc2f43e8035b26.js') }}" defer></script>
 
     @stack('scripts')
 </body>

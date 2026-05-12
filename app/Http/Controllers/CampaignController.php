@@ -2,19 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Campaign;
+use App\Services\ApiService;
+use Illuminate\Http\Request;
 
 class CampaignController extends Controller
 {
-    public function index()
+    public function index(Request $request, ApiService $api)
     {
-        $campaigns = Campaign::active()->latest()->paginate(9);
+        $page = $request->get('page', 1);
+        $campaigns = $api->getProjects($page);
+
         return view('pages.campaigns', compact('campaigns'));
     }
 
-    public function show($locale, $id)
+    public function show(string $locale, string $id, ApiService $api)
     {
-        $campaign = Campaign::findOrFail($id);
+        $campaign = $api->getProject($id);
+
         return view('pages.campaign-single', compact('campaign'));
     }
 }

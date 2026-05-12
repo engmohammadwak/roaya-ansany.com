@@ -1,24 +1,36 @@
-{{-- Footer - استبدل بمحتوى الـ footer من ملفات الـ HTML القديمة --}}
-<footer>
-    <p>{{ Setting::get('site_name_' . app()->getLocale()) }} &copy; {{ date('Y') }}</p>
+@php $locale = app()->getLocale(); @endphp
+<footer style="background:#1a1a2e; color:#fff; padding:40px 20px; margin-top:60px;">
+    <div style="max-width:1200px; margin:0 auto; display:flex; flex-wrap:wrap; gap:40px; justify-content:space-between;">
 
-    <div>
-        @if(Setting::get('facebook_url'))
-            <a href="{{ Setting::get('facebook_url') }}" target="_blank">Facebook</a>
-        @endif
-        @if(Setting::get('twitter_url'))
-            <a href="{{ Setting::get('twitter_url') }}" target="_blank">Twitter</a>
-        @endif
-        @if(Setting::get('instagram_url'))
-            <a href="{{ Setting::get('instagram_url') }}" target="_blank">Instagram</a>
-        @endif
-        @if(Setting::get('youtube_url'))
-            <a href="{{ Setting::get('youtube_url') }}" target="_blank">YouTube</a>
-        @endif
+        {{-- Logo & Description --}}
+        <div style="max-width:300px;">
+            <img src="{{ asset('assets/logoramadan2.png') }}" alt="logo" style="height:50px; margin-bottom:16px;">
+            <p style="color:#aaa; font-size:14px; line-height:1.7;">{{ __('footer.description') }}</p>
+        </div>
+
+        {{-- Links --}}
+        <div>
+            <h4 style="margin-bottom:16px; font-size:16px;">{{ __('footer.links') }}</h4>
+            <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:10px;">
+                <li><a href="{{ route('home', $locale) }}" style="color:#aaa; text-decoration:none;">{{ __('nav.home') }}</a></li>
+                <li><a href="{{ route('about', $locale) }}" style="color:#aaa; text-decoration:none;">{{ __('nav.about') }}</a></li>
+                <li><a href="{{ route('campaigns', $locale) }}" style="color:#aaa; text-decoration:none;">{{ __('nav.campaigns') }}</a></li>
+                <li><a href="{{ route('blogs', $locale) }}" style="color:#aaa; text-decoration:none;">{{ __('nav.blogs') }}</a></li>
+                <li><a href="{{ route('contact', $locale) }}" style="color:#aaa; text-decoration:none;">{{ __('nav.contact') }}</a></li>
+            </ul>
+        </div>
+
+        {{-- Legal --}}
+        <div>
+            <h4 style="margin-bottom:16px; font-size:16px;">{{ __('footer.legal') }}</h4>
+            <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:10px;">
+                <li><a href="{{ route('privacy', $locale) }}" style="color:#aaa; text-decoration:none;">{{ __('footer.privacy') }}</a></li>
+                <li><a href="{{ route('terms', $locale) }}" style="color:#aaa; text-decoration:none;">{{ __('footer.terms') }}</a></li>
+            </ul>
+        </div>
     </div>
 
-    <div>
-        <a href="{{ route('privacy', app()->getLocale()) }}">{{ __('nav.privacy') }}</a>
-        <a href="{{ route('terms', app()->getLocale()) }}">{{ __('nav.terms') }}</a>
+    <div style="text-align:center; margin-top:40px; padding-top:20px; border-top:1px solid #333; color:#666; font-size:13px;">
+        &copy; {{ date('Y') }} {{ __('app.name') }} — {{ __('footer.rights') }}
     </div>
 </footer>

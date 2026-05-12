@@ -1,27 +1,24 @@
 <?php
 
 use Illuminate\Support\Facades\Facade;
+use Illuminate\Support\ServiceProvider;
 
 return [
-    'name' => env('APP_NAME', 'Roaya Ansany'),
+    'name' => env('APP_NAME', 'Roaya Insanya'),
     'env' => env('APP_ENV', 'production'),
     'debug' => (bool) env('APP_DEBUG', false),
     'url' => env('APP_URL', 'http://localhost'),
     'asset_url' => env('ASSET_URL'),
-    'timezone' => 'Asia/Riyadh',
-    'locale' => env('APP_LOCALE', 'ar'),
-    'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en'),
-    'faker_locale' => env('APP_FAKER_LOCALE', 'ar_SA'),
-    'cipher' => 'AES-256-CBC',
+    'timezone' => 'UTC',
+    'locale' => 'ar',
+    'fallback_locale' => 'en',
+    'faker_locale' => 'ar_SA',
     'key' => env('APP_KEY'),
-    'previous_keys' => [
-        ...array_filter(explode(',', env('APP_PREVIOUS_KEYS', ''))),
-    ],
+    'cipher' => 'AES-256-CBC',
     'maintenance' => ['driver' => 'file'],
-    'providers' => Illuminate\Support\ServiceProvider::defaultProviders()->merge([
+    'api_base_url' => env('API_BASE_URL', 'https://api.tujuhbulir.com/api/v1'),
+    'providers' => ServiceProvider::defaultProviders()->merge([
         App\Providers\AppServiceProvider::class,
     ])->toArray(),
-    'aliases' => Facade::defaultAliases()->merge([
-        'Setting' => App\Models\Setting::class,
-    ])->toArray(),
+    'aliases' => Facade::defaultAliases()->merge([])->toArray(),
 ];

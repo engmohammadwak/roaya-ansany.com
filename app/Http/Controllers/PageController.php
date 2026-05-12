@@ -2,19 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Setting;
+use App\Services\ApiService;
 
 class PageController extends Controller
 {
     public function privacy()
     {
-        $settings = Setting::getAllSettings();
-        return view('pages.privacy', compact('settings'));
+        return view('pages.privacy-policy');
     }
 
     public function terms()
     {
-        $settings = Setting::getAllSettings();
-        return view('pages.terms', compact('settings'));
+        return view('pages.terms');
+    }
+
+    public function faqs(ApiService $api)
+    {
+        $faqs = $api->getFaqs();
+        return view('pages.faqs', compact('faqs'));
     }
 }

@@ -2,29 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Contact;
-use App\Models\Setting;
+use App\Services\ApiService;
 use Illuminate\Http\Request;
 
 class ContactController extends Controller
 {
     public function index()
     {
-        $settings = Setting::getAllSettings();
-        return view('pages.contact', compact('settings'));
+        return view('pages.contact');
     }
 
-    public function store(Request $request)
+    public function store(Request $request, ApiService $api)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name'    => 'required|string|max:255',
             'email'   => 'required|email',
-            'phone'   => 'nullable|string|max:20',
             'message' => 'required|string',
         ]);
 
-        Contact::create($request->only('name', 'email', 'phone', 'message'));
+        $result = $api->sendContactMessage($validated);
 
-        return back()->with('success', __('general.message_sent'));
+        if (isset($result['error'])) {
+            return back()->withErrors(['msg' => __('contact.error')])->withInput();
+        }
+
+        return back()->with('success', __('contact.success'));
     }
 }

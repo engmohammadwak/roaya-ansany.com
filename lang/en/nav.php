@@ -3,10 +3,9 @@
 return [
     'home'      => 'Home',
     'about'     => 'About Us',
-    'blogs'     => 'Blog',
     'campaigns' => 'Campaigns',
-    'donate'    => 'Donate Now',
+    'programs'  => 'Programs',
+    'blogs'     => 'Blog',
     'contact'   => 'Contact Us',
-    'privacy'   => 'Privacy Policy',
-    'terms'     => 'Terms & Conditions',
+    'donate'    => 'Donate Now',
 ];

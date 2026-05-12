@@ -2,20 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Blog;
+use App\Services\ApiService;
+use Illuminate\Http\Request;
 
 class BlogController extends Controller
 {
-    public function index()
+    public function index(Request $request, ApiService $api)
     {
-        $blogs = Blog::published()->latest()->paginate(9);
+        $page = $request->get('page', 1);
+        $blogs = $api->getBlogs($page);
+
         return view('pages.blogs', compact('blogs'));
     }
 
-    public function show($locale, $slug)
+    public function show(string $locale, string $slug, ApiService $api)
     {
-        $blog = Blog::where('slug', $slug)->where('is_published', true)->firstOrFail();
-        $related = Blog::published()->where('id', '!=', $blog->id)->latest()->take(3)->get();
-        return view('pages.blog-single', compact('blog', 'related'));
+        $blog = $api->getBlog($slug);
+
+        return view('pages.blog-single', compact('blog'));
     }
 }

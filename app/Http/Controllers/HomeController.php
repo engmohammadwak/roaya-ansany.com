@@ -2,18 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Blog;
-use App\Models\Campaign;
-use App\Models\Setting;
+use App\Services\ApiService;
 
 class HomeController extends Controller
 {
-    public function index()
+    public function index(ApiService $api)
     {
-        $blogs = Blog::published()->latest()->take(3)->get();
-        $campaigns = Campaign::active()->latest()->take(3)->get();
-        $settings = Setting::getAllSettings();
+        $data = $api->getHomeData();
+        $projects = $api->getProjects(1, 5);
+        $programs = $api->getPrograms();
 
-        return view('pages.home', compact('blogs', 'campaigns', 'settings'));
+        return view('pages.home', compact('data', 'projects', 'programs'));
     }
 }

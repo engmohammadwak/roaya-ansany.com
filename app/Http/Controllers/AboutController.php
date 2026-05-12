@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Setting;
+use App\Services\ApiService;
 
 class AboutController extends Controller
 {
-    public function index()
+    public function index(ApiService $api)
     {
-        $settings = Setting::getAllSettings();
-        return view('pages.about', compact('settings'));
+        $data = $api->getAboutData();
+
+        return view('pages.about', compact('data'));
     }
 }
