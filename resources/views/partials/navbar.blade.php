@@ -24,7 +24,7 @@
         {{-- اللوجو --}}
         <a class="navbar-brand d-flex align-items-center" href="{{ url($locale) }}">
             @if($siteLogo)
-                <img src="{{ $siteLogo }}" alt="{{ $siteName }}" class="me-2" style="max-height:50px;">
+                <img src="{{ asset('storage/' . $siteLogo) }}" alt="{{ $siteName }}" class="me-2" style="max-height:50px;">
             @else
                 <img src="https://roaya-ansany.com/website/images/logo.svg" alt="{{ $siteName }}" class="me-2">
             @endif
