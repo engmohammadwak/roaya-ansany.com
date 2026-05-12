@@ -7,7 +7,59 @@
 
 @section('content')
 
-{{-- ============ HERO BANNER ============ --}}
+{{-- ============ HERO SLIDER ============ --}}
+@php
+    $sliderProjects = array_slice($projects['data'] ?? [], 0, 5);
+@endphp
+@if(!empty($sliderProjects))
+<section class="hero-slider-section">
+    <div class="hero-swiper swiper">
+        <div class="swiper-wrapper">
+            @foreach($sliderProjects as $slide)
+            @php
+                $slideGoal   = $slide['goal_amount'] ?? 0;
+                $slideRaised = $slide['raised_amount'] ?? 0;
+                $slidePct    = $slideGoal > 0 ? min(100, round(($slideRaised / $slideGoal) * 100)) : 0;
+                $slideImg    = $slide['image'] ?? $slide['thumbnail'] ?? 'https://roaya-ansany.com/website/images/stats-card.png';
+                $slideTitle  = $slide['title'] ?? $slide['name'] ?? '';
+                $slideSlug   = $slide['slug'] ?? $slide['id'] ?? '';
+            @endphp
+            <div class="swiper-slide">
+                <div class="hero-slide" style="background-image: url('{{ $slideImg }}');">
+                    <div class="hero-slide-overlay"></div>
+                    <div class="container h-100">
+                        <div class="row h-100 align-items-center">
+                            <div class="col-lg-7">
+                                <div class="hero-slide-content">
+                                    <h2 class="hero-slide-title">{{ $slideTitle }}</h2>
+                                    <div class="slide-progress mt-3 mb-2">
+                                        <div class="slide-progress-bar">
+                                            <div class="slide-progress-fill" style="width: {{ $slidePct }}%"></div>
+                                        </div>
+                                        <div class="d-flex justify-content-between mt-2 text-white" style="font-size:13px">
+                                            <span>{{ $locale==='ar'?'تم جمع':'Raised' }}: ${{ number_format($slideRaised) }}</span>
+                                            <span>{{ $slidePct }}%</span>
+                                            <span>{{ $locale==='ar'?'الهدف':'Goal' }}: ${{ number_format($slideGoal) }}</span>
+                                        </div>
+                                    </div>
+                                    <a href="{{ url($locale.'/campaigns/'.$slideSlug) }}" class="btn-donate mt-3 d-inline-block">
+                                        {{ $locale==='ar'?'تبرع الآن':'Donate Now' }}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endforeach
+        </div>
+        <div class="swiper-pagination hero-pagination"></div>
+        <div class="swiper-button-next hero-next"></div>
+        <div class="swiper-button-prev hero-prev"></div>
+    </div>
+</section>
+@else
+{{-- ============ HERO BANNER (fallback) ============ --}}
 @php
     $hero = $data['hero'] ?? $data['page'] ?? null;
     $heroTitle = $hero['title'] ?? ($locale === 'ar' ? 'أنقذوا غزة الآن الحياة لا تنتظر، وتبرعك يصنع الفرق' : 'Save Gaza Now — Your donation makes a difference');
@@ -47,7 +99,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="col-md-1"></div>
             <div class="col-md-5">
                 <div class="clipped-image-container">
@@ -63,6 +114,7 @@
         </div>
     </div>
 </section>
+@endif
 
 {{-- ============ CAMPAIGN BANNER ============ --}}
 @php
@@ -97,6 +149,73 @@
         </div>
     </div>
 </section>
+
+{{-- ============ CAMPAIGNS WITH PROGRESS BARS ============ --}}
+@php
+    $homeProjects = array_slice($projects['data'] ?? [], 0, 6);
+@endphp
+@if(!empty($homeProjects))
+<section class="main-section">
+    <div class="container">
+        <div class="header d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h6>{{ $locale === 'ar' ? 'حملاتنا' : 'Our Campaigns' }}</h6>
+                <h2 class="section-title">{{ $locale === 'ar' ? 'أحدث حملات التبرع' : 'Latest Donation Campaigns' }}</h2>
+            </div>
+            <a href="{{ url($locale.'/campaigns') }}" class="btn-outline">
+                {{ $locale === 'ar' ? 'عرض الكل' : 'View All' }}
+            </a>
+        </div>
+        <div class="row">
+            @foreach($homeProjects as $proj)
+            @php
+                $pGoal   = $proj['goal_amount'] ?? 0;
+                $pRaised = $proj['raised_amount'] ?? 0;
+                $pRemain = max(0, $pGoal - $pRaised);
+                $pPct    = $pGoal > 0 ? min(100, round(($pRaised / $pGoal) * 100)) : 0;
+                $pImg    = $proj['image'] ?? $proj['thumbnail'] ?? 'https://roaya-ansany.com/website/images/stats-card.png';
+                $pTitle  = $proj['title'] ?? $proj['name'] ?? '';
+                $pSlug   = $proj['slug'] ?? $proj['id'] ?? '';
+            @endphp
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="campaign-card h-100">
+                    <div class="campaign-card-img">
+                        <img src="{{ $pImg }}" class="img-fluid w-100" alt="{{ $pTitle }}" style="height:200px; object-fit:cover; border-radius:12px 12px 0 0">
+                    </div>
+                    <div class="campaign-card-body p-3">
+                        <h5 class="campaign-card-title mb-3">{{ $pTitle }}</h5>
+                        {{-- Progress Bar --}}
+                        <div class="progress-container mb-2">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: {{ $pPct }}%"></div>
+                            </div>
+                        </div>
+                        {{-- Stats Row --}}
+                        <div class="d-flex justify-content-between text-muted mb-3" style="font-size:13px">
+                            <div class="text-center">
+                                <div class="fw-bold main-color">${{ number_format($pRaised) }}</div>
+                                <div>{{ $locale==='ar'?'تم جمعه':'Raised' }}</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="fw-bold">{{ $pPct }}%</div>
+                                <div>{{ $locale==='ar'?'مكتمل':'Complete' }}</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="fw-bold">${{ number_format($pGoal) }}</div>
+                                <div>{{ $locale==='ar'?'الهدف':'Goal' }}</div>
+                            </div>
+                        </div>
+                        <a href="{{ url($locale.'/campaigns/'.$pSlug) }}" class="btn-donate w-100 text-center d-block">
+                            {{ $locale==='ar'?'تبرع الآن':'Donate Now' }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+@endif
 
 {{-- ============ WHY DONATE ============ --}}
 @php
@@ -136,6 +255,64 @@
     </div>
 </section>
 
+{{-- ============ PROGRAMS SECTION ============ --}}
+@if(!empty($programs) && !empty($programs['data']))
+<section class="main-section programs-section">
+    <div class="container">
+        <div class="header d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h6>{{ $locale === 'ar' ? 'برامجنا' : 'Our Programs' }}</h6>
+                <h2 class="section-title">{{ $locale === 'ar' ? 'البرامج الإنسانية' : 'Humanitarian Programs' }}</h2>
+            </div>
+            <a href="{{ url($locale.'/campaigns') }}" class="btn-outline">
+                {{ $locale === 'ar' ? 'عرض الكل' : 'View All' }}
+            </a>
+        </div>
+        <div class="row">
+            @foreach(array_slice($programs['data'], 0, 3) as $program)
+            @php
+                $pgImg   = $program['image'] ?? $program['thumbnail'] ?? 'https://roaya-ansany.com/website/images/stats-card.png';
+                $pgTitle = $program['title'] ?? $program['name'] ?? '';
+                $pgDesc  = $program['description'] ?? $program['short_description'] ?? '';
+                $pgSlug  = $program['slug'] ?? $program['id'] ?? '';
+                $pgGoal   = $program['goal_amount'] ?? 0;
+                $pgRaised = $program['raised_amount'] ?? 0;
+                $pgPct    = $pgGoal > 0 ? min(100, round(($pgRaised / $pgGoal) * 100)) : 0;
+            @endphp
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="program-card h-100">
+                    <div class="program-card-img">
+                        <img src="{{ $pgImg }}" class="img-fluid w-100" alt="{{ $pgTitle }}" style="height:220px; object-fit:cover; border-radius:12px 12px 0 0">
+                    </div>
+                    <div class="program-card-body p-4">
+                        <h5 class="mb-2">{{ $pgTitle }}</h5>
+                        @if($pgDesc)
+                        <p class="color-67 mb-3" style="font-size:14px">{{ Str::limit(strip_tags($pgDesc), 100) }}</p>
+                        @endif
+                        @if($pgGoal > 0)
+                        <div class="progress-container mb-2">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: {{ $pgPct }}%"></div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between text-muted mb-3" style="font-size:13px">
+                            <span>{{ $locale==='ar'?'تم جمعه':'Raised' }}: ${{ number_format($pgRaised) }}</span>
+                            <span>{{ $pgPct }}%</span>
+                            <span>{{ $locale==='ar'?'الهدف':'Goal' }}: ${{ number_format($pgGoal) }}</span>
+                        </div>
+                        @endif
+                        <a href="{{ url($locale.'/campaigns/'.$pgSlug) }}" class="btn-donate w-100 text-center d-block">
+                            {{ $locale==='ar'?'تبرع الآن':'Donate Now' }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+@endif
+
 {{-- ============ WHERE WE WORK ============ --}}
 @php
     $about = $data['about'] ?? $data['organization'] ?? null;
@@ -172,7 +349,6 @@
 @php
     $statsImg = $data['stats_image'] ?? 'https://roaya-ansany.com/website/images/stats-card.png';
     $statsTitle = $data['stats_title'] ?? ($locale==='ar'?'الإغاثة العاجلة لأهل غزة، لبنان، شمال سوريا، السودان ودعم المحتاجين في تركيا':'Emergency relief for Gaza, Lebanon, North Syria, Sudan and Turkey');
-    // Try to pull stats from projects API data
     $totalGoal    = collect($projects['data'] ?? [])->sum('goal_amount');
     $totalRaised  = collect($projects['data'] ?? [])->sum('raised_amount');
     $totalRemain  = max(0, $totalGoal - $totalRaised);
@@ -300,6 +476,76 @@
     </div>
 </section>
 
+{{-- ============ FAQ SECTION ============ --}}
+@php
+    $faqs = $data['faqs'] ?? $data['faq'] ?? [];
+    $defaultFaqs = [
+        ['question' => ($locale==='ar'?'كيف يمكنني التبرع؟':'How can I donate?'), 'answer' => ($locale==='ar'?'يمكنك التبرع عبر الموقع مباشرةً باختيار المشروع وإدخال المبلغ المراد التبرع به.':'You can donate directly through the website by selecting a project and entering the desired amount.')],
+        ['question' => ($locale==='ar'?'هل تبرعاتي تصل لأصحابها؟':'Do my donations reach their recipients?'), 'answer' => ($locale==='ar'?'نعم، نحرص على توصيل 100% من تبرعاتكم للمستحقين عبر شركاء موثوقين ميدانيين.':'Yes, we ensure 100% of your donations reach beneficiaries through trusted field partners.')],
+        ['question' => ($locale==='ar'?'هل يمكنني متابعة مشروعي الذي تبرعت به؟':'Can I follow up on my donated project?'), 'answer' => ($locale==='ar'?'نعم، نوفر تقارير دورية وصور ميدانية لكل مشروع عبر موقعنا وحساباتنا على التواصل الاجتماعي.':'Yes, we provide periodic reports and field photos for each project through our website and social media.')],
+        ['question' => ($locale==='ar'?'ما هي مشاريع المؤسسة؟':'What are the foundation\'s projects?'), 'answer' => ($locale==='ar'?'تشمل مشاريعنا: كفالة الأيتام، توزيع الطرود الغذائية، حفر الآبار، بناء المساجد، ودعم المرضى.':'Our projects include: orphan sponsorship, food package distribution, well drilling, mosque construction, and patient support.')],
+        ['question' => ($locale==='ar'?'كيف أتواصل معكم؟':'How do I contact you?'), 'answer' => ($locale==='ar'?'يمكنك التواصل معنا عبر صفحة اتصل بنا أو عبر حساباتنا على منصات التواصل الاجتماعي.':'You can contact us through the Contact Us page or through our social media accounts.')],
+    ];
+    if (empty($faqs)) $faqs = $defaultFaqs;
+@endphp
+<section class="main-section faq-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-5 mb-4 mb-lg-0">
+                <h6>{{ $locale === 'ar' ? 'الأسئلة الشائعة' : 'FAQ' }}</h6>
+                <h2 class="section-title mb-4">{{ $locale === 'ar' ? 'أسئلة وأجوبة حول التبرع' : 'Questions & Answers About Donating' }}</h2>
+                <p class="muted-color mb-4">{{ $locale === 'ar' ? 'إذا لم تجد إجابتك هنا، لا تتردد في التواصل معنا.' : 'If you don\'t find your answer here, feel free to contact us.' }}</p>
+                <a href="{{ url($locale.'/contact') }}" class="btn-donate d-inline-block">
+                    {{ $locale === 'ar' ? 'تواصل معنا' : 'Contact Us' }}
+                </a>
+            </div>
+            <div class="col-lg-7">
+                <div class="accordion faq-accordion" id="faqAccordion">
+                    @foreach($faqs as $fi => $faq)
+                    <div class="accordion-item faq-item mb-3">
+                        <h2 class="accordion-header" id="faqHead{{ $fi }}">
+                            <button class="accordion-button {{ $fi > 0 ? 'collapsed' : '' }} faq-btn" type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#faqCollapse{{ $fi }}"
+                                aria-expanded="{{ $fi === 0 ? 'true' : 'false' }}"
+                                aria-controls="faqCollapse{{ $fi }}">
+                                {{ $faq['question'] ?? '' }}
+                            </button>
+                        </h2>
+                        <div id="faqCollapse{{ $fi }}" class="accordion-collapse collapse {{ $fi === 0 ? 'show' : '' }}"
+                            aria-labelledby="faqHead{{ $fi }}" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body faq-body">
+                                {{ $faq['answer'] ?? '' }}
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{{-- ============ NEWSLETTER SECTION ============ --}}
+<section class="main-section newsletter-section">
+    <div class="container">
+        <div class="newsletter-box text-center">
+            <h6>{{ $locale === 'ar' ? 'ابقَ على اطلاع' : 'Stay Updated' }}</h6>
+            <h2 class="section-title mb-3">{{ $locale === 'ar' ? 'اشترك في نشرتنا البريدية' : 'Subscribe to Our Newsletter' }}</h2>
+            <p class="muted-color mb-4">{{ $locale === 'ar' ? 'احصل على آخر أخبار المشاريع والحملات الإنسانية مباشرةً في بريدك.' : 'Get the latest news about projects and humanitarian campaigns directly in your inbox.' }}</p>
+            <form action="#" method="POST" class="newsletter-form d-flex justify-content-center gap-3 flex-wrap">
+                @csrf
+                <input type="email" name="email" class="form-input newsletter-input"
+                    placeholder="{{ $locale === 'ar' ? 'أدخل بريدك الإلكتروني' : 'Enter your email address' }}"
+                    required style="max-width:380px; flex:1">
+                <button type="submit" class="btn-donate">
+                    {{ $locale === 'ar' ? 'اشترك الآن' : 'Subscribe Now' }}
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+
 {{-- ============ CTA DONATE ============ --}}
 <section class="main-section">
     <div class="container">
@@ -316,5 +562,20 @@
         </div>
     </div>
 </section>
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    if (typeof Swiper !== 'undefined' && document.querySelector('.hero-swiper')) {
+        new Swiper('.hero-swiper', {
+            loop: true,
+            autoplay: { delay: 5000, disableOnInteraction: false },
+            pagination: { el: '.hero-pagination', clickable: true },
+            navigation: { nextEl: '.hero-next', prevEl: '.hero-prev' },
+        });
+    }
+});
+</script>
+@endpush
 
 @endsection
