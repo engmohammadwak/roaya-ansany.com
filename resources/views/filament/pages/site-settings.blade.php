@@ -3,28 +3,10 @@
 <form wire:submit="save" enctype="multipart/form-data">
 <div class="space-y-3">
 
-@php
-$sections = [
-    [
-        'id'      => 'identity',
-        'icon'    => '🌐',
-        'heading' => 'هوية الموقع',
-        'open'    => true,
-    ],
-    ['id'=>'colors_main',    'icon'=>'🎨', 'heading'=>'الألوان الرئيسية',    'open'=>true],
-    ['id'=>'colors_text',    'icon'=>'🔤', 'heading'=>'ألوان النصوص',          'open'=>false],
-    ['id'=>'colors_bg',      'icon'=>'🖥️', 'heading'=>'ألوان الخلفيات',        'open'=>false],
-    ['id'=>'colors_special', 'icon'=>'⚠️', 'heading'=>'ألوان خاصة',            'open'=>false],
-    ['id'=>'footer',         'icon'=>'📌', 'heading'=>'محتوى الفوتر',          'open'=>false],
-    ['id'=>'contact',        'icon'=>'📞', 'heading'=>'معلومات التواصل',     'open'=>false],
-    ['id'=>'admin',          'icon'=>'🔐', 'heading'=>'حساب المدير',             'open'=>false],
-];
-@endphp
-
 {{-- =================== هوية الموقع =================== --}}
 <div x-data="{ open: true }" class="rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
     <button type="button" @click="open = !open"
-        class="w-full flex items-center justify-between px-5 py-4 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors">
+        class="w-full flex items-center justify-between px-5 py-4 bg-white dark:bg-gray-800 hover:bg-gray-50 transition-colors">
         <span class="font-semibold text-base">🌐 هوية الموقع</span>
         <svg :class="open ? 'rotate-180' : ''"
             class="w-5 h-5 text-gray-400 transition-transform duration-200"
@@ -63,6 +45,65 @@ $sections = [
                 <input type="file" wire:model="favicon_upload" accept="image/*,.ico"
                     class="fi-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-800">
             </div>
+        </div>
+    </div>
+</div>
+
+{{-- =================== روابط النافبار =================== --}}
+<div x-data="{ open: true }" class="rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+    <button type="button" @click="open = !open"
+        class="w-full flex items-center justify-between px-5 py-4 bg-white dark:bg-gray-800 hover:bg-gray-50 transition-colors">
+        <span class="font-semibold text-base">🔗 روابط النافبار</span>
+        <svg :class="open ? 'rotate-180' : ''"
+            class="w-5 h-5 text-gray-400 transition-transform duration-200"
+            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+        </svg>
+    </button>
+    <div x-show="open" x-transition class="px-5 pb-5 pt-3 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700">
+
+        {{-- sticky-only toggle --}}
+        <div class="flex items-center justify-between p-3 mb-4 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700">
+            <div>
+                <div class="font-medium text-sm">🔒 النافبار Sticky فقط (تظهر عند السكرول)</div>
+                <div class="text-xs text-gray-400 mt-0.5">لو مفعّل — النافبار مخفية في أعلى الصفحة وتظهر بس لما يسكرول</div>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer ms-4">
+                <input type="checkbox" wire:model="data.navbar_sticky_only" value="1"
+                    class="sr-only peer"
+                    {{ Setting::get('navbar_sticky_only','0') === '1' ? 'checked' : '' }}>
+                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer
+                    dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white
+                    after:content-[''] after:absolute after:top-[2px] after:start-[2px]
+                    after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5
+                    after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+            </label>
+        </div>
+
+        {{-- روابط on/off --}}
+        <div class="space-y-2">
+        @foreach([
+            ['key'=>'nav_show_home',     'label'=>'الرئيسية',         'icon'=>'🏠'],
+            ['key'=>'nav_show_about',    'label'=>'من نحن',            'icon'=>'ℹ️'],
+            ['key'=>'nav_show_campaigns','label'=>'الحملات',           'icon'=>'📢'],
+            ['key'=>'nav_show_blogs',    'label'=>'المدونة',           'icon'=>'📝'],
+            ['key'=>'nav_show_contact',  'label'=>'تواصل معنا',        'icon'=>'📞'],
+            ['key'=>'nav_show_privacy',  'label'=>'سياسة الخصوصية',   'icon'=>'🔒'],
+        ] as $link)
+        <div class="flex items-center justify-between p-3 rounded-lg border border-gray-200 dark:border-gray-700">
+            <div class="font-medium text-sm">{{ $link['icon'] }} {{ $link['label'] }}</div>
+            <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" wire:model="data.{{ $link['key'] }}" value="1"
+                    class="sr-only peer"
+                    {{ Setting::get($link['key'],'1') === '1' ? 'checked' : '' }}>
+                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer
+                    dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white
+                    after:content-[''] after:absolute after:top-[2px] after:start-[2px]
+                    after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5
+                    after:transition-all dark:border-gray-600 peer-checked:bg-green-500"></div>
+            </label>
+        </div>
+        @endforeach
         </div>
     </div>
 </div>
@@ -112,7 +153,7 @@ $sections = [
             ['key'=>'color_text_dark',   'label'=>'نص غامق (العناوين)',    'desc'=>'العناوين الرئيسية h1 h2 h3'],
             ['key'=>'color_text_muted',  'label'=>'نص رمادي (الوصف)',      'desc'=>'الفقرات والوصف'],
             ['key'=>'color_text_label',  'label'=>'نص التسميات',           'desc'=>'#444C4E — لون التسميات والليبلات'],
-            ['key'=>'color_placeholder', 'label'=>'لون البلسهولدر',         'desc'=>'نص حقول الإدخال قبل الكتابة'],
+            ['key'=>'color_placeholder', 'label'=>'لون البلسهولدر',        'desc'=>'نص حقول الإدخال قبل الكتابة'],
         ] as $c)
         <div class="flex items-center gap-4 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
             <input type="color" wire:model="data.{{ $c['key'] }}" class="w-14 h-10 rounded border cursor-pointer flex-shrink-0">
@@ -127,7 +168,7 @@ $sections = [
     </div>
 </div>
 
-{{-- =================== الخلفيات =================== --}}
+{{-- =================== ألوان الخلفيات =================== --}}
 <div x-data="{ open: false }" class="rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
     <button type="button" @click="open = !open"
         class="w-full flex items-center justify-between px-5 py-4 bg-white dark:bg-gray-800 hover:bg-gray-50 transition-colors">
@@ -170,9 +211,9 @@ $sections = [
     </button>
     <div x-show="open" x-transition class="px-5 pb-5 pt-3 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700 space-y-3">
         @foreach([
-            ['key'=>'color_warning',     'label'=>'لون التحذير',          'desc'=>'برتقالي — رسائل التحذير'],
-            ['key'=>'color_danger',      'label'=>'لون الخطر',            'desc'=>'أحمر — + وإشارات الخطر'],
-            ['key'=>'color_step_active', 'label'=>'لون الخطوة النشطة',    'desc'=>'دائرة رقم الخطوة المحددة'],
+            ['key'=>'color_warning',     'label'=>'لون التحذير',         'desc'=>'برتقالي — رسائل التحذير'],
+            ['key'=>'color_danger',      'label'=>'لون الخطر',           'desc'=>'أحمر — + وإشارات الخطر'],
+            ['key'=>'color_step_active', 'label'=>'لون الخطوة النشطة',   'desc'=>'دائرة رقم الخطوة المحددة'],
         ] as $c)
         <div class="flex items-center gap-4 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
             <input type="color" wire:model="data.{{ $c['key'] }}" class="w-14 h-10 rounded border cursor-pointer flex-shrink-0">
