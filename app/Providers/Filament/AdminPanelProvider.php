@@ -22,9 +22,11 @@ class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
-        $siteName = Setting::get('site_name', 'Roaya Ansany');
-        $logoRaw  = Setting::get('site_logo');
-        $logo     = $logoRaw ? asset('storage/' . $logoRaw) : null;
+        $siteName   = Setting::get('site_name', 'Roaya Ansany');
+        $logoRaw    = Setting::get('site_logo');
+        $faviconRaw = Setting::get('site_favicon');
+        $logo       = $logoRaw ? asset('storage/' . $logoRaw) : null;
+        $favicon    = $faviconRaw ? asset('storage/' . $faviconRaw) : null;
 
         $panel = $panel
             ->default()
@@ -58,6 +60,10 @@ class AdminPanelProvider extends PanelProvider
 
         if ($logo) {
             $panel->brandLogo($logo)->brandLogoHeight('40px');
+        }
+
+        if ($favicon) {
+            $panel->favicon($favicon);
         }
 
         return $panel;
