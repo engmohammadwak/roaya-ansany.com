@@ -26,7 +26,7 @@
                 <label class="block text-sm font-medium mb-2">🎨 شعار الموقع (Logo)</label>
                 @php $logo = Setting::get('site_logo'); @endphp
                 @if($logo)
-                    <img src="{{ $logo }}" alt="Logo" class="h-16 mb-2 rounded">
+                    <img src="{{ asset('storage/' . $logo) }}" alt="Logo" class="h-16 mb-2 rounded">
                 @else
                     <div class="h-16 mb-2 flex items-center justify-center bg-gray-100 dark:bg-gray-700 rounded text-gray-400 text-xs">لا يوجد لوجو — سيستخدم الافتراضي</div>
                 @endif
@@ -38,7 +38,7 @@
                 <label class="block text-sm font-medium mb-2">🔖 الفافيكون (Favicon)</label>
                 @php $fav = Setting::get('site_favicon'); @endphp
                 @if($fav)
-                    <img src="{{ $fav }}" alt="Favicon" class="h-10 mb-2">
+                    <img src="{{ asset('storage/' . $fav) }}" alt="Favicon" class="h-10 mb-2">
                 @else
                     <div class="h-10 mb-2 flex items-center justify-center bg-gray-100 dark:bg-gray-700 rounded text-gray-400 text-xs">لا يوجد فافيكون</div>
                 @endif
@@ -50,12 +50,6 @@
 </div>
 
 {{-- =================== روابط النافبار =================== --}}
-{{--
-    toggle واحد بس:
-    navbar_links_enabled = 1  => كل روابط النافبار تظهر في كل الصفحات
-    navbar_links_enabled = 0  => كل الروابط مخفية
-    navbar_sticky_only   = 1  => النافبار تظهر فقط عند السكرول
---}}
 <div
     x-data="{
         linksOn:  @js(($this->data['navbar_links_enabled'] ?? '1') === '1'),
@@ -67,10 +61,8 @@
     "
     class="rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
 
-    {{-- Header --}}
     <div class="px-5 py-4 bg-white dark:bg-gray-800 flex items-center justify-between">
         <span class="font-semibold text-base">🔗 روابط النافبار</span>
-        {{-- سلايدر ON/OFF لكل الصفحات --}}
         <div class="flex items-center gap-3">
             <span x-text="linksOn ? 'مفعّل' : 'مخفي'"
                   :class="linksOn ? 'text-green-600 dark:text-green-400' : 'text-gray-400'"
@@ -86,15 +78,11 @@
         </div>
     </div>
 
-    {{-- Hidden inputs → Livewire --}}
     <input type="hidden" wire:model="data.navbar_links_enabled" :value="linksOn  ? '1' : '0'">
     <input type="hidden" wire:model="data.navbar_sticky_only"   :value="stickyOn ? '1' : '0'">
 
-    {{-- Body — يظهر فقط لو linksOn --}}
     <div x-show="linksOn" x-transition
          class="px-5 pb-5 pt-3 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700 space-y-3">
-
-        {{-- الروابط الموجودة — عرض فقط (info) --}}
         <p class="text-xs text-gray-400">✅ الروابط التالية ستظهر في النافبار على جميع الصفحات:</p>
         <div class="flex flex-wrap gap-2">
             @foreach(['🏠 الرئيسية','ℹ️ من نحن','📢 الحملات','📝 المدونة','📞 تواصل معنا','🔒 سياسة الخصوصية'] as $lbl)
@@ -103,8 +91,6 @@
             </span>
             @endforeach
         </div>
-
-        {{-- Sticky toggle --}}
         <div class="flex items-center justify-between p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700">
             <div>
                 <div class="font-medium text-sm">🔒 Sticky فقط (تظهر عند السكرول)</div>
