@@ -3,12 +3,18 @@
 @php
     $locale = app()->getLocale();
     $p = App\Models\Setting::get('color_primary', '#9dcc6b');
-    $heroLabelAr    = App\Models\Setting::get('hero_label_ar', 'تبرعك سينقذ الكثير من الأشخاص');
-    $heroLabelEn    = App\Models\Setting::get('hero_label_en', 'Your donation will save many lives');
+
+    // Hero data from HomeSetting (via HomeController)
+    $hero       = $data['hero'] ?? [];
+    $heroTitle  = $hero['title']       ?? ($locale==='ar' ? 'أنقذوا غزة الآن' : 'Save Gaza Now');
+    $heroDesc   = $hero['description'] ?? ($locale==='ar' ? 'ملايين المدنيين يواجهون الجوع والتشرد.' : 'Millions face hunger and displacement.');
+    $heroLabel  = $hero['label']       ?? ($locale==='ar' ? 'تبرعك سينقذ الكثير من الأشخاص' : 'Your donation will save many lives');
+    $heroImg    = $hero['image']       ?? 'https://roaya-ansany.com/storage/uploads/pages/3PCwY0bnxr9NmLyHvTlL7wlNmBC5ir5vBG5gv0Wz.png';
+
+    // Label position from Setting (controlled from SiteSettings dashboard)
     $heroLabelTop   = App\Models\Setting::get('hero_label_top',   '12px');
     $heroLabelLeft  = App\Models\Setting::get('hero_label_left',  '0');
     $heroLabelRight = App\Models\Setting::get('hero_label_right', '0');
-    $heroLabel      = $locale === 'ar' ? $heroLabelAr : $heroLabelEn;
 @endphp
 
 @section('title', $locale === 'ar' ? 'الرئيسية' : 'Home')
@@ -44,7 +50,7 @@
                                             <div class="slide-progress-fill" style="width:{{ $slidePct }}%"></div>
                                         </div>
                                         <div class="d-flex justify-content-between mt-2 text-white" style="font-size:13px">
-                                            <span>{{ $locale==='ar'?'تم جمع':'Raised' }}: ${{ number_format($slideRaised) }}</span>
+                                            <span>{{ $locale==='ar'?'تم جمعه':'Raised' }}: ${{ number_format($slideRaised) }}</span>
                                             <span>{{ $slidePct }}%</span>
                                             <span>{{ $locale==='ar'?'الهدف':'Goal' }}: ${{ number_format($slideGoal) }}</span>
                                         </div>
@@ -67,12 +73,6 @@
 </section>
 @else
 {{-- ============ HERO BANNER (fallback) ============ --}}
-@php
-    $hero       = $data['hero'] ?? [];
-    $heroTitle  = $hero['title']       ?? ($locale==='ar' ? 'أنقذوا غزة الآن' : 'Save Gaza Now');
-    $heroDesc   = $hero['description'] ?? ($locale==='ar' ? 'ملايين المدنيين يواجهون الجوع والتشرد.' : 'Millions face hunger and displacement.');
-    $heroImg    = $hero['image']       ?? 'https://roaya-ansany.com/storage/uploads/pages/3PCwY0bnxr9NmLyHvTlL7wlNmBC5ir5vBG5gv0Wz.png';
-@endphp
 <section class="hero-banner">
     <div class="container">
         <div class="row align-items-center">
@@ -107,7 +107,9 @@
                     <svg viewBox="0 0 441 388" preserveAspectRatio="none" style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:0">
                         <path d="M43 0C19.2518 0 0 19.2518 0 43V345C0 368.748 19.2518 388 43 388H398C421.748 388 441 368.748 441 345V115C441 98.9837 428.016 86 412 86H329C312.984 86 300 73.0163 300 57V29C300 12.9837 287.016 0 271 0H43Z" fill="{{ $p }}" fill-opacity="0.15"/>
                     </svg>
+                    @if($heroLabel)
                     <div style="position:absolute;top:{{ $heroLabelTop }};left:{{ $heroLabelLeft }};right:{{ $heroLabelRight }};text-align:center;z-index:2;font-size:14px;color:#555;font-weight:500">{{ $heroLabel }}</div>
+                    @endif
                     <img width="510" height="430" src="{{ $heroImg }}" alt="banner" style="position:relative;z-index:1;width:100%;border-radius:20px">
                 </div>
             </div>
@@ -387,7 +389,7 @@
     $defaultPartners = [
         ['name'=>($locale==='ar'?'هيئة الزكاة الفلسطينية':'Palestinian Zakat Authority'), 'icon'=>'fa-hand-holding-dollar','color'=>'#e8f4fd'],
         ['name'=>($locale==='ar'?'معهد الأمل للأيتام':'Al-Amal Institute for Orphans'),  'icon'=>'fa-children',           'color'=>'#edf7ee'],
-        ['name'=>($locale==='ar'?'وزارة التنمية الاجتماعية':'Ministry of Social Development'),'icon'=>'fa-building-columns',   'color'=>'#fdf3e7'],
+        ['name'=>($locale==='ar'?'وزارة التنمية الاجتماعية':'Ministry of Social Development'),'icon'=>'fa-building-columns','color'=>'#fdf3e7'],
     ];
     if (empty($partners)) $partners = $defaultPartners;
 @endphp
