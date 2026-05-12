@@ -1,7 +1,11 @@
 @extends('layouts.app')
 @php
-    $locale = app()->getLocale();
-    $isAr   = $locale === 'ar';
+    $locale  = app()->getLocale();
+    $isAr    = $locale === 'ar';
+    $goal    = (float) $campaign->target_amount;
+    $raised  = (float) $campaign->collected_amount;
+    $left    = max(0, $goal - $raised);
+    $percent = $goal > 0 ? min(100, round(($raised / $goal) * 100)) : 0;
 @endphp
 @section('title', $campaign->title . ' | ' . config('app.name'))
 @section('meta_description', Str::limit(strip_tags($campaign->description), 160))
@@ -39,13 +43,38 @@
                 </div>
             </div>
 
+            {{-- Stats + Progress in banner --}}
             <div class="row">
                 <div class="col-lg-6 col-md-12">
-                    <div class="progress-container mt-4">
-                        <div class="progress-bar">
-                            <div style="width: {{ $campaign->progress_percentage }}%;" class="progress-fill"></div>
+
+                    {{-- Raised / Goal / Left --}}
+                    <div class="d-flex justify-content-between text-white mb-2 mt-4" style="font-size:.9rem;">
+                        <div>
+                            <div class="opacity-75">{{ $isAr ? 'المستهدف' : 'Goal' }}</div>
+                            <strong>${{ number_format($goal, 0) }}</strong>
+                        </div>
+                        <div class="text-center">
+                            <div class="opacity-75">{{ $isAr ? 'تم جمعه' : 'Raised' }}</div>
+                            <strong>${{ number_format($raised, 0) }}</strong>
+                        </div>
+                        <div class="text-end">
+                            <div class="opacity-75">{{ $isAr ? 'المتبقي' : 'Left' }}</div>
+                            <strong>${{ number_format($left, 0) }}</strong>
                         </div>
                     </div>
+
+                    {{-- Progress Bar --}}
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div style="width: {{ $percent }}%;" class="progress-fill"></div>
+                        </div>
+                    </div>
+
+                    {{-- Percentage label --}}
+                    <p class="text-white mt-2" style="font-size:.85rem; opacity:.85;">
+                        {{ $percent }}% {{ $isAr ? 'من الهدف' : 'of goal' }}
+                    </p>
+
                 </div>
             </div>
 
@@ -67,6 +96,31 @@
                                 <img src="{{ $campaign->image_url }}" alt="{{ $campaign->title }}">
 
                                 <div class="donation-content mt-4">
+
+                                    {{-- Stats inside card --}}
+                                    <div class="d-flex justify-content-between mb-3" style="font-size:.88rem;">
+                                        <div>
+                                            <div class="muted-color">{{ $isAr ? 'المستهدف' : 'Goal' }}</div>
+                                            <strong class="dark-text-color">${{ number_format($goal, 0) }}</strong>
+                                        </div>
+                                        <div class="text-center">
+                                            <div class="muted-color">{{ $isAr ? 'تم جمعه' : 'Raised' }}</div>
+                                            <strong class="main-color">${{ number_format($raised, 0) }}</strong>
+                                        </div>
+                                        <div class="text-end">
+                                            <div class="muted-color">{{ $isAr ? 'المتبقي' : 'Left' }}</div>
+                                            <strong class="dark-text-color">${{ number_format($left, 0) }}</strong>
+                                        </div>
+                                    </div>
+
+                                    {{-- Progress bar in card --}}
+                                    <div class="progress-container mb-1">
+                                        <div class="progress-bar">
+                                            <div style="width: {{ $percent }}%;" class="progress-fill"></div>
+                                        </div>
+                                    </div>
+                                    <p class="muted-color mb-4" style="font-size:.82rem;">{{ $percent }}% {{ $isAr ? 'من الهدف' : 'of goal' }}</p>
+
                                     <h2>{{ $isAr ? 'اختر مبلغ التبرع الخاص بك' : 'Choose Your Donation Amount' }}</h2>
 
                                     <div class="amounts mt-3">
@@ -136,6 +190,12 @@
             <h3 class="section-title mb-4">{{ $isAr ? 'حملات أخرى' : 'Other Campaigns' }}</h3>
             <div class="row g-4">
                 @foreach($related as $rel)
+                @php
+                    $rGoal    = (float) $rel->target_amount;
+                    $rRaised  = (float) $rel->collected_amount;
+                    $rLeft    = max(0, $rGoal - $rRaised);
+                    $rPercent = $rGoal > 0 ? min(100, round(($rRaised / $rGoal) * 100)) : 0;
+                @endphp
                 <div class="col-lg-4 col-md-6">
                     <div class="campaign-card">
                         <a href="{{ url($locale . '/campaigns/' . ($rel->slug ?? $rel->id)) }}" class="blog-card">
@@ -143,9 +203,15 @@
                             <div class="title">
                                 <h3 class="dark-text-color mt-2">{{ $rel->title }}</h3>
                             </div>
-                            <div class="progress-container mt-3">
+                            {{-- Related stats --}}
+                            <div class="d-flex justify-content-between mt-3 mb-1" style="font-size:.8rem;">
+                                <span class="muted-color">{{ $isAr ? 'تم جمعه' : 'Raised' }}: <strong class="main-color">${{ number_format($rRaised, 0) }}</strong></span>
+                                <span class="muted-color">{{ $rPercent }}%</span>
+                                <span class="muted-color">{{ $isAr ? 'الهدف' : 'Goal' }}: <strong>${{ number_format($rGoal, 0) }}</strong></span>
+                            </div>
+                            <div class="progress-container mt-1">
                                 <div class="progress-bar gray">
-                                    <div style="width: {{ $rel->progress_percentage }}%;" class="progress-fill"></div>
+                                    <div style="width: {{ $rPercent }}%;" class="progress-fill"></div>
                                 </div>
                             </div>
                             <div class="card-footer mt-3">
