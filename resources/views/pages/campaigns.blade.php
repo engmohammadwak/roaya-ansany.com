@@ -45,9 +45,13 @@
             <div class="row g-4">
 
                 @forelse($campaigns as $campaign)
+                @php
+                    // استخدم slug إذا موجود وإلا id كـ fallback
+                    $campaignUrl = url($locale . '/campaigns/' . ($campaign->slug ?? $campaign->id));
+                @endphp
                     <div class="col-12 col-md-6 col-lg-4 d-flex flex-column align-items-center" data-aos="zoom-in">
                         <div class="campaign-card">
-                            <a href="{{ url($locale . '/campaigns/' . $campaign->id) }}" class="blog-card">
+                            <a href="{{ $campaignUrl }}" class="blog-card">
 
                                 <img src="{{ $campaign->image_url }}"
                                      alt="{{ $campaign->title }}" class="img-fluid mb-0">
