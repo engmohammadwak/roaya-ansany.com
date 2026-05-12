@@ -13,7 +13,7 @@ class TopCampaignsWidget extends BaseWidget
 {
     protected static ?string $heading    = '🏆 أعلى الحملات تبرعاً';
     protected static ?int    $sort       = 5;
-    protected int | string   $columnSpan = 'full';
+    protected int | string | array $columnSpan = 'full';
     protected static ?int    $maxItems   = 5;
 
     public function table(Table $table): Table
