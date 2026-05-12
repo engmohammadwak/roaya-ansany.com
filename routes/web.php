@@ -5,6 +5,7 @@ use App\Http\Controllers\AboutController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CampaignController;
 use App\Http\Controllers\DonateController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\FaqController;
@@ -18,6 +19,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return redirect('/' . app()->getLocale());
 });
+
+// Paymob webhook (no CSRF — Paymob POST directly)
+Route::post('/donate/payment/callback', [PaymentController::class, 'callback'])
+    ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class])
+    ->name('payment.callback.global');
 
 // Localized routes
 Route::prefix('{locale}')
@@ -34,12 +40,19 @@ Route::prefix('{locale}')
         Route::get('/blogs', [BlogController::class, 'index'])->name('blogs');
         Route::get('/blogs/{slug}', [BlogController::class, 'show'])->name('blogs.show');
 
-        // Campaigns — يستخدم slug بدل id للـ SEO
+        // Campaigns
         Route::get('/campaigns', [CampaignController::class, 'index'])->name('campaigns');
         Route::get('/campaigns/{slug}', [CampaignController::class, 'show'])->name('campaigns.show');
 
         // Donate
         Route::get('/donate', [DonateController::class, 'index'])->name('donate');
+
+        // Payment routes
+        Route::post('/donate/payment/3d/form', [PaymentController::class, 'process'])->name('payment.process');
+        Route::get('/donate/payment/result',   [PaymentController::class, 'result'])->name('payment.result');
+        Route::post('/donate/payment/callback', [PaymentController::class, 'callback'])
+            ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class])
+            ->name('payment.callback');
 
         // Contact
         Route::get('/contact', [ContactController::class, 'index'])->name('contact');
