@@ -159,7 +159,7 @@
                 </div>
                 <div class="col-md-7 order-1 order-lg-2 ps-lg-5">
                     <h2 class="section-title mt-4 text-start">{{ $cbTitle }}</h2>
-                    <h6 class="main-color mt-2 mb-3 text-start" style="font-size:15px;font-weight:600">{{ $cbSubtitle }}</h6>
+                    <h6 class="mt-2 mb-3 text-start" style="font-size:15px;font-weight:600;color:var(--main-color)">{{ $cbSubtitle }}</h6>
                     <p class="color-67 text-start" style="font-size:14px;line-height:1.9">{{ $cbDesc }}</p>
                     <form action="#" class="mt-4">
                         <div class="row">
@@ -232,8 +232,8 @@
 <section class="main-section why-donate">
     <div class="container">
         <div class="header text-end" dir="rtl">
-            <h6>{{ $locale==='ar'?'لماذا تتبرع لنا؟':'Why donate to us?' }}</h6>
-            <h2 class="section-title">{{ $locale==='ar'?'لأننا نهتم بالحالات الأكثر احتياجًا.':'Because we care about those in greatest need.' }}</h2>
+            <h6 style="color:var(--main-color);font-size:15px;font-weight:600">{{ $locale==='ar'?'لماذا تتبرع لنا؟':'Why donate to us?' }}</h6>
+            <h2 class="section-title text-end">{{ $locale==='ar'?'لأننا نهتم بالحالات الأكثر احتياجًا.':'Because we care about those in greatest need.' }}</h2>
         </div>
         <div class="row mt-5">
             @foreach($whyCards as $card)
