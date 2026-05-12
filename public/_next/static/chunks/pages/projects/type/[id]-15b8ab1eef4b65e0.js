@@ -1,0 +1,1 @@
+(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[9114],{34565:function(n,_,u){(window.__NEXT_P=window.__NEXT_P||[]).push(["/projects/type/[id]",function(){return u(38245)}])}},function(n){n.O(0,[5543,8134,7945,2930,6417,7622,9932,2888,9774,179],function(){return n(n.s=34565)}),_N_E=n.O()}]);
