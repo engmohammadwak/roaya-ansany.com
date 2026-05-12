@@ -55,17 +55,21 @@ class CampaignResource extends Resource
                 ->helperText('يولد تلقائياً من العنوان الإنجليزي. مثال: water-project-2025')
                 ->unique(Campaign::class, 'slug', ignoreRecord: true)
                 ->columnSpanFull()
-                ->rules(['alpha_dash'])
                 ->nullable(),
 
             Forms\Components\FileUpload::make('image')
-                ->label('الصورة')
+                ->label('صورة الحملة')
                 ->image()
                 ->disk('public')
                 ->directory('campaigns')
                 ->visibility('public')
-                ->maxSize(5120)
-                ->columnSpanFull(),
+                ->imagePreviewHeight('250')     // معاينة الصورة قبل الحفظ
+                ->imageEditor()                 // محرر الصورة
+                ->maxSize(102400)               // 100MB = 100 * 1024 KB
+                ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp', 'image/gif'])
+                ->columnSpanFull()
+                ->uploadingMessage('جاري رفع الصورة...')
+                ->helperText('الحد الأقصى 100 ميجابايت — JPG, PNG, WEBP, GIF'),
 
             Forms\Components\TextInput::make('target_amount')
                 ->label('المبلغ المستهدف')
@@ -89,7 +93,9 @@ class CampaignResource extends Resource
             ->columns([
                 Tables\Columns\ImageColumn::make('image')
                     ->label('الصورة')
-                    ->disk('public'),
+                    ->disk('public')
+                    ->height(60)
+                    ->width(80),
                 Tables\Columns\TextColumn::make('title_ar')
                     ->label('العنوان')
                     ->searchable(),
