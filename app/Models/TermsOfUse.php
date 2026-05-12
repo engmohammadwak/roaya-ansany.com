@@ -1,8 +1,19 @@
 <?php
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
+
 class TermsOfUse extends Model {
-    protected $table = 'terms_of_use';
-    protected $fillable = ['title_ar','title_en','content_ar','content_en','last_updated'];
+    protected $table    = 'terms_of_use';
+    protected $fillable = [
+        'title_ar','title_en',
+        'banner_title_ar','banner_title_en',
+        'banner_desc_ar','banner_desc_en',
+        'content_ar','content_en',
+        'last_updated',
+    ];
     protected $casts = ['last_updated' => 'datetime'];
+
+    public function sections() {
+        return $this->hasMany(TermsSection::class)->orderBy('sort_order');
+    }
 }
