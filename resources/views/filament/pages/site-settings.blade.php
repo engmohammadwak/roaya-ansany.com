@@ -1,9 +1,5 @@
-@php
-    function colorRow(string $key, string $label, string $desc = ''): array {
-        return compact('key','label','desc');
-    }
-@endphp
 <x-filament-panels::page>
+@php use App\Models\Setting; @endphp
 <form wire:submit="save" enctype="multipart/form-data">
 <div class="space-y-6">
 
@@ -18,17 +14,23 @@
             <div></div>
             <div>
                 <label class="block text-sm font-medium mb-2">🎨 شعار الموقع (Logo)</label>
-                @if(App\Models\Setting::get('site_logo'))
-                    <img src="{{ App\Models\Setting::get('site_logo') }}" alt="Logo" class="h-16 mb-2 rounded">
+                @php $logo = Setting::get('site_logo'); @endphp
+                @if($logo)
+                    <img src="{{ $logo }}" alt="Logo" class="h-16 mb-2 rounded">
+                @else
+                    <div class="h-16 mb-2 flex items-center justify-center bg-gray-100 rounded text-gray-400 text-xs">لا يوجد لوجو — سيستخدم الافتراضي</div>
                 @endif
                 <input type="file" wire:model="logo_upload" accept="image/*"
                     class="fi-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-800">
-                <p class="text-xs text-gray-400 mt-1">يظهر في النافبار والفوتر</p>
+                <p class="text-xs text-gray-400 mt-1">ينصح باستخدام PNG بخلفية شفافة أو SVG</p>
             </div>
             <div>
-                <label class="block text-sm font-medium mb-2">🔖 الفافيكون (أيقونة التاب)</label>
-                @if(App\Models\Setting::get('site_favicon'))
-                    <img src="{{ App\Models\Setting::get('site_favicon') }}" alt="Favicon" class="h-10 mb-2">
+                <label class="block text-sm font-medium mb-2">🔖 الفافيكون (Favicon)</label>
+                @php $fav = Setting::get('site_favicon'); @endphp
+                @if($fav)
+                    <img src="{{ $fav }}" alt="Favicon" class="h-10 mb-2">
+                @else
+                    <div class="h-10 mb-2 flex items-center justify-center bg-gray-100 rounded text-gray-400 text-xs">لا يوجد فافيكون</div>
                 @endif
                 <input type="file" wire:model="favicon_upload" accept="image/*,.ico"
                     class="fi-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-800">
@@ -40,8 +42,8 @@
     <x-filament::section heading="🎨 الألوان الرئيسية">
         @php
         $mainColors = [
-            ['key'=>'color_primary',     'label'=>'اللون الأساسي',          'desc'=>'الأزرار و progress bar والروابط النشطة'],
-            ['key'=>'color_secondary',   'label'=>'اللون الثانوي',          'desc'=>'الغرادينت وبانر الهيرو'],
+            ['key'=>'color_primary',   'label'=>'اللون الأساسي',  'desc'=>'الأزرار، progress bar، الروابط النشطة'],
+            ['key'=>'color_secondary', 'label'=>'اللون الثانوي',  'desc'=>'الغراديانت وبانر الهيرو'],
         ];
         @endphp
         <div class="space-y-3">
@@ -63,10 +65,10 @@
     <x-filament::section heading="🔤 ألوان النصوص">
         @php
         $textColors = [
-            ['key'=>'color_text_dark',   'label'=>'نص غامق (العناوين)',     'desc'=>'العناوين الرئيسية h1 h2 h3'],
-            ['key'=>'color_text_muted',  'label'=>'نص رمادي (الوصف)',       'desc'=>'الفقرات والوصف'],
-            ['key'=>'color_text_label',  'label'=>'نص التسميات',          'desc'=>'#444C4E — لون التسميات والليبلات'],
-            ['key'=>'color_placeholder', 'label'=>'لون البلسهولدر',        'desc'=>'نص حقول الإدخال قبل الكتابة'],
+            ['key'=>'color_text_dark',   'label'=>'نص غامق (العناوين)',    'desc'=>'العناوين الرئيسية h1 h2 h3'],
+            ['key'=>'color_text_muted',  'label'=>'نص رمادي (الوصف)',      'desc'=>'الفقرات والوصف'],
+            ['key'=>'color_text_label',  'label'=>'نص التسميات',           'desc'=>'#444C4E — لون التسميات والليبلات'],
+            ['key'=>'color_placeholder', 'label'=>'لون البلسهولدر',         'desc'=>'نص حقول الإدخال قبل الكتابة'],
         ];
         @endphp
         <div class="space-y-3">
@@ -84,12 +86,12 @@
         </div>
     </x-filament::section>
 
-    {{-- خلفيات --}}
+    {{-- الخلفيات --}}
     <x-filament::section heading="🖥️ ألوان الخلفيات">
         @php
         $bgColors = [
-            ['key'=>'color_bg_body',  'label'=>'خلفية الصفحة',          'desc'=>'لون خلفية body كاملاً'],
-            ['key'=>'color_bg_light', 'label'=>'خلفية فاتحة (الأقسام)',   'desc'=>'أقسام support section وغيرها'],
+            ['key'=>'color_bg_body',  'label'=>'خلفية الصفحة',         'desc'=>'لون خلفية body كاملاً'],
+            ['key'=>'color_bg_light', 'label'=>'خلفية فاتحة (الأقسام)', 'desc'=>'أقسام support section وغيرها'],
             ['key'=>'color_bg_card',  'label'=>'خلفية الكروت',          'desc'=>'why-donate-card وكروت التبرع'],
         ];
         @endphp
@@ -112,9 +114,9 @@
     <x-filament::section heading="⚠️ ألوان خاصة">
         @php
         $specialColors = [
-            ['key'=>'color_warning',      'label'=>'لون التحذير',           'desc'=>'برتقالي — رسائل التحذير'],
-            ['key'=>'color_danger',       'label'=>'لون الخطر',             'desc'=>'أحمر — + وإشارات الخطر'],
-            ['key'=>'color_step_active',  'label'=>'لون الخطوة النشطة',    'desc'=>'دائرة رقم الخطوة المحددة'],
+            ['key'=>'color_warning',     'label'=>'لون التحذير',          'desc'=>'برتقالي — رسائل التحذير'],
+            ['key'=>'color_danger',      'label'=>'لون الخطر',            'desc'=>'أحمر — + وإشارات الخطر'],
+            ['key'=>'color_step_active', 'label'=>'لون الخطوة النشطة',    'desc'=>'دائرة رقم الخطوة المحددة'],
         ];
         @endphp
         <div class="space-y-3">
@@ -163,7 +165,7 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
                 <label class="block text-sm font-medium mb-1">رقم الهاتف</label>
-                <input type="text" wire:model="data.contact_phone" placeholder="+905398863777"
+                <input type="text" wire:model="data.contact_phone"
                     class="fi-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-800">
             </div>
             <div>
