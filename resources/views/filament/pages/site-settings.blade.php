@@ -1,9 +1,8 @@
-<x-filament-panels::page>
 @php use App\Models\Setting; @endphp
+<x-filament-panels::page>
 <form wire:submit="save" enctype="multipart/form-data">
 <div class="space-y-6">
 
-    {{-- الهوية --}}
     <x-filament::section heading="🌐 هوية الموقع">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -38,7 +37,6 @@
         </div>
     </x-filament::section>
 
-    {{-- ألوان رئيسية --}}
     <x-filament::section heading="🎨 الألوان الرئيسية">
         @php
         $mainColors = [
@@ -61,7 +59,6 @@
         </div>
     </x-filament::section>
 
-    {{-- ألوان النصوص --}}
     <x-filament::section heading="🔤 ألوان النصوص">
         @php
         $textColors = [
@@ -86,7 +83,6 @@
         </div>
     </x-filament::section>
 
-    {{-- الخلفيات --}}
     <x-filament::section heading="🖥️ ألوان الخلفيات">
         @php
         $bgColors = [
@@ -110,7 +106,6 @@
         </div>
     </x-filament::section>
 
-    {{-- ألوان خاصة --}}
     <x-filament::section heading="⚠️ ألوان خاصة">
         @php
         $specialColors = [
@@ -134,7 +129,6 @@
         </div>
     </x-filament::section>
 
-    {{-- الفوتر --}}
     <x-filament::section heading="📌 محتوى الفوتر">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -160,7 +154,6 @@
         </div>
     </x-filament::section>
 
-    {{-- التواصل --}}
     <x-filament::section heading="📞 معلومات التواصل">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
@@ -182,7 +175,6 @@
         </div>
     </x-filament::section>
 
-    {{-- حساب المدير --}}
     <x-filament::section heading="🔐 حساب المدير">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
