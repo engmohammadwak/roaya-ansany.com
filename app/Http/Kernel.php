@@ -13,6 +13,10 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+        // سيكيورتي هيدرز على كل طلب
+        \App\Http\Middleware\SecurityHeaders::class,
+        // حماية SQLi + XSS + Path Traversal + Bad Bots
+        \App\Http\Middleware\BlockSuspiciousRequests::class,
     ];
 
     protected $middlewareGroups = [
@@ -31,11 +35,12 @@ class Kernel extends HttpKernel
     ];
 
     protected $middlewareAliases = [
-        'auth'          => \App\Http\Middleware\Authenticate::class,
-        'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
-        'can'           => \Illuminate\Auth\Middleware\Authorize::class,
-        'guest'         => \App\Http\Middleware\RedirectIfAuthenticated::class,
-        'throttle'      => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-        'setlocale'     => \App\Http\Middleware\SetLocale::class,
+        'auth'             => \App\Http\Middleware\Authenticate::class,
+        'cache.headers'    => \Illuminate\Http\Middleware\SetCacheHeaders::class,
+        'can'              => \Illuminate\Auth\Middleware\Authorize::class,
+        'guest'            => \App\Http\Middleware\RedirectIfAuthenticated::class,
+        'throttle'         => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        'setlocale'        => \App\Http\Middleware\SetLocale::class,
+        'payment.limit'    => \App\Http\Middleware\PaymentRateLimit::class,
     ];
 }
