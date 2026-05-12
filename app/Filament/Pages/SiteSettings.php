@@ -38,12 +38,17 @@ class SiteSettings extends Page
             'contact_phone', 'contact_email', 'whatsapp_number',
             'navbar_links_enabled',
             'navbar_sticky_only',
+            'hero_label_ar', 'hero_label_en',
+            'hero_label_top', 'hero_label_left', 'hero_label_right',
         ];
 
         foreach ($keys as $key) {
             $default = match($key) {
                 'navbar_links_enabled' => '1',
                 'navbar_sticky_only'   => '0',
+                'hero_label_top'       => '12px',
+                'hero_label_left'      => '0',
+                'hero_label_right'     => '0',
                 default                => '',
             };
             $this->data[$key] = Setting::get($key, $default);
@@ -81,6 +86,8 @@ class SiteSettings extends Page
             'contact_phone', 'contact_email', 'whatsapp_number',
             'navbar_links_enabled',
             'navbar_sticky_only',
+            'hero_label_ar', 'hero_label_en',
+            'hero_label_top', 'hero_label_left', 'hero_label_right',
         ];
 
         $boolKeys = ['navbar_links_enabled', 'navbar_sticky_only'];

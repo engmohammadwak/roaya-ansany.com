@@ -49,6 +49,59 @@
     </div>
 </div>
 
+{{-- =================== الصفحة الرئيسية - Hero =================== --}}
+<div x-data="{ open: true }" class="rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+    <button type="button" @click="open = !open"
+        class="w-full flex items-center justify-between px-5 py-4 bg-white dark:bg-gray-800 hover:bg-gray-50 transition-colors">
+        <span class="font-semibold text-base">🏠 الصفحة الرئيسية - Hero</span>
+        <svg :class="open ? 'rotate-180' : ''"
+            class="w-5 h-5 text-gray-400 transition-transform duration-200"
+            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+        </svg>
+    </button>
+    <div x-show="open" x-transition class="px-5 pb-5 pt-3 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium mb-1">النص فوق الصورة (عربي)</label>
+                <input type="text" wire:model="data.hero_label_ar"
+                    class="fi-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-800"
+                    placeholder="تبرعك سينقذ الكثير من الأشخاص">
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-1">النص فوق الصورة (إنجليزي)</label>
+                <input type="text" wire:model="data.hero_label_en"
+                    class="fi-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-800"
+                    placeholder="Your donation will save many lives">
+            </div>
+        </div>
+        <div class="mt-4">
+            <p class="text-sm font-medium mb-3">📐 موضع النص فوق الصورة</p>
+            <div class="grid grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-xs text-gray-500 mb-1">Top (من الأعلى)</label>
+                    <input type="text" wire:model="data.hero_label_top"
+                        class="fi-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-800 font-mono"
+                        placeholder="12px">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-500 mb-1">Left (من اليسار)</label>
+                    <input type="text" wire:model="data.hero_label_left"
+                        class="fi-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-800 font-mono"
+                        placeholder="0 أو 351px">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-500 mb-1">Right (من اليمين)</label>
+                    <input type="text" wire:model="data.hero_label_right"
+                        class="fi-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-800 font-mono"
+                        placeholder="0">
+                </div>
+            </div>
+            <p class="text-xs text-gray-400 mt-2">💡 مثال: left=0 right=0 يمركز النص. left=351px يزيحه لليسار.</p>
+        </div>
+    </div>
+</div>
+
 {{-- =================== روابط النافبار =================== --}}
 <div
     x-data="{
