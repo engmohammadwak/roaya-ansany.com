@@ -21,17 +21,22 @@ class TermsOfUseResource extends Resource
     {
         return $form->schema([
 
-            // ===== بيانات البانر =====
             Forms\Components\Section::make('بيانات البانر العلوي')
                 ->description('هذه البيانات تظهر في أعلى صفحة شروط الاستخدام')
                 ->schema([
                     Forms\Components\Grid::make(2)->schema([
-                        Forms\Components\TextInput::make('banner_title_ar')
+                        Forms\Components\Textarea::make('banner_title_ar')
                             ->label('عنوان البانر (عربي)')
-                            ->placeholder('شروطنا وأحكامنا…'),
-                        Forms\Components\TextInput::make('banner_title_en')
+                            ->rows(2)
+                            ->hint('يدعم HTML — مثال: شروطنا <span class="main-color">وأحكامنا</span>')
+                            ->hintColor('warning')
+                            ->placeholder("شروطنا وأحكامنا… <span class=\"main-color\">لضمان</span> تجربة واضحة"),
+                        Forms\Components\Textarea::make('banner_title_en')
                             ->label('عنوان البانر (إنجليزي)')
-                            ->placeholder('Our Terms & Conditions...'),
+                            ->rows(2)
+                            ->hint('Supports HTML — e.g. Our <span class="main-color">Terms</span>')
+                            ->hintColor('warning')
+                            ->placeholder('Our Terms & <span class="main-color">Conditions</span>...'),
                     ]),
                     Forms\Components\Grid::make(2)->schema([
                         Forms\Components\Textarea::make('banner_desc_ar')
@@ -45,7 +50,6 @@ class TermsOfUseResource extends Resource
                         ->label('تاريخ آخر تحديث'),
                 ]),
 
-            // ===== البنود =====
             Forms\Components\Section::make('بنود الشروط والأحكام')
                 ->description('أضف أو عدّل أو احذف البنود. تظهر بالترتيب نفسه في الصفحة.')
                 ->schema([
@@ -84,7 +88,7 @@ class TermsOfUseResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('banner_title_ar')->label('عنوان الصفحة'),
+                Tables\Columns\TextColumn::make('banner_title_ar')->label('عنوان الصفحة')->html(),
                 Tables\Columns\TextColumn::make('last_updated')->label('آخر تحديث')->dateTime('Y-m-d')->sortable(),
             ])
             ->actions([Tables\Actions\EditAction::make()]);
