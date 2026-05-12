@@ -13,9 +13,12 @@ class BlogPostResource extends Resource
 {
     protected static ?string $model = BlogPost::class;
     protected static ?string $navigationIcon = 'heroicon-o-newspaper';
-    protected static ?string $navigationLabel = 'المدونة';
+    protected static ?string $navigationLabel = 'المدونة (قديم)';
     protected static ?string $navigationGroup = 'إدارة الصفحات';
-    protected static ?int $navigationSort = 7;
+    protected static ?int $navigationSort = 99;
+
+    // ✅ مخفي من الناف بار — استخدم BlogResource بدلاً منه
+    protected static bool $shouldRegisterNavigation = false;
 
     public static function form(Form $form): Form {
         return $form->schema([
