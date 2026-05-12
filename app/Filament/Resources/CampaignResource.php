@@ -6,9 +6,11 @@ use App\Filament\Resources\CampaignResource\Pages;
 use App\Models\Campaign;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\Str;
 
 class CampaignResource extends Resource
 {
@@ -22,16 +24,39 @@ class CampaignResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
+
             Forms\Components\Tabs::make('translations')->tabs([
                 Forms\Components\Tabs\Tab::make('العربية')->schema([
-                    Forms\Components\TextInput::make('title_ar')->label('العنوان بالعربية')->required(),
-                    Forms\Components\Textarea::make('description_ar')->label('الوصف بالعربية')->required()->rows(4),
+                    Forms\Components\TextInput::make('title_ar')
+                        ->label('العنوان بالعربية')
+                        ->required(),
+                    Forms\Components\Textarea::make('description_ar')
+                        ->label('الوصف بالعربية')
+                        ->required()
+                        ->rows(4),
                 ]),
                 Forms\Components\Tabs\Tab::make('English')->schema([
-                    Forms\Components\TextInput::make('title_en')->label('Title in English')->required(),
-                    Forms\Components\Textarea::make('description_en')->label('Description in English')->required()->rows(4),
+                    Forms\Components\TextInput::make('title_en')
+                        ->label('Title in English')
+                        ->required()
+                        ->live(debounce: 600)
+                        ->afterStateUpdated(function (Set $set, ?string $state) {
+                            $set('slug', Str::slug($state ?? ''));
+                        }),
+                    Forms\Components\Textarea::make('description_en')
+                        ->label('Description in English')
+                        ->required()
+                        ->rows(4),
                 ]),
             ])->columnSpanFull(),
+
+            Forms\Components\TextInput::make('slug')
+                ->label('Slug (رابط SEO)')
+                ->helperText('يولد تلقائياً من العنوان الإنجليزي. مثال: water-project-2025')
+                ->unique(Campaign::class, 'slug', ignoreRecord: true)
+                ->columnSpanFull()
+                ->rules(['alpha_dash'])
+                ->nullable(),
 
             Forms\Components\FileUpload::make('image')
                 ->label('الصورة')
@@ -42,10 +67,19 @@ class CampaignResource extends Resource
                 ->maxSize(5120)
                 ->columnSpanFull(),
 
-            Forms\Components\TextInput::make('target_amount')->label('المبلغ المستهدف')->numeric()->required(),
-            Forms\Components\TextInput::make('collected_amount')->label('المبلغ المجموع')->numeric()->default(0),
-            Forms\Components\DatePicker::make('end_date')->label('تاريخ الانتهاء'),
-            Forms\Components\Toggle::make('is_active')->label('نشطة')->default(true),
+            Forms\Components\TextInput::make('target_amount')
+                ->label('المبلغ المستهدف')
+                ->numeric()
+                ->required(),
+            Forms\Components\TextInput::make('collected_amount')
+                ->label('المبلغ المجموع')
+                ->numeric()
+                ->default(0),
+            Forms\Components\DatePicker::make('end_date')
+                ->label('تاريخ الانتهاء'),
+            Forms\Components\Toggle::make('is_active')
+                ->label('نشطة')
+                ->default(true),
         ]);
     }
 
@@ -53,14 +87,36 @@ class CampaignResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('image')->label('الصورة')->disk('public'),
-                Tables\Columns\TextColumn::make('title_ar')->label('العنوان')->searchable(),
-                Tables\Columns\TextColumn::make('target_amount')->label('المستهدف')->money('USD'),
-                Tables\Columns\TextColumn::make('collected_amount')->label('المجموع')->money('USD'),
-                Tables\Columns\IconColumn::make('is_active')->label('نشطة')->boolean(),
-                Tables\Columns\TextColumn::make('end_date')->label('ينتهي')->date(),
+                Tables\Columns\ImageColumn::make('image')
+                    ->label('الصورة')
+                    ->disk('public'),
+                Tables\Columns\TextColumn::make('title_ar')
+                    ->label('العنوان')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('slug')
+                    ->label('Slug')
+                    ->copyable()
+                    ->color('primary'),
+                Tables\Columns\TextColumn::make('target_amount')
+                    ->label('المستهدف')
+                    ->money('USD'),
+                Tables\Columns\TextColumn::make('collected_amount')
+                    ->label('المجموع')
+                    ->money('USD'),
+                Tables\Columns\IconColumn::make('is_active')
+                    ->label('نشطة')
+                    ->boolean(),
+                Tables\Columns\TextColumn::make('end_date')
+                    ->label('ينتهي')
+                    ->date(),
             ])
             ->actions([
+                Tables\Actions\Action::make('view_site')
+                    ->label('عرض')
+                    ->icon('heroicon-o-eye')
+                    ->color('gray')
+                    ->url(fn (Campaign $record) => url('ar/campaigns/' . ($record->slug ?? $record->id)))
+                    ->openUrlInNewTab(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])

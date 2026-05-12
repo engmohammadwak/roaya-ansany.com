@@ -16,11 +16,14 @@ class CampaignController extends Controller
         return view('pages.campaigns', compact('campaigns'));
     }
 
-    public function show(string $locale, string $id)
+    public function show(string $locale, string $slug)
     {
-        $campaign = Campaign::active()->findOrFail($id);
-        $related  = Campaign::active()
-            ->where('id', '!=', $id)
+        $campaign = Campaign::active()
+            ->where('slug', $slug)
+            ->firstOrFail();
+
+        $related = Campaign::active()
+            ->where('id', '!=', $campaign->id)
             ->latest()
             ->take(3)
             ->get();
