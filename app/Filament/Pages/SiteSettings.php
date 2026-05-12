@@ -8,6 +8,7 @@ use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Livewire\WithFileUploads;
 
 class SiteSettings extends Page
@@ -35,7 +36,6 @@ class SiteSettings extends Page
             'footer_description_ar', 'footer_description_en',
             'footer_copyright_ar',   'footer_copyright_en',
             'contact_phone', 'contact_email', 'whatsapp_number',
-            // نافبار
             'navbar_links_enabled',
             'navbar_sticky_only',
         ];
@@ -59,12 +59,15 @@ class SiteSettings extends Page
     public function save(): void
     {
         if ($this->logo_upload) {
-            $path = $this->logo_upload->store('site', 'public');
-            $this->data['site_logo'] = $path;
+            $filename = 'site/' . uniqid() . '.' . $this->logo_upload->getClientOriginalExtension();
+            Storage::disk('public')->put($filename, file_get_contents($this->logo_upload->getRealPath()));
+            $this->data['site_logo'] = $filename;
         }
+
         if ($this->favicon_upload) {
-            $path = $this->favicon_upload->store('site', 'public');
-            $this->data['site_favicon'] = $path;
+            $filename = 'site/' . uniqid() . '.' . $this->favicon_upload->getClientOriginalExtension();
+            Storage::disk('public')->put($filename, file_get_contents($this->favicon_upload->getRealPath()));
+            $this->data['site_favicon'] = $filename;
         }
 
         $keys = [
