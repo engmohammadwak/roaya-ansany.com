@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Models\Setting;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -21,11 +22,16 @@ class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
-        return $panel
+        $siteName = Setting::get('site_name', 'Roaya Ansany');
+        $logoRaw  = Setting::get('site_logo');
+        $logo     = $logoRaw ? asset('storage/' . $logoRaw) : null;
+
+        $panel = $panel
             ->default()
             ->id('admin')
             ->path('admin')
             ->login()
+            ->brandName($siteName)
             ->colors([
                 'primary' => Color::Amber,
             ])
@@ -49,5 +55,11 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ]);
+
+        if ($logo) {
+            $panel->brandLogo($logo)->brandLogoHeight('40px');
+        }
+
+        return $panel;
     }
 }
