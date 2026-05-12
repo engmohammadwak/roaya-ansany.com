@@ -1,24 +1,52 @@
 <?php
 
 use Illuminate\Support\Facades\Facade;
-use Illuminate\Support\ServiceProvider;
 
 return [
-    'name' => env('APP_NAME', 'Roaya Insanya'),
-    'env' => env('APP_ENV', 'production'),
+
+    'name' => env('APP_NAME', 'مؤسسة رؤيا الإنسانية'),
+    'env'  => env('APP_ENV', 'production'),
     'debug' => (bool) env('APP_DEBUG', false),
-    'url' => env('APP_URL', 'http://localhost'),
+    'url'   => env('APP_URL', 'https://roaya-ansany.com'),
     'asset_url' => env('ASSET_URL'),
     'timezone' => 'UTC',
-    'locale' => 'ar',
+    'locale'   => 'ar',
     'fallback_locale' => 'en',
     'faker_locale' => 'ar_SA',
-    'key' => env('APP_KEY'),
+    'key'    => env('APP_KEY'),
     'cipher' => 'AES-256-CBC',
-    'maintenance' => ['driver' => 'file'],
+
     'api_base_url' => env('API_BASE_URL', 'https://api.tujuhbulir.com/api/v1'),
-    'providers' => ServiceProvider::defaultProviders()->merge([
-        App\Providers\AppServiceProvider::class,
-    ])->toArray(),
+
+    'maintenance' => [
+        'driver' => 'file',
+    ],
+
+    'providers' => [
+        Illuminate\Auth\AuthServiceProvider::class,
+        Illuminate\Broadcasting\BroadcastServiceProvider::class,
+        Illuminate\Bus\BusServiceProvider::class,
+        Illuminate\Cache\CacheServiceProvider::class,
+        Illuminate\Foundation\Providers\ConsoleSupportServiceProvider::class,
+        Illuminate\Cookie\CookieServiceProvider::class,
+        Illuminate\Database\DatabaseServiceProvider::class,
+        Illuminate\Encryption\EncryptionServiceProvider::class,
+        Illuminate\Filesystem\FilesystemServiceProvider::class,
+        Illuminate\Foundation\Providers\FoundationServiceProvider::class,
+        Illuminate\Hashing\HashServiceProvider::class,
+        Illuminate\Http\HttpServiceProvider::class,
+        Illuminate\Mail\MailServiceProvider::class,
+        Illuminate\Notifications\NotificationServiceProvider::class,
+        Illuminate\Pagination\PaginationServiceProvider::class,
+        Illuminate\Pipeline\PipelineServiceProvider::class,
+        Illuminate\Queue\QueueServiceProvider::class,
+        Illuminate\Redis\RedisServiceProvider::class,
+        Illuminate\Auth\Passwords\PasswordResetServiceProvider::class,
+        Illuminate\Session\SessionServiceProvider::class,
+        Illuminate\Translation\TranslationServiceProvider::class,
+        Illuminate\Validation\ValidationServiceProvider::class,
+        Illuminate\View\ViewServiceProvider::class,
+    ],
+
     'aliases' => Facade::defaultAliases()->merge([])->toArray(),
 ];

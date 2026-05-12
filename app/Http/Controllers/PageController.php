@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\ApiService;
-
 class PageController extends Controller
 {
     public function privacy()
@@ -14,11 +12,5 @@ class PageController extends Controller
     public function terms()
     {
         return view('pages.terms');
-    }
-
-    public function faqs(ApiService $api)
-    {
-        $faqs = $api->getFaqs();
-        return view('pages.faqs', compact('faqs'));
     }
 }

@@ -9,7 +9,7 @@ class BlogController extends Controller
 {
     public function index(Request $request, ApiService $api)
     {
-        $page = $request->get('page', 1);
+        $page  = (int) $request->get('page', 1);
         $blogs = $api->getBlogs($page);
 
         return view('pages.blogs', compact('blogs'));
@@ -17,8 +17,9 @@ class BlogController extends Controller
 
     public function show(string $locale, string $slug, ApiService $api)
     {
-        $blog = $api->getBlog($slug);
+        $blog   = $api->getBlog($slug);
+        $recent = $api->getBlogs(1);
 
-        return view('pages.blog-single', compact('blog'));
+        return view('pages.blog-single', compact('blog', 'recent'));
     }
 }
