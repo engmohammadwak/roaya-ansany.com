@@ -60,11 +60,11 @@ class SiteSettings extends Page
     {
         if ($this->logo_upload) {
             $path = $this->logo_upload->store('site', 'public');
-            $this->data['site_logo'] = asset('storage/' . $path);
+            $this->data['site_logo'] = $path;
         }
         if ($this->favicon_upload) {
             $path = $this->favicon_upload->store('site', 'public');
-            $this->data['site_favicon'] = asset('storage/' . $path);
+            $this->data['site_favicon'] = $path;
         }
 
         $keys = [
