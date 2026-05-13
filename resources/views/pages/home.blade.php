@@ -342,13 +342,18 @@
     </div>
 </section>
 
-{{-- ============ STATS CARD ============ --}}
+{{-- ============ STATS CARD + DONATION COUNTER (من الداشبورد) ============ --}}
 @php
     $statsImg   = $data['stats_image'] ?? 'https://roaya-ansany.com/website/images/stats-card.png';
     $statsTitle = $data['stats_title'] ?? ($locale==='ar'?'الإغاثة العاجلة لأهل غزة، لبنان، شمال سوريا، السودان ودعم المحتاجين في تركيا':'Emergency relief for Gaza, Lebanon, North Syria, Sudan and Turkey');
-    $totalGoal   = collect($projects['data'] ?? [])->sum('goal_amount');
-    $totalRaised = collect($projects['data'] ?? [])->sum('raised_amount');
-    $totalRemain = max(0, $totalGoal - $totalRaised);
+
+    {{-- الأرقام من الداشبورد أولاً، ثم fallback لمجموع المشاريع --}}
+    $counter    = $data['donation_counter'] ?? [];
+    $dcGoal     = (float)($counter['goal']     ?? collect($projects['data'] ?? [])->sum('goal_amount'));
+    $dcRaised   = (float)($counter['raised']   ?? collect($projects['data'] ?? [])->sum('raised_amount'));
+    $dcCurr     = $counter['currency'] ?? '$';
+    $dcRemain   = max(0, $dcGoal - $dcRaised);
+    $dcPct      = $dcGoal > 0 ? min(100, round(($dcRaised / $dcGoal) * 100)) : 0;
 @endphp
 <section class="main-section">
     <div class="container">
@@ -356,14 +361,15 @@
             <img src="{{ $statsImg }}" class="img-fluid" alt="kids">
             <div class="text-center pt-5">
                 <p class="text-white">{{ $locale==='ar'?'مشاريعنا تقدم لـ':'Our projects offer' }}</p>
-                {{-- ✅ العنوان في النص بالكامل --}}
+                {{-- ✅ العنوان من الداشبورد --}}
                 <h2 class="text-white mt-4 section-title" style="text-align:center !important;">{{ $statsTitle }}</h2>
             </div>
+            {{-- ✅ الأرقام من الداشبورد --}}
             <div class="stats mt-5">
                 <div class="row">
-                    <div class="col-md-4"><div class="stat w-100 mb-3"><span>{{ $locale==='ar'?'المتبقي':'Remaining' }}</span><span>${{ number_format($totalRemain) }}</span></div></div>
-                    <div class="col-md-4"><div class="stat w-100 mb-3"><span>{{ $locale==='ar'?'المبلغ المُجَمَع':'Raised' }}</span><span>${{ number_format($totalRaised) }}</span></div></div>
-                    <div class="col-md-4"><div class="stat w-100 mb-3"><span>{{ $locale==='ar'?'الهدف':'Goal' }}</span><span>${{ number_format($totalGoal) }}</span></div></div>
+                    <div class="col-md-4"><div class="stat w-100 mb-3"><span>{{ $locale==='ar'?'المتبقي':'Remaining' }}</span><span>{{ $dcCurr }}{{ number_format($dcRemain) }}</span></div></div>
+                    <div class="col-md-4"><div class="stat w-100 mb-3"><span>{{ $locale==='ar'?'المبلغ المُجَمَع':'Raised' }}</span><span>{{ $dcCurr }}{{ number_format($dcRaised) }}</span></div></div>
+                    <div class="col-md-4"><div class="stat w-100 mb-3"><span>{{ $locale==='ar'?'الهدف':'Goal' }}</span><span>{{ $dcCurr }}{{ number_format($dcGoal) }}</span></div></div>
                 </div>
             </div>
             <div class="text-center my-5">
@@ -525,12 +531,7 @@ html[dir="ltr"] .why-donate-header { align-items:flex-start; }
 .why-icon-wrap { text-align:center; }
 .partner-card { transition:transform 0.2s,box-shadow 0.2s; }
 .partner-card:hover { transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,0.1); }
-
-/* ✅ stats-card title في النص دايمًا */
-.stats-card .section-title {
-    text-align: center !important;
-    width: 100%;
-}
+.stats-card .section-title { text-align:center !important; width:100%; }
 </style>
 @endpush
 
