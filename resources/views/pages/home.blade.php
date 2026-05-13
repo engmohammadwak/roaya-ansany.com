@@ -490,8 +490,9 @@
     $ctaDesc = $locale === 'ar'
         ? ($data['cta_description'] ?? '')
         : ($data['cta_description_en'] ?? '');
-    $ctaImg = $data['cta_image']
-        ? asset('storage/' . $data['cta_image'])
+    $ctaImgRaw = $data['cta_image'] ?? null;
+    $ctaImg = $ctaImgRaw
+        ? asset('storage/' . $ctaImgRaw)
         : 'https://roaya-ansany.com/website/images/donate-child.svg';
 @endphp
 <section class="main-section">
