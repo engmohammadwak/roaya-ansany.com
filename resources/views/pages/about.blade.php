@@ -14,6 +14,8 @@
     $ctaImg = $hs->cta_image
         ? asset('storage/' . $hs->cta_image)
         : asset('website/images/donate-child.svg');
+
+    $siteName = \App\Models\Setting::get('site_name', $isAr ? 'مؤسسة رؤيا الإنسانية' : 'Roaya Humanitarian Foundation');
 @endphp
 @section('title', ($isAr ? 'من نحن' : 'About Us') . ' | ' . config('app.name'))
 
@@ -216,7 +218,7 @@
                         <h6 class="mb-3">{{ $isAr ? 'نبذة قصيرة' : 'Brief Overview' }}</h6>
 
                         <h2 class="section-title mb-4">
-                            {{ $isAr ? 'مؤسسة رؤيا الإنسانية' : 'Roaya Humanitarian Foundation' }}
+                            {{ $siteName }}
                         </h2>
 
                         <p class="muted-color mb-3">
