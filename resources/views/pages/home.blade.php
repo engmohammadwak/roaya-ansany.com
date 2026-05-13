@@ -223,18 +223,13 @@
         <div class="row mt-5">
             @foreach($whyCards as $card)
             @php
-                $cardIcon     = $card['icon']       ?? null;
-                $cardColor    = $card['icon_color'] ?? null;  // لون الأيقونة (SVG)
-                $cardBg       = $card['color']      ?? null;  // لون خلفية الكارت
-                $cardIconUrl  = $cardIcon ? asset('storage/' . $cardIcon) : null;
+                $cardIcon    = $card['icon']       ?? null;
+                $cardColor   = $card['icon_color'] ?? null;
+                $cardBg      = $card['color']      ?? null;
+                $cardIconUrl = $cardIcon ? asset('storage/' . $cardIcon) : null;
 
-                // توليد CSS filter من الـ hex color
-                $svgFilter = '';
-                if ($cardColor) {
-                    // نستخدم hue-rotate approach بسيط — أو inline style على الـ img
-                    $svgFilter = 'style="filter: drop-shadow(0 0 0 ' . $cardColor . ') brightness(0) saturate(100%) invert(1);"';
-                    // الطريقة الأدق: نضع الـ color مباشرة عبر CSS mask
-                    $svgStyle = 'width:36px;height:36px;object-fit:contain;'
+                if ($cardColor && $cardIconUrl) {
+                    $svgStyle = 'width:36px;height:36px;'
                         . '-webkit-mask:url(' . $cardIconUrl . ') no-repeat center;'
                         . 'mask:url(' . $cardIconUrl . ') no-repeat center;'
                         . '-webkit-mask-size:contain;mask-size:contain;'
@@ -249,18 +244,16 @@
                 <div class="why-donate-card" @if($cardBg) style="background:{{ $cardBg }}" @endif>
                     <div class="why-icon-wrap mb-3">
                         @if($cardIconUrl)
-                            <div class="why-icon-circle">
+                            <div class="why-icon-circle" style="background:{{ $p }}1a;border:2px solid {{ $p }}4d;">
                                 @if($useMask)
-                                    {{-- SVG مع لون مخصص عبر CSS mask --}}
                                     <div style="{{ $svgStyle }}"></div>
                                 @else
-                                    {{-- PNG أو SVG بدون تلوين --}}
                                     <img src="{{ $cardIconUrl }}" alt="icon" style="{{ $svgStyle }}">
                                 @endif
                             </div>
                         @else
-                            <div class="why-icon-circle">
-                                <i class="fa-solid fa-heart fa-lg"></i>
+                            <div class="why-icon-circle" style="background:{{ $p }}1a;border:2px solid {{ $p }}4d;">
+                                <i class="fa-solid fa-heart fa-lg" style="color:{{ $p }}"></i>
                             </div>
                         @endif
                     </div>
@@ -529,7 +522,8 @@
 <style>
 .why-donate-header { display:flex;flex-direction:column;align-items:flex-end;width:100%; }
 html[dir="ltr"] .why-donate-header { align-items:flex-start; }
-.why-icon-circle { width:64px;height:64px;border-radius:50%;background:rgba(157,204,107,0.1);display:flex;align-items:center;justify-content:center;margin:0 auto;border:2px solid rgba(157,204,107,0.3); }
+.why-donate-header h6 { display:block !important; width:100% !important; }
+.why-icon-circle { width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto; }
 .why-icon-wrap { text-align:center; }
 .partner-card { transition:transform 0.2s,box-shadow 0.2s; }
 .partner-card:hover { transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,0.1); }
