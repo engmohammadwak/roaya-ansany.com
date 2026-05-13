@@ -9,6 +9,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\HtmlString;
 
 class HomeSettingResource extends Resource
 {
@@ -104,7 +105,12 @@ class HomeSettingResource extends Resource
                                         Forms\Components\TextInput::make('icon')
                                             ->label('أيقونة FontAwesome')
                                             ->placeholder('fa-house-crack')
-                                            ->helperText('مثال: fa-bowl-food, fa-droplet | fontawesome.com'),
+                                            ->helperText(new HtmlString(
+                                                'مثال: fa-bowl-food, fa-droplet &nbsp;|&nbsp; '
+                                                . '<a href="https://fontawesome.com/icons" target="_blank" '
+                                                . 'style="color:#6366f1;text-decoration:underline;font-weight:600;">'
+                                                . '🔍 تصفح جميع الأيقونات</a>'
+                                            )),
                                         Forms\Components\ColorPicker::make('color')
                                             ->label('لون الخلفية'),
                                     ]),
