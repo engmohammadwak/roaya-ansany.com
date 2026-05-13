@@ -14,13 +14,14 @@ document.addEventListener("DOMContentLoaded", function () {
     const section   = document.querySelector(".float-section");
     if (!container || !section) return;
 
-    // Only apply on desktop (float-section is absolute on desktop only)
     if (window.innerWidth >= 992) {
       const sectionHeight = section.offsetHeight;
-      const topOffset     = Math.abs(parseInt(getComputedStyle(section).top) || 144); // default top: -9rem
-      container.style.marginBottom = (sectionHeight - topOffset) + "px";
+      const topOffset     = 144; // top: -9rem = 144px
+      const needed        = sectionHeight - topOffset;
+      // setProperty with !important to override the CSS 68%
+      container.style.setProperty("margin-bottom", needed + "px", "important");
     } else {
-      container.style.marginBottom = "";
+      container.style.removeProperty("margin-bottom");
     }
   }
 
