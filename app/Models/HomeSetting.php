@@ -20,6 +20,8 @@ class HomeSetting extends Model
         'cb_image',
         // Why Donate
         'why_cards',
+        'why_donate_label_ar', 'why_donate_label_en',
+        'why_donate_title_ar', 'why_donate_title_en',
         // Stats
         'stats_title_ar', 'stats_title_en',
         'stats_image',
@@ -49,7 +51,6 @@ class HomeSetting extends Model
         'donation_raised' => 'float',
     ];
 
-    // Always work with single row (id=1)
     public static function instance(): self
     {
         return self::firstOrCreate(['id' => 1]);
