@@ -1168,6 +1168,14 @@ footer .footer-bottom {
     height: 390px;
 }
 
+/* ===== fix: terms & privacy pages — banner grows with content ===== */
+main.terms .blank-banner,
+main.privacy .blank-banner {
+    height: auto;
+    padding-bottom: 9rem;
+}
+/* ================================================================= */
+
 .breadcrumbs {
     display: flex;
     align-items: center;
