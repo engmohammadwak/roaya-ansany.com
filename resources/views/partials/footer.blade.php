@@ -1,6 +1,9 @@
 @php
     $locale      = app()->getLocale();
-    $siteLogo    = App\Models\Setting::get('site_logo');
+    $siteLogoRaw  = App\Models\Setting::get('site_logo');
+    $siteLogo     = $siteLogoRaw
+        ? (str_starts_with($siteLogoRaw, 'http') ? $siteLogoRaw : asset('storage/' . $siteLogoRaw))
+        : null;
     $siteName    = App\Models\Setting::get('site_name', 'رؤيا');
     $footerDescAr = App\Models\Setting::get('footer_description_ar', 'رؤيا هي منصة عطاء مخصصة للأشخاص الذين يهتمون بالأثر الحقيقي لعطائهم.');
     $footerDescEn = App\Models\Setting::get('footer_description_en', 'Roaya is a giving platform dedicated to people who care about the real impact of their giving.');
