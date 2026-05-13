@@ -12,70 +12,138 @@ use Filament\Tables\Table;
 
 class AboutPageResource extends Resource
 {
-    protected static ?string $model = AboutPage::class;
-    protected static ?string $navigationIcon = 'heroicon-o-information-circle';
-    protected static ?string $navigationLabel = 'صفحة من نحن';
-    protected static ?string $navigationGroup = 'إدارة الصفحات';
-    protected static ?int $navigationSort = 1;
+    protected static ?string $model             = AboutPage::class;
+    protected static ?string $navigationIcon    = 'heroicon-o-information-circle';
+    protected static ?string $navigationLabel   = 'صفحة من نحن';
+    protected static ?string $navigationGroup   = 'إدارة الصفحات';
+    protected static ?int    $navigationSort    = 1;
 
     public static function form(Form $form): Form
     {
         return $form->schema([
             Forms\Components\Tabs::make('about_tabs')->tabs([
 
-                Forms\Components\Tabs\Tab::make('Hero Section')->schema([
+                // =================== HERO ===================
+                Forms\Components\Tabs\Tab::make('🏠 Hero')->schema([
                     Forms\Components\Grid::make(2)->schema([
-                        Forms\Components\TextInput::make('hero_title_ar')->label('العنوان (عربي)')->required(),
-                        Forms\Components\TextInput::make('hero_title_en')->label('العنوان (إنجليزي)'),
-                        Forms\Components\Textarea::make('hero_subtitle_ar')->label('النص الفرعي (عربي)')->rows(3),
-                        Forms\Components\Textarea::make('hero_subtitle_en')->label('النص الفرعي (إنجليزي)')->rows(3),
+                        Forms\Components\TextInput::make('hero_title_ar')
+                            ->label('عنوان الصفحة (عربي)')
+                            ->required(),
+                        Forms\Components\TextInput::make('hero_title_en')
+                            ->label('عنوان الصفحة (إنجليزي)'),
+                        Forms\Components\Textarea::make('hero_description_ar')
+                            ->label('وصف الهيرو (عربي)')->rows(4),
+                        Forms\Components\Textarea::make('hero_description_en')
+                            ->label('وصف الهيرو (إنجليزي)')->rows(4),
                     ]),
-                    Forms\Components\FileUpload::make('hero_image')
-                        ->label('صورة الهيرو')->image()->directory('about/hero'),
+                    Forms\Components\FileUpload::make('hero_image_1')
+                        ->label('صورة الهيرو')
+                        ->image()
+                        ->directory('about/hero')
+                        ->imagePreviewHeight('200')
+                        ->columnSpanFull(),
                 ]),
 
-                Forms\Components\Tabs\Tab::make('الإحصائيات')->schema([
-                    Forms\Components\Grid::make(3)->schema([
-                        Forms\Components\TextInput::make('stat1_number')->label('الرقم 1'),
-                        Forms\Components\TextInput::make('stat1_label_ar')->label('التسمية 1 (عربي)'),
-                        Forms\Components\TextInput::make('stat1_label_en')->label('التسمية 1 (إنجليزي)'),
-                        Forms\Components\TextInput::make('stat2_number')->label('الرقم 2'),
-                        Forms\Components\TextInput::make('stat2_label_ar')->label('التسمية 2 (عربي)'),
-                        Forms\Components\TextInput::make('stat2_label_en')->label('التسمية 2 (إنجليزي)'),
-                        Forms\Components\TextInput::make('stat3_number')->label('الرقم 3'),
-                        Forms\Components\TextInput::make('stat3_label_ar')->label('التسمية 3 (عربي)'),
-                        Forms\Components\TextInput::make('stat3_label_en')->label('التسمية 3 (إنجليزي)'),
-                        Forms\Components\TextInput::make('stat4_number')->label('الرقم 4'),
-                        Forms\Components\TextInput::make('stat4_label_ar')->label('التسمية 4 (عربي)'),
-                        Forms\Components\TextInput::make('stat4_label_en')->label('التسمية 4 (إنجليزي)'),
+                // =================== VISION & GOALS ===================
+                Forms\Components\Tabs\Tab::make('🎯 الرؤية و الأهداف')->schema([
+
+                    Forms\Components\Section::make('وصف قسم الرؤية (النص المركزي)')->schema([
+                        Forms\Components\Grid::make(2)->schema([
+                            Forms\Components\Textarea::make('vision_section_desc_ar')
+                                ->label('(عربي)')->rows(3),
+                            Forms\Components\Textarea::make('vision_section_desc_en')
+                                ->label('(إنجليزي)')->rows(3),
+                        ]),
                     ]),
+
+                    Forms\Components\Section::make('🔵 بطاقة رؤيتنا (Vision)')->schema([
+                        Forms\Components\Grid::make(2)->schema([
+                            Forms\Components\Textarea::make('vision_text_ar')
+                                ->label('نص الرؤية (عربي)')->rows(4),
+                            Forms\Components\Textarea::make('vision_text_en')
+                                ->label('نص الرؤية (إنجليزي)')->rows(4),
+                        ]),
+                    ]),
+
+                    Forms\Components\Section::make('🟢 بطاقة أهدافنا (Goals) — قائمة نقاط')->schema([
+                        Forms\Components\Repeater::make('goal_points_ar')
+                            ->label('نقاط الأهداف (عربي)')
+                            ->schema([
+                                Forms\Components\TextInput::make('item')->label('النقطة')->required(),
+                            ])
+                            ->addActionLabel('➕ إضافة نقطة')
+                            ->columnSpanFull()
+                            ->reorderable()
+                            ->collapsible(),
+
+                        Forms\Components\Repeater::make('goal_points_en')
+                            ->label('نقاط الأهداف (إنجليزي)')
+                            ->schema([
+                                Forms\Components\TextInput::make('item')->label('Point')->required(),
+                            ])
+                            ->addActionLabel('+ Add Point')
+                            ->columnSpanFull()
+                            ->reorderable()
+                            ->collapsible(),
+                    ]),
+
+                    Forms\Components\Section::make('🟠 بطاقة رسالتنا (Mission)')->schema([
+                        Forms\Components\Grid::make(2)->schema([
+                            Forms\Components\Textarea::make('mission_text_ar')
+                                ->label('نص الرسالة (عربي)')->rows(4),
+                            Forms\Components\Textarea::make('mission_text_en')
+                                ->label('نص الرسالة (إنجليزي)')->rows(4),
+                        ]),
+                    ]),
+
                 ]),
 
-                Forms\Components\Tabs\Tab::make('الرسالة والرؤية')->schema([
+                // =================== STORY ===================
+                Forms\Components\Tabs\Tab::make('📍 قسم من نحن')->schema([
+
+                    Forms\Components\Section::make('الفقرة الأولى')->schema([
+                        Forms\Components\Grid::make(2)->schema([
+                            Forms\Components\Textarea::make('story_paragraph_1_ar')
+                                ->label('(عربي)')->rows(4),
+                            Forms\Components\Textarea::make('story_paragraph_1_en')
+                                ->label('(إنجليزي)')->rows(4),
+                        ]),
+                    ]),
+
+                    Forms\Components\Section::make('الفقرة الثانية')->schema([
+                        Forms\Components\Grid::make(2)->schema([
+                            Forms\Components\Textarea::make('story_paragraph_2_ar')
+                                ->label('(عربي)')->rows(4),
+                            Forms\Components\Textarea::make('story_paragraph_2_en')
+                                ->label('(إنجليزي)')->rows(4),
+                        ]),
+                    ]),
+
+                    Forms\Components\Section::make('نص الدعوة للتبرع')->schema([
+                        Forms\Components\Grid::make(2)->schema([
+                            Forms\Components\Textarea::make('story_cta_text_ar')
+                                ->label('(عربي)')->rows(3),
+                            Forms\Components\Textarea::make('story_cta_text_en')
+                                ->label('(إنجليزي)')->rows(3),
+                        ]),
+                    ]),
+
+                    Forms\Components\FileUpload::make('story_image')
+                        ->label('صورة قسم من نحن')
+                        ->image()
+                        ->directory('about/story')
+                        ->imagePreviewHeight('200')
+                        ->columnSpanFull(),
+
+                ]),
+
+                // =================== CTA ===================
+                Forms\Components\Tabs\Tab::make('📬 قسم التبرع (CTA)')->schema([
                     Forms\Components\Grid::make(2)->schema([
-                        Forms\Components\Textarea::make('mission_ar')->label('الرسالة (عربي)')->rows(4),
-                        Forms\Components\Textarea::make('mission_en')->label('الرسالة (إنجليزي)')->rows(4),
-                        Forms\Components\Textarea::make('vision_ar')->label('الرؤية (عربي)')->rows(4),
-                        Forms\Components\Textarea::make('vision_en')->label('الرؤية (إنجليزي)')->rows(4),
-                        Forms\Components\Textarea::make('goal_ar')->label('الهدف (عربي)')->rows(4),
-                        Forms\Components\Textarea::make('goal_en')->label('الهدف (إنجليزي)')->rows(4),
-                    ]),
-                ]),
-
-                Forms\Components\Tabs\Tab::make('من نحن - النص')->schema([
-                    Forms\Components\Grid::make(2)->schema([
-                        Forms\Components\RichEditor::make('about_text_ar')->label('النص (عربي)'),
-                        Forms\Components\RichEditor::make('about_text_en')->label('النص (إنجليزي)'),
-                    ]),
-                    Forms\Components\FileUpload::make('about_image')
-                        ->label('الصورة الجانبية')->image()->directory('about/content'),
-                ]),
-
-                Forms\Components\Tabs\Tab::make('زر الدعوة للتبرع')->schema([
-                    Forms\Components\Grid::make(3)->schema([
-                        Forms\Components\TextInput::make('cta_text_ar')->label('نص الزر (عربي)'),
-                        Forms\Components\TextInput::make('cta_text_en')->label('نص الزر (إنجليزي)'),
-                        Forms\Components\TextInput::make('cta_url')->label('رابط الزر')->url(),
+                        Forms\Components\Textarea::make('cta_description_ar')
+                            ->label('وصف القسم (عربي)')->rows(5),
+                        Forms\Components\Textarea::make('cta_description_en')
+                            ->label('وصف القسم (إنجليزي)')->rows(5),
                     ]),
                 ]),
 
@@ -85,20 +153,36 @@ class AboutPageResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return $table->columns([
-            Tables\Columns\TextColumn::make('hero_title_ar')->label('عنوان الصفحة')->searchable(),
-            Tables\Columns\TextColumn::make('updated_at')->label('آخر تعديل')->dateTime('Y-m-d H:i')->sortable(),
-        ])->actions([
-            Tables\Actions\EditAction::make(),
-        ]);
+        return $table
+            ->columns([
+                Tables\Columns\TextColumn::make('hero_title_ar')
+                    ->label('عنوان الصفحة'),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->label('آخر تعديل')
+                    ->dateTime('Y-m-d H:i')
+                    ->sortable(),
+            ])
+            ->actions([
+                Tables\Actions\EditAction::make()->label('تعديل'),
+            ])
+            ->paginated(false);
     }
 
     public static function getPages(): array
     {
         return [
-            'index'  => Pages\ListAboutPages::route('/'),
-            'create' => Pages\CreateAboutPage::route('/create'),
-            'edit'   => Pages\EditAboutPage::route('/{record}/edit'),
+            'index' => Pages\ListAboutPages::route('/'),
+            'edit'  => Pages\EditAboutPage::route('/{record}/edit'),
         ];
+    }
+
+    // redirect index directly to edit the first record
+    public static function getNavigationUrl(): string
+    {
+        $record = AboutPage::first();
+        if ($record) {
+            return static::getUrl('edit', ['record' => $record->id]);
+        }
+        return parent::getNavigationUrl();
     }
 }

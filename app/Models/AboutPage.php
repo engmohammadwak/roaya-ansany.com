@@ -9,16 +9,35 @@ class AboutPage extends Model
     protected $table = 'about_page';
 
     protected $fillable = [
+        // Hero
         'hero_title_ar', 'hero_title_en',
-        'hero_subtitle_ar', 'hero_subtitle_en', 'hero_image',
-        'stat1_number', 'stat1_label_ar', 'stat1_label_en',
-        'stat2_number', 'stat2_label_ar', 'stat2_label_en',
-        'stat3_number', 'stat3_label_ar', 'stat3_label_en',
-        'stat4_number', 'stat4_label_ar', 'stat4_label_en',
-        'mission_ar', 'mission_en',
-        'vision_ar', 'vision_en',
-        'goal_ar', 'goal_en',
-        'about_text_ar', 'about_text_en', 'about_image',
-        'cta_text_ar', 'cta_text_en', 'cta_url',
+        'hero_description_ar', 'hero_description_en',
+        'hero_image_1',
+
+        // Vision section
+        'vision_section_desc_ar', 'vision_section_desc_en',
+
+        // Vision card
+        'vision_text_ar', 'vision_text_en',
+
+        // Goals card
+        'goal_points_ar', 'goal_points_en',
+
+        // Mission card
+        'mission_text_ar', 'mission_text_en',
+
+        // Story
+        'story_paragraph_1_ar', 'story_paragraph_1_en',
+        'story_paragraph_2_ar', 'story_paragraph_2_en',
+        'story_cta_text_ar',    'story_cta_text_en',
+        'story_image',
+
+        // CTA
+        'cta_description_ar', 'cta_description_en',
+    ];
+
+    protected $casts = [
+        'goal_points_ar' => 'array',
+        'goal_points_en' => 'array',
     ];
 }
