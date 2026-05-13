@@ -22,11 +22,18 @@ class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
-        $siteName   = Setting::get('site_name', 'Roaya Ansany');
-        $logoRaw    = Setting::get('site_logo');
-        $faviconRaw = Setting::get('site_favicon');
-        $logo       = $logoRaw ? asset('storage/' . $logoRaw) : null;
-        $favicon    = $faviconRaw ? asset('storage/' . $faviconRaw) : null;
+        try {
+            $siteName   = Setting::get('site_name', 'Alsawaed');
+            $logoRaw    = Setting::get('site_logo');
+            $faviconRaw = Setting::get('site_favicon');
+        } catch (\Throwable $e) {
+            $siteName   = 'Alsawaed';
+            $logoRaw    = null;
+            $faviconRaw = null;
+        }
+
+        $logo    = $logoRaw    ? asset('storage/' . $logoRaw)    : null;
+        $favicon = $faviconRaw ? asset('storage/' . $faviconRaw) : null;
 
         $panel = $panel
             ->default()
