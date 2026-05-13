@@ -32,9 +32,9 @@
     <link rel="shortcut icon" href="{{ $favicon }}">
     <link rel="apple-touch-icon" href="{{ $favicon }}">
 
-    <link href="https://roaya-ansany.com/website/libs/bootstrap/bootstrap.rtl.min.css" rel="stylesheet">
-    <link href="https://roaya-ansany.com/website/libs/slimselect/slimselect.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://roaya-ansany.com/website/css/main.css?v=3">
+    <link href="{{ asset('website/libs/bootstrap/bootstrap.rtl.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('website/libs/slimselect/slimselect.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('website/css/main.css') }}?v={{ filemtime(public_path('website/css/main.css')) }}">
 
     <style>
         :root {
@@ -287,9 +287,9 @@
         </div>
     </div>
 
-    <script src="https://roaya-ansany.com/website/libs/slimselect/slimselect.js"></script>
-    <script src="https://roaya-ansany.com/website/libs/bootstrap/bootstrap.bundle.min.js"></script>
-    <script src="https://roaya-ansany.com/website/js/main.js" defer></script>
+    <script src="{{ asset('website/libs/slimselect/slimselect.js') }}"></script>
+    <script src="{{ asset('website/libs/bootstrap/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('website/js/main.js') }}" defer></script>
     <script>
     window.addEventListener("scroll",function(){const n=document.querySelector(".main-navbar");if(n){if(window.scrollY>30)n.classList.add("scrolled");else n.classList.remove("scrolled");}});
     const scrollBtn=document.getElementById("scrollTopBtn");if(scrollBtn){window.addEventListener("scroll",function(){scrollBtn.style.display=window.scrollY>250?"flex":"none";});scrollBtn.addEventListener("click",function(){window.scrollTo({top:0,behavior:"smooth"});});}
