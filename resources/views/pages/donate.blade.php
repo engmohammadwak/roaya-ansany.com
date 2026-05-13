@@ -12,6 +12,12 @@
     $campaignId   = request('campaign_id', '');
     $campaignName = request('campaign_name', '');
     $homeUrl      = url($locale);
+
+    // اللوجو من الداشبورد
+    $siteLogoRaw = App\Models\Setting::get('site_logo');
+    $siteLogoUrl = $siteLogoRaw
+        ? asset('storage/' . $siteLogoRaw)
+        : asset('website/images/logo.svg');
 @endphp
 @section('title', ($isAr ? 'تبرع الآن' : 'Donate Now') . ' | ' . config('app.name'))
 
@@ -182,7 +188,7 @@ html[dir="rtl"] .num-ltr{direction:ltr;text-align:left;}
                 <span id="submitBtnText">{{ $isAr ? 'ادفع الآن' : 'Pay Now' }}</span>
                 <span id="submitBtnLoader" style="display:none">
                   <span class="spinner-border spinner-border-sm me-1"></span>
-                  {{ $isAr ? 'جارٍ المعالجة...' : 'Processing...' }}
+                  {{ $isAr ? 'جارسٌ المعالجة...' : 'Processing...' }}
                 </span>
               </button>
             </div>
@@ -199,7 +205,8 @@ html[dir="rtl"] .num-ltr{direction:ltr;text-align:left;}
                   <div class="fw-semibold" style="opacity:.9">{{ $isAr ? 'بطاقة دفع آمنة' : 'Secure Payment Card' }}</div>
                   <div class="small muted">{{ $isAr ? 'رؤيا الإنسانية' : 'Roaya Ansany' }}</div>
                 </div>
-                <img id="brandLogo" alt="brand" src="{{ asset('website/images/logo.svg') }}">
+                {{-- اللوجو من الداشبورد افتراضيًا، يتغيّر تلقائيًا للبراند Visa/MC/Amex --}}
+                <img id="brandLogo" alt="brand" src="{{ $siteLogoUrl }}">
               </div>
               <div class="mt-5">
                 <div class="preview-number num-ltr" id="pv-number">•••• •••• •••• ••••</div>
@@ -244,13 +251,16 @@ const HOME_URL = "{{ $homeUrl }}";
 const PAYMENT_URL = "{{ url($locale.'/donate/payment/3d/form') }}";
 const CSRF = "{{ csrf_token() }}";
 
-let lastPaymentSuccess = false; // ← الفلاق الأساسي
+// اللوجو من الداشبورد (fallback لو ما كان براند البطاقة معروف)
+const SITE_LOGO = "{{ $siteLogoUrl }}";
+
+let lastPaymentSuccess = false;
 
 const brandLogos = {
   visa: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 471"><rect width="750" height="471" rx="40" fill="#1A1F71"/><text x="375" y="300" font-size="200" font-family="Arial" font-weight="bold" fill="white" text-anchor="middle">VISA</text></svg>'),
   mc:   'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 471"><circle cx="280" cy="235" r="150" fill="#EB001B"/><circle cx="470" cy="235" r="150" fill="#F79E1B"/><path d="M375 120a150 150 0 0 1 0 230 150 150 0 0 1 0-230z" fill="#FF5F00"/></svg>'),
   amex: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 471"><rect width="750" height="471" rx="40" fill="#2E77BC"/><text x="375" y="310" font-size="160" font-family="Arial" font-weight="bold" fill="white" text-anchor="middle">AMEX</text></svg>'),
-  unknown: '{{ asset("website/images/logo.svg") }}'
+  unknown: SITE_LOGO  // ← هون صار ياخذ من الداشبورد ✅
 };
 
 function onlyDigits(s){return(s||'').replace(/\D+/g,'');}
@@ -347,20 +357,18 @@ function validateForm(){
 }
 $('#payForm input,#payForm select').on('change keyup blur',validateForm);
 
-// ── Modal ──
 function showPayModal(success, data){
-  lastPaymentSuccess = success; // ← حفظ النتيجة
+  lastPaymentSuccess = success;
   const modal=$('#payModal');
   modal.removeClass('fail');
   if(success){
     $('#modalIcon').text('✅');
     $('#modalTitle').text(IS_AR?'تم التبرع بنجاح!':'Donation Successful!');
-    $('#modalBodyText').text(IS_AR?'شكراً لك، تبرعك وصل وسيُوظَّف في أفضل المشاريع.':'Thank you! Your donation has been received.');
+    $('#modalBodyText').text(IS_AR?'شكرًا لك، تبرعك وصل وسيُوَظَّف في أفضل المشاريع.':'Thank you! Your donation has been received.');
     $('#modalAmount').text((data.currency||'')+' '+parseFloat(data.amount||0).toFixed(2));
     if(data.campaign_name){
       $('#modalCampaign').text((IS_AR?'لحملة: ':'Campaign: ')+data.campaign_name).show();
     }else{$('#modalCampaign').hide();}
-    // غيّر نص الزر للنجاح
     $('#modalCloseBtn').text(IS_AR?'العودة للرئيسية':'Go to Home');
   } else {
     modal.addClass('fail');
@@ -376,10 +384,8 @@ function showPayModal(success, data){
 
 function closePayModal(){
   if(lastPaymentSuccess){
-    // ✅ نجح → روح للرئيسية
     window.location.href = HOME_URL;
   } else {
-    // ❌ فشل → إبق على الصفحة وأعد تفعيل الزر
     $('#payModalOverlay').removeClass('show');
     $('#submitBtn').prop('disabled',false);
     $('#submitBtnText').show();
@@ -387,11 +393,9 @@ function closePayModal(){
     lastPaymentSuccess = false;
   }
 }
-// ESC أو الضغط خارج الـ modal
 $(document).on('keydown',function(e){if(e.key==='Escape')closePayModal();});
 $('#payModalOverlay').on('click',function(e){if(e.target===this)closePayModal();});
 
-// ── AJAX Submit ──
 $('#payForm').on('submit',function(e){
   e.preventDefault();
   if(!$('#confirmData').is(':checked')){
@@ -416,7 +420,6 @@ $('#payForm').on('submit',function(e){
     headers: {'X-Requested-With':'XMLHttpRequest'},
     success: function(res){
       if(res.redirect && res.checkout_url){
-        // Live mode: redirect to Paymob checkout
         window.location.href = res.checkout_url;
       } else {
         showPayModal(res.success===true, res);
