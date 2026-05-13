@@ -324,7 +324,7 @@
 </div>
 
 {{-- =================== التواصل =================== --}}
-<div x-data="{ open: false }" class="rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+<div x-data="{ open: true }" class="rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
     <button type="button" @click="open = !open"
         class="w-full flex items-center justify-between px-5 py-4 bg-white dark:bg-gray-800 hover:bg-gray-50 transition-colors">
         <span class="font-semibold text-base">📞 معلومات التواصل</span>
@@ -334,24 +334,53 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
         </svg>
     </button>
-    <div x-show="open" x-transition class="px-5 pb-5 pt-3 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-                <label class="block text-sm font-medium mb-1">رقم الهاتف</label>
-                <input type="text" wire:model="data.contact_phone"
-                    class="fi-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-800">
+    <div x-show="open" x-transition class="px-5 pb-5 pt-3 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700 space-y-5">
+        <p class="text-xs text-gray-400">💡 اترك الحقل فارغاً لإخفائه من الموقع تلقائياً</p>
+
+        {{-- أرقام الهاتف --}}
+        <div>
+            <p class="text-sm font-semibold mb-2">📞 أرقام الهاتف</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                @foreach(['contact_phone' => 'رقم 1','contact_phone_2' => 'رقم 2','contact_phone_3' => 'رقم 3'] as $key => $label)
+                <div>
+                    <label class="block text-xs text-gray-500 mb-1">{{ $label }}</label>
+                    <input type="text" wire:model="data.{{ $key }}"
+                        class="fi-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-800"
+                        placeholder="+9055XXXXXXXX">
+                </div>
+                @endforeach
             </div>
-            <div>
-                <label class="block text-sm font-medium mb-1">البريد الإلكتروني</label>
-                <input type="email" wire:model="data.contact_email"
-                    class="fi-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-800">
+        </div>
+
+        {{-- البريد الإلكتروني --}}
+        <div>
+            <p class="text-sm font-semibold mb-2">✉️ البريد الإلكتروني</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                @foreach(['contact_email' => 'بريد 1','contact_email_2' => 'بريد 2','contact_email_3' => 'بريد 3'] as $key => $label)
+                <div>
+                    <label class="block text-xs text-gray-500 mb-1">{{ $label }}</label>
+                    <input type="email" wire:model="data.{{ $key }}"
+                        class="fi-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-800"
+                        placeholder="example@email.com">
+                </div>
+                @endforeach
             </div>
-            <div>
-                <label class="block text-sm font-medium mb-1">📲 رقم الواتساب</label>
-                <input type="text" wire:model="data.whatsapp_number" placeholder="905398863777"
-                    class="fi-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-800">
-                <p class="text-xs text-gray-400 mt-1">بدون + مثال: 905398863777</p>
+        </div>
+
+        {{-- واتساب --}}
+        <div>
+            <p class="text-sm font-semibold mb-2">📲 أرقام الواتساب</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                @foreach(['whatsapp_number' => 'واتساب 1','whatsapp_number_2' => 'واتساب 2','whatsapp_number_3' => 'واتساب 3'] as $key => $label)
+                <div>
+                    <label class="block text-xs text-gray-500 mb-1">{{ $label }}</label>
+                    <input type="text" wire:model="data.{{ $key }}"
+                        class="fi-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-800"
+                        placeholder="905XXXXXXXXX (بدون +)">
+                </div>
+                @endforeach
             </div>
+            <p class="text-xs text-gray-400 mt-1">بدون + — مثال: 905398863777</p>
         </div>
     </div>
 </div>
