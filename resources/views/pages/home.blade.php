@@ -23,13 +23,11 @@
 @php $sliderProjects = array_slice($projects['data'] ?? [], 0, 5); @endphp
 @if(!empty($sliderProjects))
 <section class="hero-slider-section" style="position:relative">
-
     @if($heroLabel)
     <div style="position:absolute;top:12px;left:351px;right:0;text-align:center;z-index:2;font-size:14px;color:#555;font-weight:500;pointer-events:none;">
         {{ $heroLabel }}
     </div>
     @endif
-
     <div class="hero-swiper swiper">
         <div class="swiper-wrapper">
             @foreach($sliderProjects as $slide)
@@ -76,7 +74,6 @@
     </div>
 </section>
 @else
-{{-- ============ HERO BANNER (fallback) ============ --}}
 <section class="hero-banner">
     <div class="container">
         <div class="row align-items-center">
@@ -85,17 +82,9 @@
                 <p class="main-p my-3 my-lg-5">{{ $heroDesc }}</p>
                 <form action="#">
                     <div class="row">
-                        <div class="col-lg-9 col-8">
-                            <input type="text" name="amount" class="form-input w-100" placeholder="{{ $locale==='ar'?'ادخل المبلغ':'Enter amount' }}">
-                        </div>
-                        <div class="col-lg-3 col-4">
-                            <button type="submit" class="btn-donate w-100">{{ $locale==='ar'?'تبرع الآن':'Donate Now' }}</button>
-                        </div>
-                        <div class="col-md-12">
-                            <div class="progress-container mt-4">
-                                <div class="progress-bar"><div style="width:100%" class="progress-fill"></div></div>
-                            </div>
-                        </div>
+                        <div class="col-lg-9 col-8"><input type="text" name="amount" class="form-input w-100" placeholder="{{ $locale==='ar'?'ادخل المبلغ':'Enter amount' }}"></div>
+                        <div class="col-lg-3 col-4"><button type="submit" class="btn-donate w-100">{{ $locale==='ar'?'تبرع الآن':'Donate Now' }}</button></div>
+                        <div class="col-md-12"><div class="progress-container mt-4"><div class="progress-bar"><div style="width:100%" class="progress-fill"></div></div></div></div>
                     </div>
                 </form>
                 <div class="banner-footer mt-4">
@@ -132,9 +121,7 @@
     <div class="container">
         <div class="campaign-banner">
             <div class="row align-items-center">
-                <div class="col-md-5 order-2 order-lg-1">
-                    <img src="{{ $cbImg }}" class="img-fluid rounded-3" alt="campaign">
-                </div>
+                <div class="col-md-5 order-2 order-lg-1"><img src="{{ $cbImg }}" class="img-fluid rounded-3" alt="campaign"></div>
                 <div class="col-md-7 order-1 order-lg-2 ps-lg-5" dir="{{ $locale === 'ar' ? 'rtl' : 'ltr' }}">
                     <h2 class="section-title mt-4" style="text-align:{{ $cbAlign }}">{{ $cbTitle }}</h2>
                     <h6 class="mt-2 mb-3" style="font-size:15px;font-weight:600;color:var(--main-color);text-align:{{ $cbAlign }}">{{ $cbSubtitle }}</h6>
@@ -198,11 +185,9 @@
 @php
     $whyCards = $data['why_donate'] ?? [];
     $whyLabel = $data['why_donate_label'] ?? ($locale==='ar' ? 'لماذا تتبرع لنا؟' : 'Why donate to us?');
-
     $whyTitle = $locale === 'ar'
         ? (App\Models\Setting::get('why_donate_title_ar', '') ?: ($data['why_donate_title'] ?? 'لأننا نهتم بالحالات الأكثر احتياجًا.'))
         : (App\Models\Setting::get('why_donate_title_en', '') ?: ($data['why_donate_title'] ?? 'Because we care about those in greatest need.'));
-
     $defaultCards = [
         ['icon'=>null,'icon_color'=>null,'color'=>null,'title'=>($locale==='ar'?'الأطفال والنساء بلا مأوى':'Children & Women Without Shelter'),'description'=>($locale==='ar'?'نهتم بالأطفال والنساء.':'We care for children and women.')],
         ['icon'=>null,'icon_color'=>null,'color'=>null,'title'=>($locale==='ar'?'الأطفال والنساء بلا غذاء':'Children & Women Without Food'),'description'=>($locale==='ar'?'نقدّم الدعم للأسر.':'We support families.')],
@@ -227,13 +212,8 @@
                 $cardColor   = $card['icon_color'] ?? null;
                 $cardBg      = $card['color']      ?? null;
                 $cardIconUrl = $cardIcon ? asset('storage/' . $cardIcon) : null;
-
                 if ($cardColor && $cardIconUrl) {
-                    $svgStyle = 'width:36px;height:36px;'
-                        . '-webkit-mask:url(' . $cardIconUrl . ') no-repeat center;'
-                        . 'mask:url(' . $cardIconUrl . ') no-repeat center;'
-                        . '-webkit-mask-size:contain;mask-size:contain;'
-                        . 'background-color:' . $cardColor . ';';
+                    $svgStyle = 'width:36px;height:36px;-webkit-mask:url('.$cardIconUrl.') no-repeat center;mask:url('.$cardIconUrl.') no-repeat center;-webkit-mask-size:contain;mask-size:contain;background-color:'.$cardColor.';';
                     $useMask = true;
                 } else {
                     $svgStyle = 'width:36px;height:36px;object-fit:contain;';
@@ -245,10 +225,8 @@
                     <div class="why-icon-wrap mb-3">
                         @if($cardIconUrl)
                             <div class="why-icon-circle" style="background:{{ $p }}1a;border:2px solid {{ $p }}4d;">
-                                @if($useMask)
-                                    <div style="{{ $svgStyle }}"></div>
-                                @else
-                                    <img src="{{ $cardIconUrl }}" alt="icon" style="{{ $svgStyle }}">
+                                @if($useMask)<div style="{{ $svgStyle }}"></div>
+                                @else<img src="{{ $cardIconUrl }}" alt="icon" style="{{ $svgStyle }}">
                                 @endif
                             </div>
                         @else
@@ -284,21 +262,21 @@
         <div class="row">
             @foreach(array_slice($programs['data'], 0, 3) as $program)
             @php
-                $pgImg    = $program['image'] ?? 'https://roaya-ansany.com/website/images/stats-card.png';
-                $pgTitle  = $program['title'] ?? $program['name'] ?? '';
-                $pgDesc   = $program['description'] ?? '';
-                $pgSlug   = $program['slug'] ?? $program['id'] ?? '';
-                $pgGoal   = $program['goal_amount'] ?? 0;
-                $pgRaised = $program['raised_amount'] ?? 0;
-                $pgPct    = $pgGoal > 0 ? min(100, round(($pgRaised / $pgGoal) * 100)) : 0;
+                $pgImg=$program['image']??'https://roaya-ansany.com/website/images/stats-card.png';
+                $pgTitle=$program['title']??$program['name']??'';
+                $pgDesc=$program['description']??'';
+                $pgSlug=$program['slug']??$program['id']??'';
+                $pgGoal=$program['goal_amount']??0;
+                $pgRaised=$program['raised_amount']??0;
+                $pgPct=$pgGoal>0?min(100,round(($pgRaised/$pgGoal)*100)):0;
             @endphp
             <div class="col-lg-4 col-md-6 mb-4">
                 <div class="program-card h-100">
                     <img src="{{ $pgImg }}" class="img-fluid w-100" alt="{{ $pgTitle }}" style="height:220px;object-fit:cover;border-radius:12px 12px 0 0">
                     <div class="p-4">
                         <h5 class="mb-2">{{ $pgTitle }}</h5>
-                        @if($pgDesc)<p class="color-67 mb-3" style="font-size:14px">{{ Str::limit(strip_tags($pgDesc), 100) }}</p>@endif
-                        @if($pgGoal > 0)
+                        @if($pgDesc)<p class="color-67 mb-3" style="font-size:14px">{{ Str::limit(strip_tags($pgDesc),100) }}</p>@endif
+                        @if($pgGoal>0)
                         <div class="progress-container mb-2"><div class="progress-bar"><div class="progress-fill" style="width:{{ $pgPct }}%"></div></div></div>
                         <div class="d-flex justify-content-between text-muted mb-3" style="font-size:13px">
                             <span>{{ $locale==='ar'?'تم جمعه':'Raised' }}: ${{ number_format($pgRaised) }}</span>
@@ -318,10 +296,10 @@
 
 {{-- ============ WHERE WE WORK ============ --}}
 @php
-    $about      = $data['about'] ?? [];
-    $aboutTitle = $about['title']       ?? ($locale==='ar'?'من نحن':'About Us');
-    $aboutDesc  = $about['description'] ?? ($locale==='ar'?'مؤسسة أهلية غير ربحية.':'Non-profit organization.');
-    $aboutImg   = $about['image']       ?? 'https://roaya-ansany.com/storage/uploads/pages/dWfpjiaOmZUcA0BC2wvyPZotctgE6L3TwskmdcsO.jpg';
+    $about=$data['about']??[];
+    $aboutTitle=$about['title']??($locale==='ar'?'من نحن':'About Us');
+    $aboutDesc=$about['description']??($locale==='ar'?'مؤسسة أهلية غير ربحية.':'Non-profit organization.');
+    $aboutImg=$about['image']??'https://roaya-ansany.com/storage/uploads/pages/dWfpjiaOmZUcA0BC2wvyPZotctgE6L3TwskmdcsO.jpg';
 @endphp
 <section class="main-section where-work">
     <div class="container">
@@ -344,15 +322,14 @@
 
 {{-- ============ STATS CARD ============ --}}
 @php
-    $statsImg   = $data['stats_image'] ?? 'https://roaya-ansany.com/website/images/stats-card.png';
-    $statsTitle = $data['stats_title'] ?? ($locale==='ar' ? 'الإغاثة العاجلة لأهل غزة، لبنان، شمال سوريا، السودان ودعم المحتاجين في تركيا' : 'Emergency relief for Gaza, Lebanon, North Syria, Sudan and Turkey');
-
-    $counter  = $data['donation_counter'] ?? [];
-    $dcGoal   = (float)($counter['goal']   ?? collect($projects['data'] ?? [])->sum('goal_amount'));
-    $dcRaised = (float)($counter['raised'] ?? collect($projects['data'] ?? [])->sum('raised_amount'));
-    $dcCurr   = $counter['currency'] ?? '$';
-    $dcRemain = max(0, $dcGoal - $dcRaised);
-    $dcPct    = $dcGoal > 0 ? min(100, round(($dcRaised / $dcGoal) * 100)) : 0;
+    $statsImg=$data['stats_image']??'https://roaya-ansany.com/website/images/stats-card.png';
+    $statsTitle=$data['stats_title']??($locale==='ar'?'الإغاثة العاجلة لأهل غزة، لبنان، شمال سوريا، السودان ودعم المحتاجين في تركيا':'Emergency relief for Gaza, Lebanon, North Syria, Sudan and Turkey');
+    $counter=$data['donation_counter']??[];
+    $dcGoal=(float)($counter['goal']??collect($projects['data']??[])->sum('goal_amount'));
+    $dcRaised=(float)($counter['raised']??collect($projects['data']??[])->sum('raised_amount'));
+    $dcCurr=$counter['currency']??'$';
+    $dcRemain=max(0,$dcGoal-$dcRaised);
+    $dcPct=$dcGoal>0?min(100,round(($dcRaised/$dcGoal)*100)):0;
 @endphp
 <section class="main-section">
     <div class="container">
@@ -378,11 +355,11 @@
 
 {{-- ============ SUPPORT ============ --}}
 @php
-    $support      = $data['support'] ?? [];
-    $supportImg   = $support['image']       ?? 'https://roaya-ansany.com/storage/uploads/pages/JDqjlXwu5odPJit3bTMC8NQxssv8OKDDNyPeVwPS.jpg';
-    $supportTitle = $support['title']       ?? ($locale==='ar' ? 'من نحن' : 'About Us');
-    $supportDesc  = $support['description'] ?? ($locale==='ar' ? 'مؤسسة خيرية غير ربحية.' : 'A non-profit charitable organization.');
-    $supportItems = $support['items']       ?? [];
+    $support=$data['support']??[];
+    $supportImg=$support['image']??'https://roaya-ansany.com/storage/uploads/pages/JDqjlXwu5odPJit3bTMC8NQxssv8OKDDNyPeVwPS.jpg';
+    $supportTitle=$support['title']??($locale==='ar'?'من نحن':'About Us');
+    $supportDesc=$support['description']??($locale==='ar'?'مؤسسة خيرية غير ربحية.':'A non-profit charitable organization.');
+    $supportItems=$support['items']??[];
 @endphp
 <section class="main-section">
     <div class="container">
@@ -397,15 +374,15 @@
                             <div class="row g-3 justify-content-center">
                                 <div class="col-12 col-md-6">
                                     <ul class="numbered-list list-unstyled m-0">
-                                        @foreach(array_slice($supportItems, 0, 3) as $i => $item)
-                                        <li><span>{{ $i+1 }}</span><p>{{ is_array($item) ? ($item['title'] ?? '') : $item }}</p></li>
+                                        @foreach(array_slice($supportItems,0,3) as $i=>$item)
+                                        <li><span>{{ $i+1 }}</span><p>{{ is_array($item)?($item['title']??''):$item }}</p></li>
                                         @endforeach
                                     </ul>
                                 </div>
                                 <div class="col-12 col-md-6">
                                     <ul class="numbered-list list-unstyled m-0">
-                                        @foreach(array_slice($supportItems, 3) as $i => $item)
-                                        <li><span>{{ $i+4 }}</span><p>{{ is_array($item) ? ($item['title'] ?? '') : $item }}</p></li>
+                                        @foreach(array_slice($supportItems,3) as $i=>$item)
+                                        <li><span>{{ $i+4 }}</span><p>{{ is_array($item)?($item['title']??''):$item }}</p></li>
                                         @endforeach
                                     </ul>
                                 </div>
@@ -419,7 +396,7 @@
 </section>
 
 {{-- ============ PARTNERS ============ --}}
-@php $partners = $data['partners'] ?? []; @endphp
+@php $partners=$data['partners']??[]; @endphp
 @if(!empty($partners))
 <section class="main-section">
     <div class="container">
@@ -427,16 +404,10 @@
         <h2 class="text-center section-title mx-auto my-3">{{ $locale==='ar'?'موثوق بها':'Trusted Partners' }}</h2>
         <div class="row justify-content-center g-4">
             @foreach($partners as $partner)
-            @php
-                $pName  = $partner['name']  ?? '';
-                $pColor = $partner['color'] ?? '#f0f7ff';
-                $pImg   = $partner['image'] ?? $partner['logo'] ?? null;
-            @endphp
+            @php $pName=$partner['name']??'';$pColor=$partner['color']??'#f0f7ff';$pImg=$partner['image']??$partner['logo']??null; @endphp
             <div class="col-lg-3 col-md-4 col-6">
                 <div class="partner-card text-center p-4" style="background:{{ $pColor }};border-radius:16px;border:1px solid rgba(0,0,0,0.06)">
-                    @if($pImg)
-                    <img src="{{ $pImg }}" alt="{{ $pName }}" class="img-fluid mb-3" style="max-height:70px;object-fit:contain">
-                    @endif
+                    @if($pImg)<img src="{{ $pImg }}" alt="{{ $pName }}" class="img-fluid mb-3" style="max-height:70px;object-fit:contain">@endif
                     <h6 class="mb-0" style="font-size:14px;font-weight:600">{{ $pName }}</h6>
                 </div>
             </div>
@@ -446,11 +417,16 @@
 </section>
 @endif
 
-{{-- ============ FAQ ============ --}}
+{{-- ============ FAQ — يقرأ مباشرة من Setting ============ --}}
 @php
-    $faqs           = $data['faqs'] ?? [];
-    $faqSectionLabel = $data['faq_section_label'] ?? ($locale==='ar' ? 'الأسئلة الشائعة' : 'FAQ');
-    $faqSectionTitle = $data['faq_section_title'] ?? ($locale==='ar' ? 'أسئلة وأجوبة' : 'Q&A');
+    $faqs = $data['faqs'] ?? [];
+    // قراءة مباشرة من Setting بدون أي default
+    $faqSectionLabel = $locale === 'ar'
+        ? App\Models\Setting::get('home_faq_label_ar')
+        : App\Models\Setting::get('home_faq_label_en');
+    $faqSectionTitle = $locale === 'ar'
+        ? App\Models\Setting::get('home_faq_title_ar')
+        : App\Models\Setting::get('home_faq_title_en');
     $defaultFaqs = [
         ['question'=>($locale==='ar'?'كيف يمكنني التبرع؟':'How can I donate?'),'answer'=>($locale==='ar'?'عبر الموقع مباشرةً.':'Through the website directly.')],
         ['question'=>($locale==='ar'?'هل تبرعاتي تصل؟':'Do my donations reach?'),'answer'=>($locale==='ar'?'نعم، 100%.':'Yes, 100%.')],
@@ -462,8 +438,8 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-5 mb-4 mb-lg-0">
-                <h6>{{ $faqSectionLabel }}</h6>
-                <h2 class="section-title mb-4">{{ $faqSectionTitle }}</h2>
+                @if($faqSectionLabel)<h6>{{ $faqSectionLabel }}</h6>@endif
+                @if($faqSectionTitle)<h2 class="section-title mb-4">{{ $faqSectionTitle }}</h2>@endif
                 <a href="{{ url($locale.'/contact') }}" class="btn-donate d-inline-block">{{ $locale==='ar'?'تواصل معنا':'Contact Us' }}</a>
             </div>
             <div class="col-lg-7">
@@ -489,8 +465,8 @@
 
 {{-- ============ NEWSLETTER ============ --}}
 @php
-    $nlTitle = $data['newsletter_title'] ?? ($locale==='ar'?'اشترك في نشرتنا':'Subscribe to Our Newsletter');
-    $nlDesc  = $data['newsletter_description'] ?? ($locale==='ar'?'احصل على آخر الأخبار.':'Get the latest news.');
+    $nlTitle=$data['newsletter_title']??($locale==='ar'?'اشترك في نشرتنا':'Subscribe to Our Newsletter');
+    $nlDesc=$data['newsletter_description']??($locale==='ar'?'احصل على آخر الأخبار.':'Get the latest news.');
 @endphp
 <section class="main-section newsletter-section">
     <div class="container">
@@ -525,27 +501,22 @@
 
 @push('styles')
 <style>
-.why-donate-header { display:flex;flex-direction:column;align-items:flex-end;width:100%; }
-html[dir="ltr"] .why-donate-header { align-items:flex-start; }
-.why-donate-header h6 { display:block !important; width:100% !important; }
-.why-icon-circle { width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto; }
-.why-icon-wrap { text-align:center; }
-.partner-card { transition:transform 0.2s,box-shadow 0.2s; }
-.partner-card:hover { transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,0.1); }
-.stats-card .section-title { text-align:center !important; width:100%; }
+.why-donate-header{display:flex;flex-direction:column;align-items:flex-end;width:100%;}
+html[dir="ltr"] .why-donate-header{align-items:flex-start;}
+.why-donate-header h6{display:block !important;width:100% !important;}
+.why-icon-circle{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto;}
+.why-icon-wrap{text-align:center;}
+.partner-card{transition:transform 0.2s,box-shadow 0.2s;}
+.partner-card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,0.1);}
+.stats-card .section-title{text-align:center !important;width:100%;}
 </style>
 @endpush
 
 @push('scripts')
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    if (typeof Swiper !== 'undefined' && document.querySelector('.hero-swiper')) {
-        new Swiper('.hero-swiper', {
-            loop: true,
-            autoplay: { delay: 5000, disableOnInteraction: false },
-            pagination: { el: '.hero-pagination', clickable: true },
-            navigation: { nextEl: '.hero-next', prevEl: '.hero-prev' },
-        });
+document.addEventListener('DOMContentLoaded',function(){
+    if(typeof Swiper!=='undefined'&&document.querySelector('.hero-swiper')){
+        new Swiper('.hero-swiper',{loop:true,autoplay:{delay:5000,disableOnInteraction:false},pagination:{el:'.hero-pagination',clickable:true},navigation:{nextEl:'.hero-next',prevEl:'.hero-prev'}});
     }
 });
 </script>
