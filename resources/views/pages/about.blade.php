@@ -143,9 +143,14 @@
                                         @endfor
                                     </div>
                                     <ul class="text-dark">
-                                        @if($about?->goal_points_ar)
-                                            @foreach(json_decode($isAr ? $about->goal_points_ar : $about->goal_points_en, true) ?? [] as $point)
-                                                <li>{{ $point }}</li>
+                                        @php
+                                            $goalPoints = $isAr
+                                                ? ($about?->goal_points_ar ?? [])
+                                                : ($about?->goal_points_en ?? []);
+                                        @endphp
+                                        @if(!empty($goalPoints))
+                                            @foreach($goalPoints as $point)
+                                                <li>{{ is_array($point) ? ($point['item'] ?? '') : $point }}</li>
                                             @endforeach
                                         @else
                                             <li>{{ $isAr ? 'تنفيذ مشاريع إنسانية وتنموية مستدامة تُحدث أثراً حقيقياً في حياة الفقراء والمحتاجين.' : 'Implement humanitarian and sustainable development projects.' }}</li>
@@ -203,7 +208,7 @@
                         </p>
 
                         <p>{{ $isAr
-                            ? ($about?->story_paragraph_2_ar ?? 'ويعتمد تنفيذ هذه البرامج على تقييمات احتياج دورية، وشبكة واسعة من الشركات المحلية والدولية، ومنهجيات تتماشى مع معايير العمل الإنساني.')
+                            ? ($about?->story_paragraph_2_ar ?? 'ويعتمد تنفيذ هذه البرامج على تقييمات احتياج دورية، وشبكة واسعة من الشركاء المحليين والدوليين، ومنهجيات تتماشى مع معايير العمل الإنساني.')
                             : ($about?->story_paragraph_2_en ?? 'Implementation of these programs relies on periodic needs assessments, a wide network of local and international partnerships, and methodologies aligned with humanitarian work standards.')
                         }}</p>
 
