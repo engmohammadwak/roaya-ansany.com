@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ App\Models\Setting::get('site_name', 'الموقع') }} - تحت الصيانة</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
     @php
+        $favicon  = App\Models\Setting::get('site_favicon');
         $logo     = App\Models\Setting::get('site_logo');
         $phone1   = App\Models\Setting::get('contact_phone');
         $phone2   = App\Models\Setting::get('contact_phone_2');
@@ -23,6 +22,11 @@
         $waLink   = App\Models\Setting::get('social_whatsapp');
         $primary  = App\Models\Setting::get('color_primary', '#C4452C');
     @endphp
+    @if($favicon)
+        <link rel="icon" href="{{ asset('storage/' . $favicon) }}">
+    @endif
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
