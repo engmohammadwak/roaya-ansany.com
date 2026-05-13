@@ -31,7 +31,6 @@
     <link href="https://roaya-ansany.com/website/libs/slimselect/slimselect.css" rel="stylesheet">
     <link rel="stylesheet" href="https://roaya-ansany.com/website/css/main.css?v=3">
 
-    {{-- ✅ بعد main.css عشان يكتب فوق أي لون ثابت --}}
     <style>
         :root {
             --main-color:        {{ $p }} !important;
@@ -45,9 +44,22 @@
         }
         body { background-color: {{ $bb }}; }
 
-        /* ✅ فل مشكلة المحاذاة - كل section-title يتبع dir تلقائياً */
-        [dir="rtl"] .section-title { text-align: right !important; }
-        [dir="ltr"] .section-title { text-align: left  !important; }
+        /* ✅ RTL alignment fixes */
+        [dir="rtl"] .section-title,
+        [dir="rtl"] .why-donate .header h2,
+        [dir="rtl"] .why-donate .header h6,
+        [dir="rtl"] .campaign-banner h2,
+        [dir="rtl"] .campaign-banner h6,
+        [dir="rtl"] .campaign-banner p {
+            text-align: right !important;
+        }
+        [dir="ltr"] .section-title { text-align: left !important; }
+
+        /* fix flex container killing text-align in why-donate */
+        [dir="rtl"] .main-section.why-donate .header {
+            flex-direction: column;
+            align-items: flex-end !important;
+        }
 
         .main-section.support-section   { background-color: {{ $bl }} !important; }
         .why-donate-card                { background-color: {{ $bc }} !important; }
@@ -94,7 +106,6 @@
         footer ul li:hover a              { color: {{ $p }} !important; }
         .main-color                       { color: {{ $p }} !important; }
 
-        /* btn-donate ديناميكي */
         .btn-donate,
         a.btn-donate,
         button.btn-donate {
