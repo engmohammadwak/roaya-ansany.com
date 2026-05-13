@@ -29,8 +29,8 @@ class BlockSuspiciousRequests
         '/benchmark\s*\(/i',
         '/sleep\s*\(/i',
         '/load_file\s*\(/i',
-        "/'\s+or\s+'1'\s*=\s*'1/i",
-        '/\'\s+or\s+1\s*=\s*1/i',
+        "/'\\s+or\\s+'1'\\s*=\\s*'1/i",
+        '/\'\\s+or\\s+1\\s*=\\s*1/i',
         '/;\s*drop/i',
         '/xp_cmdshell/i',
     ];
@@ -55,12 +55,12 @@ class BlockSuspiciousRequests
         'sqlmap', 'nikto', 'nmap', 'masscan', 'dirbuster', 'gobuster',
         'wfuzz', 'burpsuite', 'havij', 'acunetix', 'nessus', 'openvas',
         'zgrab', 'nuclei', 'hydra', 'medusa', 'w3af', 'whatweb',
-        'python-requests', 'go-http-client', 'curl/', 'wget/',
+        'python-requests', 'go-http-client',
     ];
 
     // مسارات خطيرة
     private array $dangerousPaths = [
-        '../', '..\\', '%2e%2e', '%252e',
+        '../', '..\/', '%2e%2e', '%252e',
         '/etc/passwd', '/proc/self',
         'wp-admin', 'wp-login', 'phpmyadmin', 'phpinfo',
         '.env', '.git/', 'config.php', 'xmlrpc.php',
