@@ -173,10 +173,22 @@
                 @endif
             </h2>
             <div class="grid grid-cols-2 gap-4">
-                <div><label class="text-xs text-gray-500">العنوان (عربي)</label><input wire:model="settingsData.hero_title_ar" type="text" class="w-full border rounded px-3 py-2 mt-1 text-sm"></div>
-                <div><label class="text-xs text-gray-500">العنوان (إنجليزي)</label><input wire:model="settingsData.hero_title_en" type="text" class="w-full border rounded px-3 py-2 mt-1 text-sm"></div>
-                <div><label class="text-xs text-gray-500">الوصف (عربي)</label><textarea wire:model="settingsData.hero_desc_ar" rows="3" class="w-full border rounded px-3 py-2 mt-1 text-sm"></textarea></div>
-                <div><label class="text-xs text-gray-500">الوصف (إنجليزي)</label><textarea wire:model="settingsData.hero_desc_en" rows="3" class="w-full border rounded px-3 py-2 mt-1 text-sm"></textarea></div>
+                <div>
+                    <label class="text-xs text-gray-500">العنوان (عربي)</label>
+                    <input wire:model="s_hero_title_ar" type="text" class="w-full border rounded px-3 py-2 mt-1 text-sm">
+                </div>
+                <div>
+                    <label class="text-xs text-gray-500">العنوان (إنجليزي)</label>
+                    <input wire:model="s_hero_title_en" type="text" class="w-full border rounded px-3 py-2 mt-1 text-sm">
+                </div>
+                <div>
+                    <label class="text-xs text-gray-500">الوصف (عربي)</label>
+                    <textarea wire:model="s_hero_desc_ar" rows="3" class="w-full border rounded px-3 py-2 mt-1 text-sm"></textarea>
+                </div>
+                <div>
+                    <label class="text-xs text-gray-500">الوصف (إنجليزي)</label>
+                    <textarea wire:model="s_hero_desc_en" rows="3" class="w-full border rounded px-3 py-2 mt-1 text-sm"></textarea>
+                </div>
             </div>
             <div class="flex justify-end gap-3 mt-6">
                 <button wire:click="$set('showSettingsModal', false)" class="px-4 py-2 rounded bg-gray-100 text-gray-700 text-sm">إلغاء</button>

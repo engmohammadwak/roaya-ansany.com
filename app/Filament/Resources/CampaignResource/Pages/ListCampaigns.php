@@ -16,14 +16,20 @@ class ListCampaigns extends ListRecords
 
     public string $activeSection = 'campaigns';
 
-    public bool   $showProjectModal  = false;
-    public bool   $showProgramModal  = false;
-    public bool   $showSettingsModal = false;
-    public ?int   $editingProjectId  = null;
-    public ?int   $editingProgramId  = null;
-    public array  $projectData       = [];
-    public array  $programData       = [];
-    public array  $settingsData      = [];
+    // Modals
+    public bool  $showProjectModal  = false;
+    public bool  $showProgramModal  = false;
+    public bool  $showSettingsModal = false;
+    public ?int  $editingProjectId  = null;
+    public ?int  $editingProgramId  = null;
+    public array $projectData       = [];
+    public array $programData       = [];
+
+    // Settings — individual properties (wire:model doesn't work with nested arrays)
+    public string $s_hero_title_ar = '';
+    public string $s_hero_title_en = '';
+    public string $s_hero_desc_ar  = '';
+    public string $s_hero_desc_en  = '';
 
     protected function getHeaderActions(): array
     {
@@ -57,13 +63,11 @@ class ListCampaigns extends ListRecords
                 ->icon('heroicon-o-adjustments-horizontal')
                 ->color('gray')
                 ->action(function () {
-                    $section = $this->activeSection;
-                    $this->settingsData = [
-                        'hero_title_ar' => Setting::get($section.'_hero_title_ar', ''),
-                        'hero_title_en' => Setting::get($section.'_hero_title_en', ''),
-                        'hero_desc_ar'  => Setting::get($section.'_hero_desc_ar', ''),
-                        'hero_desc_en'  => Setting::get($section.'_hero_desc_en', ''),
-                    ];
+                    $s = $this->activeSection;
+                    $this->s_hero_title_ar = Setting::get($s . '_hero_title_ar', '');
+                    $this->s_hero_title_en = Setting::get($s . '_hero_title_en', '');
+                    $this->s_hero_desc_ar  = Setting::get($s . '_hero_desc_ar', '');
+                    $this->s_hero_desc_en  = Setting::get($s . '_hero_desc_en', '');
                     $this->showSettingsModal = true;
                 }),
         ];
@@ -74,14 +78,14 @@ class ListCampaigns extends ListRecords
         $this->activeSection = $section;
     }
 
+    // ---- Projects ----
     public function saveProject(): void
     {
-        $data = $this->projectData;
         if ($this->editingProjectId) {
-            Project::findOrFail($this->editingProjectId)->update($data);
+            Project::findOrFail($this->editingProjectId)->update($this->projectData);
             Notification::make()->title('تم التحديث ✅')->success()->send();
         } else {
-            Project::create($data);
+            Project::create($this->projectData);
             Notification::make()->title('تم الإضافة ✅')->success()->send();
         }
         $this->showProjectModal = false;
@@ -91,9 +95,8 @@ class ListCampaigns extends ListRecords
 
     public function editProject(int $id): void
     {
-        $p = Project::findOrFail($id);
         $this->editingProjectId = $id;
-        $this->projectData = $p->toArray();
+        $this->projectData = Project::findOrFail($id)->toArray();
         $this->showProjectModal = true;
     }
 
@@ -103,14 +106,14 @@ class ListCampaigns extends ListRecords
         Notification::make()->title('تم الحذف')->success()->send();
     }
 
+    // ---- Programs ----
     public function saveProgram(): void
     {
-        $data = $this->programData;
         if ($this->editingProgramId) {
-            Program::findOrFail($this->editingProgramId)->update($data);
+            Program::findOrFail($this->editingProgramId)->update($this->programData);
             Notification::make()->title('تم التحديث ✅')->success()->send();
         } else {
-            Program::create($data);
+            Program::create($this->programData);
             Notification::make()->title('تم الإضافة ✅')->success()->send();
         }
         $this->showProgramModal = false;
@@ -120,9 +123,8 @@ class ListCampaigns extends ListRecords
 
     public function editProgram(int $id): void
     {
-        $p = Program::findOrFail($id);
         $this->editingProgramId = $id;
-        $this->programData = $p->toArray();
+        $this->programData = Program::findOrFail($id)->toArray();
         $this->showProgramModal = true;
     }
 
@@ -132,12 +134,14 @@ class ListCampaigns extends ListRecords
         Notification::make()->title('تم الحذف')->success()->send();
     }
 
+    // ---- Settings ----
     public function saveSettings(): void
     {
-        $section = $this->activeSection;
-        foreach ($this->settingsData as $key => $value) {
-            Setting::set($section.'_'.$key, $value ?? '');
-        }
+        $s = $this->activeSection;
+        Setting::set($s . '_hero_title_ar', $this->s_hero_title_ar);
+        Setting::set($s . '_hero_title_en', $this->s_hero_title_en);
+        Setting::set($s . '_hero_desc_ar',  $this->s_hero_desc_ar);
+        Setting::set($s . '_hero_desc_en',  $this->s_hero_desc_en);
         $this->showSettingsModal = false;
         Notification::make()->title('تم حفظ الإعدادات ✅')->success()->send();
     }
