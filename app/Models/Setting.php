@@ -11,10 +11,17 @@ class Setting extends Model
 
     public static function get($key, $default = null)
     {
-        return Cache::rememberForever('setting_' . $key, function () use ($key, $default) {
-            $setting = static::where('key', $key)->first();
-            return $setting ? $setting->value : $default;
-        });
+        // لا نستخدم rememberForever لأنه يسبب مشاكل مع بعض drivers
+        $cached = Cache::get('setting_' . $key);
+        if ($cached !== null) {
+            return $cached;
+        }
+        $setting = static::where('key', $key)->first();
+        $value   = $setting ? $setting->value : $default;
+        if ($value !== null) {
+            Cache::put('setting_' . $key, $value, now()->addHours(6));
+        }
+        return $value;
     }
 
     public static function set($key, $value)
@@ -26,8 +33,12 @@ class Setting extends Model
 
     public static function getAllSettings()
     {
-        return Cache::rememberForever('all_settings', function () {
-            return static::all()->pluck('value', 'key');
-        });
+        $cached = Cache::get('all_settings');
+        if ($cached !== null) {
+            return $cached;
+        }
+        $settings = static::all()->pluck('value', 'key');
+        Cache::put('all_settings', $settings, now()->addHours(6));
+        return $settings;
     }
 }

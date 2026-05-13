@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\FaqCategoryResource\Pages;
+use App\Models\Faq;
 use App\Models\FaqCategory;
 use App\Models\Setting;
 use Filament\Forms;
@@ -20,6 +21,9 @@ class FaqCategoryResource extends Resource
     protected static ?string $navigationLabel = 'أسئلة شائعة';
     protected static ?int    $navigationSort  = 30;
 
+    /* ------------------------------------------------------------------ */
+    /*  FORM – إنشاء / تعديل فئة                                           */
+    /* ------------------------------------------------------------------ */
     public static function form(Form $form): Form
     {
         return $form->schema([
@@ -39,6 +43,9 @@ class FaqCategoryResource extends Resource
         ]);
     }
 
+    /* ------------------------------------------------------------------ */
+    /*  TABLE                                                               */
+    /* ------------------------------------------------------------------ */
     public static function table(Table $table): Table
     {
         return $table
@@ -48,9 +55,33 @@ class FaqCategoryResource extends Resource
                 Tables\Columns\TextColumn::make('sort_order')->label('الترتيب')->sortable(),
                 Tables\Columns\TextColumn::make('faqs_count')->label('عدد الأسئلة')->counts('faqs'),
             ])
+            ->defaultSort('sort_order')
+
+            /* ---------- أزرار الرأس ---------- */
             ->headerActions([
+
+                /* زر إضافة سؤال جديد */
+                Tables\Actions\Action::make('add_faq')
+                    ->label('➕ إضافة سؤال')
+                    ->icon('heroicon-o-plus-circle')
+                    ->color('success')
+                    ->form(self::faqForm())
+                    ->action(function (array $data) {
+                        Faq::create([
+                            'faq_category_id' => $data['faq_category_id'] ?? null,
+                            'question_ar'     => $data['question_ar'],
+                            'question_en'     => $data['question_en']     ?? null,
+                            'answer_ar'       => $data['answer_ar'],
+                            'answer_en'       => $data['answer_en']       ?? null,
+                            'sort_order'      => $data['sort_order']      ?? 0,
+                            'is_active'       => $data['is_active']       ?? true,
+                        ]);
+                        Notification::make()->title('تمت إضافة السؤال ✅')->success()->send();
+                    }),
+
+                /* زر إعدادات صفحة الأسئلة */
                 Tables\Actions\Action::make('faq_page_settings')
-                    ->label('⚙️ إعدادات صفحة الأسئلة')
+                    ->label('⚙️ إعدادات الصفحة')
                     ->icon('heroicon-o-cog-6-tooth')
                     ->color('gray')
                     ->form([
@@ -83,12 +114,59 @@ class FaqCategoryResource extends Resource
                         Notification::make()->title('تم الحفظ بنجاح ✅')->success()->send();
                     }),
             ])
+
+            /* ---------- أزرار كل صف ---------- */
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()->label('تعديل الفئة'),
                 Tables\Actions\DeleteAction::make(),
             ]);
     }
 
+    /* ------------------------------------------------------------------ */
+    /*  نموذج السؤال (مشترك بين إضافة + تعديل)                            */
+    /* ------------------------------------------------------------------ */
+    protected static function faqForm(): array
+    {
+        return [
+            Forms\Components\Section::make('📂 التصنيف والحالة')
+                ->schema([
+                    Forms\Components\Select::make('faq_category_id')
+                        ->label('الفئة')
+                        ->options(FaqCategory::orderBy('sort_order')->pluck('name_ar', 'id'))
+                        ->searchable()
+                        ->nullable(),
+                    Forms\Components\Toggle::make('is_active')
+                        ->label('نشط')
+                        ->default(true),
+                    Forms\Components\TextInput::make('sort_order')
+                        ->label('الترتيب')
+                        ->numeric()
+                        ->default(0),
+                ])->columns(3),
+
+            Forms\Components\Section::make('❓ السؤال')
+                ->schema([
+                    Forms\Components\Textarea::make('question_ar')
+                        ->label('السؤال (عربي)')
+                        ->required()
+                        ->rows(2),
+                    Forms\Components\Textarea::make('question_en')
+                        ->label('السؤال (إنجليزي)')
+                        ->rows(2),
+                ])->columns(2),
+
+            Forms\Components\Section::make('💡 الإجابة')
+                ->schema([
+                    Forms\Components\RichEditor::make('answer_ar')
+                        ->label('الإجابة (عربي)')
+                        ->required(),
+                    Forms\Components\RichEditor::make('answer_en')
+                        ->label('الإجابة (إنجليزي)'),
+                ])->columns(2),
+        ];
+    }
+
+    /* ------------------------------------------------------------------ */
     public static function getPages(): array
     {
         return [
