@@ -3,6 +3,7 @@
     $otherLocale = $locale === 'ar' ? 'en' : 'ar';
     $siteLogo    = App\Models\Setting::get('site_logo');
     $siteName    = App\Models\Setting::get('site_name', 'رؤيا');
+    $blogActive  = App\Models\BlogPage::isEnabled();
 
     // روابط النافبار — on/off من الإعدادات
     $navLinks = [
@@ -44,6 +45,10 @@
         <div class="collapse navbar-collapse" id="navbarMain">
             <ul class="navbar-nav links-holder mx-auto mb-2 mb-lg-0">
                 @foreach($navLinks as $key => $link)
+                    {{-- إخفاء المدونة لو مش نشطة --}}
+                    @if($key === 'blogs' && !$blogActive)
+                        @continue
+                    @endif
                     @if(App\Models\Setting::get('nav_show_'.$key, '1') === '1')
                     <li class="nav-item me-4">
                         <a class="nav-link {{ request()->is($link['path']) || request()->is($link['path'].'/*') ? 'active' : '' }}"

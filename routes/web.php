@@ -13,6 +13,7 @@ use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\PrivacyController;
 use App\Http\Controllers\TermsController;
 use App\Http\Controllers\ProjectController;
+use App\Models\BlogPage;
 use Illuminate\Support\Facades\Route;
 
 // حل خطأ: Route [login] not defined
@@ -40,8 +41,15 @@ Route::prefix('{locale}')
 
         Route::get('/about', [AboutController::class, 'index'])->name('about');
 
-        Route::get('/blogs', [BlogController::class, 'index'])->name('blogs');
-        Route::get('/blogs/{slug}', [BlogController::class, 'show'])->name('blogs.show');
+        // روابط المدونة — تُحجب تلقائياً لو is_active = false
+        Route::get('/blogs', function () use (&$locale) {
+            if (!BlogPage::isEnabled()) abort(404);
+            return app(BlogController::class)->index();
+        })->name('blogs');
+        Route::get('/blogs/{slug}', function ($locale, $slug) {
+            if (!BlogPage::isEnabled()) abort(404);
+            return app(BlogController::class)->show($slug);
+        })->name('blogs.show');
 
         Route::get('/campaigns', [CampaignController::class, 'index'])->name('campaigns');
         Route::get('/campaigns/{slug}', [CampaignController::class, 'show'])->name('campaigns.show');
@@ -60,7 +68,6 @@ Route::prefix('{locale}')
             ->name('payment.callback');
 
         Route::get('/contact', [ContactController::class, 'index'])->name('contact');
-        // حماية Contact Form من spam — ماكس 20 رسالة / دقيقة
         Route::post('/contact', [ContactController::class, 'store'])
             ->middleware('throttle:20,1')
             ->name('contact.store');

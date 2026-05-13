@@ -22,6 +22,17 @@ class BlogPageResource extends Resource
     {
         return $form->schema([
 
+            Forms\Components\Section::make('حالة المدونة')
+                ->schema([
+                    Forms\Components\Toggle::make('is_active')
+                        ->label('إظهار المدونة في الموقع')
+                        ->helperText('عند الإيقاف تختفي المدونة من القائمة والفوتر ويعود الرابط بـ 404')
+                        ->default(true)
+                        ->onColor('success')
+                        ->offColor('danger')
+                        ->columnSpanFull(),
+                ])->columns(1),
+
             Forms\Components\Section::make('صورة الهيرو')
                 ->schema([
                     Forms\Components\FileUpload::make('hero_image')
@@ -74,6 +85,7 @@ class BlogPageResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('section_title_ar')->label('عنوان القسم'),
+                Tables\Columns\IconColumn::make('is_active')->label('المدونة نشطة')->boolean(),
                 Tables\Columns\TextColumn::make('updated_at')->label('آخر تعديل')->dateTime()->sortable(),
             ])
             ->actions([Tables\Actions\EditAction::make()])

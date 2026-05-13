@@ -13,9 +13,22 @@ class BlogPage extends Model {
         'hero_sub_ar','hero_sub_en',
         'hero_para_ar','hero_para_en',
         'hero_image','campaign_id',
+        'is_active',
+    ];
+
+    protected $casts = [
+        'is_active' => 'boolean',
     ];
 
     public function campaign() {
         return $this->belongsTo(Campaign::class);
+    }
+
+    /**
+     * هل المدونة مفعّلة؟
+     */
+    public static function isEnabled(): bool
+    {
+        return (bool) static::first()?->is_active ?? true;
     }
 }

@@ -43,6 +43,8 @@
             $whatsapps[] = ['number' => trim($num), 'text' => trim($waTexts[$i])];
         }
     }
+
+    $blogActive = App\Models\BlogPage::isEnabled();
 @endphp
 <footer class="footer mt-5 border-top pt-3">
     <div class="container overflow-hidden">
@@ -95,7 +97,9 @@
                         <ul class="list-unstyled">
                             <li><a href="{{ url($locale) }}">{{ $locale === 'ar' ? 'الرئيسية' : 'Home' }}</a></li>
                             <li><a href="{{ url($locale.'/about') }}">{{ $locale === 'ar' ? 'من نحن' : 'About Us' }}</a></li>
+                            @if($blogActive)
                             <li><a href="{{ url($locale.'/blogs') }}">{{ $locale === 'ar' ? 'المدونة' : 'Blog' }}</a></li>
+                            @endif
                         </ul>
                     </div>
                     <div class="col-6 col-md-4 mt-5">
