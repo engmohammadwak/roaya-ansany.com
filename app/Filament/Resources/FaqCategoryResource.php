@@ -37,8 +37,9 @@ class FaqCategoryResource extends Resource
                     ->limit(60),
                 Tables\Columns\ToggleColumn::make('is_active')
                     ->label('ظاهر'),
-                Tables\Columns\TextColumn::make('sort_order')
+                Tables\Columns\TextInputColumn::make('sort_order')
                     ->label('الترتيب')
+                    ->rules(['numeric', 'min:0'])
                     ->sortable(),
             ])
             ->defaultSort('sort_order')
@@ -63,20 +64,16 @@ class FaqCategoryResource extends Resource
                         Notification::make()->title('تمت إضافة السؤال ✅')->success()->send();
                     }),
 
-                // ⚙️ إعدادات الصفحة
+                // ⚙️ إعدادات الصفحة — فقط عناوين الصفحة الرئيسية
                 Tables\Actions\Action::make('faq_page_settings')
                     ->label('⚙️ إعدادات الصفحة')
                     ->icon('heroicon-o-cog-6-tooth')
                     ->color('gray')
                     ->fillForm(fn() => [
-                        'home_faq_label_ar'    => Setting::get('home_faq_label_ar', ''),
-                        'home_faq_label_en'    => Setting::get('home_faq_label_en', ''),
-                        'home_faq_title_ar'    => Setting::get('home_faq_title_ar', ''),
-                        'home_faq_title_en'    => Setting::get('home_faq_title_en', ''),
-                        'faq_hero_title_ar'    => Setting::get('faq_hero_title_ar', ''),
-                        'faq_hero_title_en'    => Setting::get('faq_hero_title_en', ''),
-                        'faq_hero_subtitle_ar' => Setting::get('faq_hero_subtitle_ar', ''),
-                        'faq_hero_subtitle_en' => Setting::get('faq_hero_subtitle_en', ''),
+                        'home_faq_label_ar' => Setting::get('home_faq_label_ar', ''),
+                        'home_faq_label_en' => Setting::get('home_faq_label_en', ''),
+                        'home_faq_title_ar' => Setting::get('home_faq_title_ar', ''),
+                        'home_faq_title_en' => Setting::get('home_faq_title_en', ''),
                     ])
                     ->form([
                         Forms\Components\Section::make('📌 عناوين قسم الأسئلة في الصفحة الرئيسية')
@@ -90,28 +87,12 @@ class FaqCategoryResource extends Resource
                                 Forms\Components\TextInput::make('home_faq_title_en')
                                     ->label('العنوان الكبير (إنجليزي)'),
                             ])->columns(2),
-
-                        Forms\Components\Section::make('📌 عناوين صفحة /faq المستقلة')
-                            ->schema([
-                                Forms\Components\TextInput::make('faq_hero_title_ar')
-                                    ->label('العنوان الرئيسي (عربي)'),
-                                Forms\Components\TextInput::make('faq_hero_title_en')
-                                    ->label('العنوان الرئيسي (إنجليزي)'),
-                                Forms\Components\TextInput::make('faq_hero_subtitle_ar')
-                                    ->label('الوصف (عربي)'),
-                                Forms\Components\TextInput::make('faq_hero_subtitle_en')
-                                    ->label('الوصف (إنجليزي)'),
-                            ])->columns(2),
                     ])
                     ->action(function (array $data) {
-                        Setting::set('home_faq_label_ar',    $data['home_faq_label_ar']);
-                        Setting::set('home_faq_label_en',    $data['home_faq_label_en']);
-                        Setting::set('home_faq_title_ar',    $data['home_faq_title_ar']);
-                        Setting::set('home_faq_title_en',    $data['home_faq_title_en']);
-                        Setting::set('faq_hero_title_ar',    $data['faq_hero_title_ar']);
-                        Setting::set('faq_hero_title_en',    $data['faq_hero_title_en']);
-                        Setting::set('faq_hero_subtitle_ar', $data['faq_hero_subtitle_ar']);
-                        Setting::set('faq_hero_subtitle_en', $data['faq_hero_subtitle_en']);
+                        Setting::set('home_faq_label_ar', $data['home_faq_label_ar']);
+                        Setting::set('home_faq_label_en', $data['home_faq_label_en']);
+                        Setting::set('home_faq_title_ar', $data['home_faq_title_ar']);
+                        Setting::set('home_faq_title_en', $data['home_faq_title_en']);
                         Notification::make()->title('تم الحفظ بنجاح ✅')->success()->send();
                     }),
             ])
