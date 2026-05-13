@@ -44,6 +44,11 @@
             --main-warning-color:{{ $cw }};
         }
         body { background-color: {{ $bb }}; }
+
+        /* ✅ فل مشكلة المحاذاة - كل section-title يتبع dir تلقائياً */
+        [dir="rtl"] .section-title { text-align: right !important; }
+        [dir="ltr"] .section-title { text-align: left  !important; }
+
         .main-section.support-section   { background-color: {{ $bl }} !important; }
         .why-donate-card                { background-color: {{ $bc }} !important; }
         .how-to .step-number.active     { background-color: {{ $cs }} !important; border-color: {{ $cs }} !important; }
