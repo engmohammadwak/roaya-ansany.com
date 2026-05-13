@@ -2,6 +2,12 @@
 @php
     $locale = app()->getLocale();
     $isAr   = $locale === 'ar';
+
+    // CTA image — same logic as home page
+    $ctaImgRaw = \App\Models\Setting::get('cta_image', null);
+    $ctaImg = $ctaImgRaw
+        ? asset('storage/' . $ctaImgRaw)
+        : asset('website/images/donate-child.svg');
 @endphp
 @section('title', ($isAr ? 'من نحن' : 'About Us') . ' | ' . config('app.name'))
 
@@ -266,13 +272,17 @@
 
                 <div class="content">
                     <h2 class="main-title text-white mb-4">
-                        {{ $isAr ? 'تبرّع الآن — أنقذ حياة' : 'Donate Now — Save a Life' }}
+                        {{ $isAr
+                            ? ($about?->cta_title_ar ?? 'تبرّع الآن — أنقذ حياة')
+                            : ($about?->cta_title_en ?? 'Donate Now — Save a Life')
+                        }}
                     </h2>
 
-                    <p>{{ $isAr
-                        ? ($about?->cta_description_ar ?? 'تبرّع الآن وأنقذ حياة. في مكان ما، هناك شخص ينتظر يد العون لتغيير واقعه وإعادة الأمل إلى حياته. مساهمتك، مهما كانت صغيرة، تصنع تأثيراً دائماً وتعيد الثقة بالإنسانية. كن السبب في عودة ابتسامة — فكل فعل خير يبدأ بك.')
-                        : ($about?->cta_description_en ?? 'Donate now and save a life. Somewhere, there is a person waiting for a helping hand to change their reality and restore hope. Your contribution, however small, creates a lasting impact.')
-                    }}</p>
+                    @if($isAr ? $about?->cta_description_ar : $about?->cta_description_en)
+                    <p class="text-white mb-4" style="font-size:15px;line-height:1.9;opacity:.9">
+                        {{ $isAr ? $about->cta_description_ar : $about->cta_description_en }}
+                    </p>
+                    @endif
 
                     <div class="mt-4 holder">
                         <input type="text" name="amount" id="amount888" class="form-input"
@@ -283,7 +293,7 @@
                     </div>
                 </div>
 
-                <img src="{{ asset('website/images/donate-child.svg') }}" class="d-none d-lg-block" alt="donate image">
+                <img src="{{ $ctaImg }}" class="d-none d-lg-block" alt="donate image">
 
             </div>
         </div>
