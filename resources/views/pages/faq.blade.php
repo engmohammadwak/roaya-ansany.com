@@ -1,5 +1,16 @@
 @extends('layouts.app')
-@php $locale = app()->getLocale(); $isAr = $locale === 'ar'; @endphp
+@php
+    $locale = app()->getLocale();
+    $isAr   = $locale === 'ar';
+
+    $heroTitle    = $isAr
+        ? App\Models\Setting::get('faq_hero_title_ar',    'الأسئلة الشائعة')
+        : App\Models\Setting::get('faq_hero_title_en',    'Frequently Asked Questions');
+
+    $heroSubtitle = $isAr
+        ? App\Models\Setting::get('faq_hero_subtitle_ar', 'إجابات على أكثر الأسئلة شيوعاً')
+        : App\Models\Setting::get('faq_hero_subtitle_en', 'Answers to the most common questions');
+@endphp
 @section('title', ($isAr ? 'الأسئلة الشائعة' : 'FAQs') . ' | مؤسسة رؤيا الإنسانية')
 @push('styles')
 <style>
@@ -24,8 +35,8 @@
 </div>
 <section class="faq-hero">
     <div class="container">
-        <h1>{{ $isAr ? 'الأسئلة الشائعة' : 'Frequently Asked Questions' }}</h1>
-        <p style="opacity:.9;margin-top:10px">{{ $isAr ? 'إجابات على أكثر الأسئلة شيوعاً' : 'Answers to the most common questions' }}</p>
+        <h1>{{ $heroTitle }}</h1>
+        <p style="opacity:.9;margin-top:10px">{{ $heroSubtitle }}</p>
     </div>
 </section>
 <section class="faq-section">
