@@ -356,7 +356,8 @@
             <img src="{{ $statsImg }}" class="img-fluid" alt="kids">
             <div class="text-center pt-5">
                 <p class="text-white">{{ $locale==='ar'?'مشاريعنا تقدم لـ':'Our projects offer' }}</p>
-                <h2 class="text-white mt-4 section-title">{{ $statsTitle }}</h2>
+                {{-- ✅ العنوان في النص بالكامل --}}
+                <h2 class="text-white mt-4 section-title" style="text-align:center !important;">{{ $statsTitle }}</h2>
             </div>
             <div class="stats mt-5">
                 <div class="row">
@@ -371,9 +372,6 @@
         </div>
     </div>
 </section>
-
-{{-- ============ DONATION COUNTER ============ --}}
-@include('partials.donation-counter', ['donationCounter' => $data['donation_counter'] ?? []])
 
 {{-- ============ SUPPORT ============ --}}
 @php
@@ -527,6 +525,12 @@ html[dir="ltr"] .why-donate-header { align-items:flex-start; }
 .why-icon-wrap { text-align:center; }
 .partner-card { transition:transform 0.2s,box-shadow 0.2s; }
 .partner-card:hover { transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,0.1); }
+
+/* ✅ stats-card title في النص دايمًا */
+.stats-card .section-title {
+    text-align: center !important;
+    width: 100%;
+}
 </style>
 @endpush
 
