@@ -417,10 +417,9 @@
 </section>
 @endif
 
-{{-- ============ FAQ — يقرأ مباشرة من Setting ============ --}}
+{{-- ============ FAQ ============ --}}
 @php
     $faqs = $data['faqs'] ?? [];
-    // قراءة مباشرة من Setting بدون أي default
     $faqSectionLabel = $locale === 'ar'
         ? App\Models\Setting::get('home_faq_label_ar')
         : App\Models\Setting::get('home_faq_label_en');
@@ -465,7 +464,7 @@
 
 {{-- ============ NEWSLETTER ============ --}}
 @php
-    $nlTitle=$data['newsletter_title']??($locale==='ar'?'اشترك في نشرتنا':'Subscribe to Our Newsletter');
+    $nlTitle=$data['newsletter_title']??($locale==='ar'?'اشترك في نشرتنا':' Subscribe to Our Newsletter');
     $nlDesc=$data['newsletter_description']??($locale==='ar'?'احصل على آخر الأخبار.':'Get the latest news.');
 @endphp
 <section class="main-section newsletter-section">
@@ -483,18 +482,32 @@
     </div>
 </section>
 
-{{-- ============ CTA ============ --}}
+{{-- ============ CTA — يقرأ من HomeSetting ============ --}}
+@php
+    $ctaTitle = $locale === 'ar'
+        ? ($data['cta_title'] ?? 'تبرّع الآن')
+        : ($data['cta_title_en'] ?? 'Donate Now');
+    $ctaDesc = $locale === 'ar'
+        ? ($data['cta_description'] ?? '')
+        : ($data['cta_description_en'] ?? '');
+    $ctaImg = $data['cta_image']
+        ? asset('storage/' . $data['cta_image'])
+        : 'https://roaya-ansany.com/website/images/donate-child.svg';
+@endphp
 <section class="main-section">
     <div class="container">
         <div class="donate overflow-hidden">
             <div class="content">
-                <h2 class="main-title text-white mb-4">{{ $locale==='ar'?'تبرّع الآن':'Donate Now' }}</h2>
+                <h2 class="main-title text-white mb-4">{{ $ctaTitle }}</h2>
+                @if($ctaDesc)
+                <p class="text-white mb-4" style="font-size:15px;line-height:1.9;opacity:.9">{{ $ctaDesc }}</p>
+                @endif
                 <div class="mt-4 holder">
                     <input type="text" name="amount" class="form-input" placeholder="{{ $locale==='ar'?'ادخل المبلغ':'Enter amount' }}">
                     <button type="button" class="btn-donate">{{ $locale==='ar'?'تبرع':'Donate' }}</button>
                 </div>
             </div>
-            <img src="https://roaya-ansany.com/website/images/donate-child.svg" class="d-none d-lg-block" alt="donate">
+            <img src="{{ $ctaImg }}" class="d-none d-lg-block" alt="donate">
         </div>
     </div>
 </section>

@@ -123,27 +123,6 @@ class HomeSettingResource extends Resource
                                 ->columnSpanFull(),
                         ]),
 
-                    // ======= FAQ =======
-                    Forms\Components\Tabs\Tab::make('❓ الأسئلة الشائعة')
-                        ->schema([
-                            Forms\Components\Repeater::make('faqs')
-                                ->label('أسئلة وأجوبة')
-                                ->schema([
-                                    Forms\Components\TextInput::make('question')
-                                        ->label('السؤال (عربي)')->required(),
-                                    Forms\Components\TextInput::make('question_en')
-                                        ->label('Question (English)'),
-                                    Forms\Components\Textarea::make('answer')
-                                        ->label('الجواب (عربي)')->rows(3),
-                                    Forms\Components\Textarea::make('answer_en')
-                                        ->label('Answer (English)')->rows(3),
-                                ])
-                                ->addActionLabel('+ إضافة سؤال')
-                                ->collapsible()
-                                ->reorderable()
-                                ->columnSpanFull(),
-                        ]),
-
                     // ======= ABOUT =======
                     Forms\Components\Tabs\Tab::make('🏛️ عن المؤسسة')
                         ->schema([
@@ -237,6 +216,33 @@ class HomeSettingResource extends Resource
                                 Forms\Components\TextInput::make('donation_currency')
                                     ->label('العملة')->default('$'),
                             ]),
+                        ]),
+
+                    // ======= CTA DONATE =======
+                    Forms\Components\Tabs\Tab::make('🎁 قسم تبرّع الآن (CTA)')
+                        ->schema([
+                            Forms\Components\Grid::make(2)->schema([
+                                Forms\Components\TextInput::make('cta_title_ar')
+                                    ->label('العنوان (عربي)')
+                                    ->placeholder('تبرّع الآن — أنقذ حياة'),
+                                Forms\Components\TextInput::make('cta_title_en')
+                                    ->label('Title (English)')
+                                    ->placeholder('Donate Now — Save a Life'),
+                                Forms\Components\Textarea::make('cta_description_ar')
+                                    ->label('الوصف (عربي)')
+                                    ->rows(3)
+                                    ->placeholder('تبرّع الآن وأنقذ حياة. في مكان ما، هناك شخص ينتظر يد العون...'),
+                                Forms\Components\Textarea::make('cta_description_en')
+                                    ->label('Description (English)')
+                                    ->rows(3)
+                                    ->placeholder('Donate now and save a life. Somewhere, someone is waiting for a helping hand...'),
+                            ]),
+                            Forms\Components\FileUpload::make('cta_image')
+                                ->label('صورة القسم (يظهر على اليمين)')
+                                ->image()
+                                ->directory('home/cta')
+                                ->helperText('اتركها فارغة للإبقاء على الصورة الافتراضية')
+                                ->columnSpanFull(),
                         ]),
 
                 ])->columnSpanFull(),
