@@ -30,6 +30,8 @@ class FaqCategoryResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->reorderable('sort_order')   // ← drag & drop
+            ->defaultSort('sort_order')
             ->columns([
                 Tables\Columns\TextColumn::make('question_ar')
                     ->label('السؤال (عربي)')
@@ -37,12 +39,7 @@ class FaqCategoryResource extends Resource
                     ->limit(60),
                 Tables\Columns\ToggleColumn::make('is_active')
                     ->label('ظاهر'),
-                Tables\Columns\TextInputColumn::make('sort_order')
-                    ->label('الترتيب')
-                    ->rules(['numeric', 'min:0'])
-                    ->sortable(),
             ])
-            ->defaultSort('sort_order')
             ->headerActions([
 
                 // ➕ إضافة سؤال
@@ -52,19 +49,20 @@ class FaqCategoryResource extends Resource
                     ->color('success')
                     ->form(self::faqFormSchema())
                     ->action(function (array $data) {
+                        // الترتيب التلقائي = آخر رقم + 1
+                        $nextOrder = (Faq::max('sort_order') ?? 0) + 1;
                         Faq::create([
-                            'faq_category_id' => $data['faq_category_id'] ?: null,
-                            'question_ar'     => $data['question_ar'],
-                            'question_en'     => $data['question_en']  ?? null,
-                            'answer_ar'       => $data['answer_ar'],
-                            'answer_en'       => $data['answer_en']    ?? null,
-                            'sort_order'      => (int)($data['sort_order'] ?? 0),
-                            'is_active'       => (bool)($data['is_active'] ?? true),
+                            'question_ar' => $data['question_ar'],
+                            'question_en' => $data['question_en'] ?? null,
+                            'answer_ar'   => $data['answer_ar'],
+                            'answer_en'   => $data['answer_en']   ?? null,
+                            'sort_order'  => $nextOrder,
+                            'is_active'   => (bool)($data['is_active'] ?? true),
                         ]);
                         Notification::make()->title('تمت إضافة السؤال ✅')->success()->send();
                     }),
 
-                // ⚙️ إعدادات الصفحة — فقط عناوين الصفحة الرئيسية
+                // ⚙️ إعدادات الصفحة
                 Tables\Actions\Action::make('faq_page_settings')
                     ->label('⚙️ إعدادات الصفحة')
                     ->icon('heroicon-o-cog-6-tooth')
@@ -78,14 +76,10 @@ class FaqCategoryResource extends Resource
                     ->form([
                         Forms\Components\Section::make('📌 عناوين قسم الأسئلة في الصفحة الرئيسية')
                             ->schema([
-                                Forms\Components\TextInput::make('home_faq_label_ar')
-                                    ->label('العنوان الصغير (عربي)'),
-                                Forms\Components\TextInput::make('home_faq_label_en')
-                                    ->label('العنوان الصغير (إنجليزي)'),
-                                Forms\Components\TextInput::make('home_faq_title_ar')
-                                    ->label('العنوان الكبير (عربي)'),
-                                Forms\Components\TextInput::make('home_faq_title_en')
-                                    ->label('العنوان الكبير (إنجليزي)'),
+                                Forms\Components\TextInput::make('home_faq_label_ar')->label('العنوان الصغير (عربي)'),
+                                Forms\Components\TextInput::make('home_faq_label_en')->label('العنوان الصغير (إنجليزي)'),
+                                Forms\Components\TextInput::make('home_faq_title_ar')->label('العنوان الكبير (عربي)'),
+                                Forms\Components\TextInput::make('home_faq_title_en')->label('العنوان الكبير (إنجليزي)'),
                             ])->columns(2),
                     ])
                     ->action(function (array $data) {
@@ -107,25 +101,10 @@ class FaqCategoryResource extends Resource
             ]);
     }
 
+    // فورم السؤال — بدون فئة وبدون ترتيب
     protected static function faqFormSchema(): array
     {
         return [
-            Forms\Components\Section::make('📂 التصنيف والحالة')
-                ->schema([
-                    Forms\Components\Select::make('faq_category_id')
-                        ->label('الفئة (اختياري)')
-                        ->options(FaqCategory::orderBy('sort_order')->pluck('name_ar', 'id'))
-                        ->searchable()
-                        ->nullable()
-                        ->placeholder('— بدون فئة —'),
-                    Forms\Components\Toggle::make('is_active')
-                        ->label('ظاهر في الموقع')
-                        ->default(true),
-                    Forms\Components\TextInput::make('sort_order')
-                        ->label('الترتيب')
-                        ->numeric()
-                        ->default(0),
-                ])->columns(3),
             Forms\Components\Section::make('❓ السؤال')
                 ->schema([
                     Forms\Components\Textarea::make('question_ar')->label('السؤال (عربي)')->required()->rows(2),
@@ -136,6 +115,9 @@ class FaqCategoryResource extends Resource
                     Forms\Components\RichEditor::make('answer_ar')->label('الإجابة (عربي)')->required(),
                     Forms\Components\RichEditor::make('answer_en')->label('الإجابة (إنجليزي)'),
                 ])->columns(2),
+            Forms\Components\Toggle::make('is_active')
+                ->label('ظاهر في الموقع')
+                ->default(true),
         ];
     }
 
