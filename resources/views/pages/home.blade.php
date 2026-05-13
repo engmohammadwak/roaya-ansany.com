@@ -140,6 +140,7 @@
     $cbTitle    = $cb['title']       ?? ($locale==='ar' ? 'رابطة علماء فلسطين تُشيد بمؤسستنا' : 'Palestine Scholars praise us');
     $cbSubtitle = $cb['subtitle']    ?? ($locale==='ar' ? 'تؤكد الالتزام بالشفافية والضوابط الشرعية' : 'Confirms commitment to transparency and Sharia standards');
     $cbDesc     = $cb['description'] ?? ($locale==='ar' ? 'أصدرت رابطة علماء فلسطين بيانًا رسميًا أكدت فيه التزامنا.' : 'The Palestine Scholars Association issued an official statement.');
+    $cbAlign    = $locale === 'ar' ? 'right' : 'left';
 @endphp
 <section class="main-section">
     <div class="container">
@@ -148,10 +149,10 @@
                 <div class="col-md-5 order-2 order-lg-1">
                     <img src="{{ $cbImg }}" class="img-fluid rounded-3" alt="campaign">
                 </div>
-                <div class="col-md-7 order-1 order-lg-2 ps-lg-5">
-                    <h2 class="section-title mt-4 text-end">{{ $cbTitle }}</h2>
-                    <h6 class="mt-2 mb-3 text-end" style="font-size:15px;font-weight:600;color:var(--main-color)">{{ $cbSubtitle }}</h6>
-                    <p class="color-67 text-end" style="font-size:14px;line-height:1.9">{{ $cbDesc }}</p>
+                <div class="col-md-7 order-1 order-lg-2 ps-lg-5" dir="{{ $locale === 'ar' ? 'rtl' : 'ltr' }}">
+                    <h2 class="section-title mt-4">{{ $cbTitle }}</h2>
+                    <h6 class="mt-2 mb-3" style="font-size:15px;font-weight:600;color:var(--main-color)">{{ $cbSubtitle }}</h6>
+                    <p class="color-67" style="font-size:14px;line-height:1.9">{{ $cbDesc }}</p>
                     <form action="#" class="mt-4">
                         <div class="row">
                             <div class="col-9"><input type="text" name="amount" class="form-input gray w-100" placeholder="{{ $locale==='ar'?'ادخل المبلغ':'Enter amount' }}"></div>
@@ -224,9 +225,9 @@
 @endphp
 <section class="main-section why-donate">
     <div class="container">
-        <div class="header text-end" dir="rtl">
+        <div class="header" dir="{{ $locale === 'ar' ? 'rtl' : 'ltr' }}">
             <h6 style="color:var(--main-color);font-size:15px;font-weight:600">{{ $whyLabel }}</h6>
-            <h2 class="section-title" style="text-align:right !important">{{ $whyTitle }}</h2>
+            <h2 class="section-title">{{ $whyTitle }}</h2>
         </div>
         <div class="row mt-5">
             @foreach($whyCards as $card)
@@ -375,7 +376,7 @@
                     <div class="content">
                         <h2 class="section-title mb-4">{{ $locale==='ar'?'من نحن':'About Us' }}</h2>
                         <p class="muted-color">{{ $locale==='ar'?'مؤسسة خيرية غير ربحية تعمل في المجال الإنساني.':'A non-profit organization in the humanitarian field.' }}</p>
-                        <div class="container my-5 text-end" dir="rtl">
+                        <div class="container my-5" dir="{{ $locale === 'ar' ? 'rtl' : 'ltr' }}">
                             <div class="row g-3 justify-content-center">
                                 <div class="col-12 col-md-6">
                                     <ul class="numbered-list list-unstyled m-0">
