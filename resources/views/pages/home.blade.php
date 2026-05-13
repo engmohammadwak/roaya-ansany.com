@@ -232,9 +232,8 @@
 <section class="main-section why-donate">
     <div class="container">
         <div class="header" dir="{{ $locale === 'ar' ? 'rtl' : 'ltr' }}">
-            <h6 style="color:var(--main-color);font-size:15px;font-weight:600;">{{ $whyLabel }}</h6>
-            {{-- العنوان الكبير: h6 بنفس style بدون مشاكل flex --}}
-            <h6 style="font-size:32px;font-weight:600;color:var(--dark-text-color);margin:0;">{{ $whyTitle }}</h6>
+            <h6 style="color:var(--main-color);font-size:15px;font-weight:600;text-align:{{ $whyAlign }};width:100%;">{{ $whyLabel }}</h6>
+            <h6 style="font-size:32px;font-weight:600;color:var(--dark-text-color);margin:0;text-align:{{ $whyAlign }};width:100%;">{{ $whyTitle }}</h6>
         </div>
         <div class="row mt-5">
             @foreach($whyCards as $card)
