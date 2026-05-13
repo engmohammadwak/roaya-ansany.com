@@ -245,7 +245,7 @@
 </head>
 <body>
     @include('partials.navbar')
-    <main>@yield('content')</main>
+    <main class="@yield('body_class')">@yield('content')</main>
     @include('partials.footer')
 
     {{-- ===== Newsletter Popup ===== --}}
