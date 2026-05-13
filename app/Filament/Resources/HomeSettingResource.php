@@ -104,7 +104,7 @@ class HomeSettingResource extends Resource
                                         Forms\Components\TextInput::make('icon')
                                             ->label('أيقونة FontAwesome')
                                             ->placeholder('fa-house-crack')
-                                            ->helperText('مثال: fa-bowl-food, fa-droplet'),
+                                            ->helperText('مثال: fa-bowl-food, fa-droplet | fontawesome.com'),
                                         Forms\Components\ColorPicker::make('color')
                                             ->label('لون الخلفية'),
                                     ]),
