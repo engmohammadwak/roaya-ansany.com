@@ -19,11 +19,14 @@ class PagesSettings extends Page implements HasForms
     use InteractsWithForms;
 
     protected static ?string $navigationIcon  = 'heroicon-o-adjustments-horizontal';
-    protected static ?string $navigationLabel = '\u0625\u0639\u062f\u0627\u062f\u0627\u062a \u0627\u0644\u0635\u0641\u062d\u0627\u062a';
-    protected static ?string $navigationGroup = '\u0625\u062f\u0627\u0631\u0629 \u0627\u0644\u0635\u0641\u062d\u0627\u062a';
-    protected static ?string $title           = '\u0625\u0639\u062f\u0627\u062f\u0627\u062a \u0635\u0641\u062d\u0627\u062a \u0627\u0644\u062d\u0645\u0644\u0627\u062a \u0648\u0627\u0644\u0645\u0634\u0627\u0631\u064a\u0639 \u0648\u0627\u0644\u0628\u0631\u0627\u0645\u062c';
+    protected static ?string $navigationLabel = 'إعدادات الصفحات';
+    protected static ?string $navigationGroup = 'إدارة الصفحات';
+    protected static ?string $title           = 'إعدادات صفحات الحملات والمشاريع والبرامج';
     protected static ?int    $navigationSort  = 10;
     protected static string  $view            = 'filament.pages.pages-settings';
+
+    // مخفية من القائمة — الإعدادات موجودة داخل صفحة الحملات
+    protected static bool $shouldRegisterNavigation = false;
 
     public array $data = [];
 
@@ -52,53 +55,53 @@ class PagesSettings extends Page implements HasForms
             ->schema([
                 Tabs::make('pages_tabs')->tabs([
 
-                    Tabs\Tab::make('\ud83d\udce3 \u0627\u0644\u062d\u0645\u0644\u0627\u062a')->schema([
-                        Section::make('\u0646\u0635 Hero \u0635\u0641\u062d\u0629 \u0627\u0644\u062d\u0645\u0644\u0627\u062a')->schema([
+                    Tabs\Tab::make('📣 الحملات')->schema([
+                        Section::make('نص Hero صفحة الحملات')->schema([
                             Grid::make(2)->schema([
                                 TextInput::make('campaigns_hero_title_ar')
-                                    ->label('\u0627\u0644\u0639\u0646\u0648\u0627\u0646 (\u0639\u0631\u0628\u064a)')
-                                    ->placeholder('\u0634\u0627\u0631\u0643 \u0641\u064a \u0635\u0646\u0639 \u0627\u0644\u0623\u0645\u0644'),
+                                    ->label('العنوان (عربي)')
+                                    ->placeholder('شارك في صنع الأمل'),
                                 TextInput::make('campaigns_hero_title_en')
-                                    ->label('\u0627\u0644\u0639\u0646\u0648\u0627\u0646 (\u0625\u0646\u062c\u0644\u064a\u0632\u064a)')
+                                    ->label('العنوان (إنجليزي)')
                                     ->placeholder('Be Part of Making Hope'),
                                 Textarea::make('campaigns_hero_desc_ar')
-                                    ->label('\u0627\u0644\u0648\u0635\u0641 (\u0639\u0631\u0628\u064a)')->rows(3),
+                                    ->label('الوصف (عربي)')->rows(3),
                                 Textarea::make('campaigns_hero_desc_en')
-                                    ->label('\u0627\u0644\u0648\u0635\u0641 (\u0625\u0646\u062c\u0644\u064a\u0632\u064a)')->rows(3),
+                                    ->label('الوصف (إنجليزي)')->rows(3),
                             ]),
                         ]),
                     ]),
 
-                    Tabs\Tab::make('\ud83c\udf31 \u0627\u0644\u0645\u0634\u0627\u0631\u064a\u0639')->schema([
-                        Section::make('\u0646\u0635 Hero \u0635\u0641\u062d\u0629 \u0627\u0644\u0645\u0634\u0627\u0631\u064a\u0639')->schema([
+                    Tabs\Tab::make('🌱 المشاريع')->schema([
+                        Section::make('نص Hero صفحة المشاريع')->schema([
                             Grid::make(2)->schema([
                                 TextInput::make('projects_hero_title_ar')
-                                    ->label('\u0627\u0644\u0639\u0646\u0648\u0627\u0646 (\u0639\u0631\u0628\u064a)')
-                                    ->placeholder('\u0645\u0634\u0627\u0631\u064a\u0639\u0646\u0627'),
+                                    ->label('العنوان (عربي)')
+                                    ->placeholder('مشاريعنا'),
                                 TextInput::make('projects_hero_title_en')
-                                    ->label('\u0627\u0644\u0639\u0646\u0648\u0627\u0646 (\u0625\u0646\u062c\u0644\u064a\u0632\u064a)')
+                                    ->label('العنوان (إنجليزي)')
                                     ->placeholder('Our Projects'),
                                 Textarea::make('projects_hero_desc_ar')
-                                    ->label('\u0627\u0644\u0648\u0635\u0641 (\u0639\u0631\u0628\u064a)')->rows(3),
+                                    ->label('الوصف (عربي)')->rows(3),
                                 Textarea::make('projects_hero_desc_en')
-                                    ->label('\u0627\u0644\u0648\u0635\u0641 (\u0625\u0646\u062c\u0644\u064a\u0632\u064a)')->rows(3),
+                                    ->label('الوصف (إنجليزي)')->rows(3),
                             ]),
                         ]),
                     ]),
 
-                    Tabs\Tab::make('\ud83d\udccc \u0627\u0644\u0628\u0631\u0627\u0645\u062c')->schema([
-                        Section::make('\u0646\u0635 Hero \u0635\u0641\u062d\u0629 \u0627\u0644\u0628\u0631\u0627\u0645\u062c')->schema([
+                    Tabs\Tab::make('📌 البرامج')->schema([
+                        Section::make('نص Hero صفحة البرامج')->schema([
                             Grid::make(2)->schema([
                                 TextInput::make('programs_hero_title_ar')
-                                    ->label('\u0627\u0644\u0639\u0646\u0648\u0627\u0646 (\u0639\u0631\u0628\u064a)')
-                                    ->placeholder('\u0628\u0631\u0627\u0645\u062c\u0646\u0627'),
+                                    ->label('العنوان (عربي)')
+                                    ->placeholder('برامجنا'),
                                 TextInput::make('programs_hero_title_en')
-                                    ->label('\u0627\u0644\u0639\u0646\u0648\u0627\u0646 (\u0625\u0646\u062c\u0644\u064a\u0632\u064a)')
+                                    ->label('العنوان (إنجليزي)')
                                     ->placeholder('Our Programs'),
                                 Textarea::make('programs_hero_desc_ar')
-                                    ->label('\u0627\u0644\u0648\u0635\u0641 (\u0639\u0631\u0628\u064a)')->rows(3),
+                                    ->label('الوصف (عربي)')->rows(3),
                                 Textarea::make('programs_hero_desc_en')
-                                    ->label('\u0627\u0644\u0648\u0635\u0641 (\u0625\u0646\u062c\u0644\u064a\u0632\u064a)')->rows(3),
+                                    ->label('الوصف (إنجليزي)')->rows(3),
                             ]),
                         ]),
                     ]),
@@ -116,7 +119,7 @@ class PagesSettings extends Page implements HasForms
         }
 
         Notification::make()
-            ->title('\u062a\u0645 \u0627\u0644\u062d\u0641\u0638 \u0628\u0646\u062c\u0627\u062d \u2705')
+            ->title('تم الحفظ بنجاح ✅')
             ->success()
             ->send();
     }

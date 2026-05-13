@@ -2,7 +2,6 @@
 namespace App\Filament\Resources;
 use App\Filament\Resources\ProjectResource\Pages;
 use App\Models\Project;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -12,8 +11,8 @@ class ProjectResource extends Resource
 {
     protected static ?string $model          = Project::class;
     protected static ?string $navigationIcon = 'heroicon-o-briefcase';
-    protected static ?string $navigationLabel= '\u0627\u0644\u0645\u0634\u0627\u0631\u064a\u0639';
-    protected static ?string $navigationGroup= '\u0625\u062f\u0627\u0631\u0629 \u0627\u0644\u0635\u0641\u062d\u0627\u062a';
+    protected static ?string $navigationLabel= 'المشاريع';
+    protected static ?string $navigationGroup= 'إدارة الصفحات';
     protected static ?int    $navigationSort = 11;
     protected static bool    $shouldRegisterNavigation = false;
 
@@ -22,9 +21,9 @@ class ProjectResource extends Resource
     }
     public static function table(Table $table): Table {
         return $table->columns([
-            Tables\Columns\ImageColumn::make('image')->label('\u0627\u0644\u0635\u0648\u0631\u0629'),
-            Tables\Columns\TextColumn::make('title_ar')->label('\u0627\u0644\u0645\u0634\u0631\u0648\u0639')->searchable(),
-            Tables\Columns\IconColumn::make('is_active')->label('\u0646\u0634\u0637')->boolean(),
+            Tables\Columns\ImageColumn::make('image')->label('الصورة'),
+            Tables\Columns\TextColumn::make('title_ar')->label('المشروع')->searchable(),
+            Tables\Columns\IconColumn::make('is_active')->label('نشط')->boolean(),
         ])->actions([Tables\Actions\EditAction::make(), Tables\Actions\DeleteAction::make()]);
     }
     public static function getPages(): array {

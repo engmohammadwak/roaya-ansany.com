@@ -14,10 +14,8 @@ class ListCampaigns extends ListRecords
 {
     protected static string $resource = CampaignResource::class;
 
-    // ---- active tab ----
     public string $activeSection = 'campaigns';
 
-    // ---- modals state ----
     public bool   $showProjectModal  = false;
     public bool   $showProgramModal  = false;
     public bool   $showSettingsModal = false;
@@ -30,12 +28,10 @@ class ListCampaigns extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            // ---- New Campaign ----
             Actions\CreateAction::make()
                 ->label('إضافة حملة')
                 ->visible(fn () => $this->activeSection === 'campaigns'),
 
-            // ---- New Project ----
             Actions\Action::make('new_project')
                 ->label('إضافة مشروع')
                 ->icon('heroicon-o-plus')
@@ -46,7 +42,6 @@ class ListCampaigns extends ListRecords
                     $this->showProjectModal = true;
                 }),
 
-            // ---- New Program ----
             Actions\Action::make('new_program')
                 ->label('إضافة برنامج')
                 ->icon('heroicon-o-plus')
@@ -57,7 +52,6 @@ class ListCampaigns extends ListRecords
                     $this->showProgramModal = true;
                 }),
 
-            // ---- Page Settings ----
             Actions\Action::make('page_settings')
                 ->label('إعدادات الصفحة')
                 ->icon('heroicon-o-adjustments-horizontal')
@@ -75,13 +69,11 @@ class ListCampaigns extends ListRecords
         ];
     }
 
-    // ---- switch tab ----
     public function switchSection(string $section): void
     {
         $this->activeSection = $section;
     }
 
-    // ---- save project ----
     public function saveProject(): void
     {
         $data = $this->projectData;
@@ -92,9 +84,9 @@ class ListCampaigns extends ListRecords
             Project::create($data);
             Notification::make()->title('تم الإضافة ✅')->success()->send();
         }
-        $this->showProjectModal  = false;
-        $this->editingProjectId  = null;
-        $this->projectData       = [];
+        $this->showProjectModal = false;
+        $this->editingProjectId = null;
+        $this->projectData      = [];
     }
 
     public function editProject(int $id): void
@@ -111,7 +103,6 @@ class ListCampaigns extends ListRecords
         Notification::make()->title('تم الحذف')->success()->send();
     }
 
-    // ---- save program ----
     public function saveProgram(): void
     {
         $data = $this->programData;
@@ -122,9 +113,9 @@ class ListCampaigns extends ListRecords
             Program::create($data);
             Notification::make()->title('تم الإضافة ✅')->success()->send();
         }
-        $this->showProgramModal  = false;
-        $this->editingProgramId  = null;
-        $this->programData       = [];
+        $this->showProgramModal = false;
+        $this->editingProgramId = null;
+        $this->programData      = [];
     }
 
     public function editProgram(int $id): void
@@ -141,7 +132,6 @@ class ListCampaigns extends ListRecords
         Notification::make()->title('تم الحذف')->success()->send();
     }
 
-    // ---- save settings ----
     public function saveSettings(): void
     {
         $section = $this->activeSection;
