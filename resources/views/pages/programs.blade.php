@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @php $locale = app()->getLocale(); $isAr = $locale === 'ar'; @endphp
-@section('title', ($isAr ? 'البرامج' : 'Programs') . ' | مؤسسة رؤيا الإنسانية')
+@section('title', ($isAr ? '\u0627\u0644\u0628\u0631\u0627\u0645\u062c' : 'Programs') . ' | \u0645\u0624\u0633\u0633\u0629 \u0631\u0624\u064a\u0627 \u0627\u0644\u0625\u0646\u0633\u0627\u0646\u064a\u0629')
 @push('styles')
 <style>
 .programs-hero { background:linear-gradient(135deg,#1a7a4a,#2ecc71); padding:100px 0 60px; color:#fff; text-align:center; }
@@ -23,19 +23,21 @@
 @endpush
 @section('content')
 <div class="breadcrumb-section">
-    <div class="container"><small><a href="{{ url($locale.'/') }}">{{ $isAr?'الرئيسية':'Home' }}</a><span style="margin:0 8px;color:#888">›</span><span class="text-muted">{{ $isAr?'البرامج':'Programs' }}</span></small></div>
+    <div class="container"><small><a href="{{ url($locale.'/') }}">{{ $isAr?'\u0627\u0644\u0631\u0626\u064a\u0633\u064a\u0629':'Home' }}</a><span style="margin:0 8px;color:#888">\u203a</span><span class="text-muted">{{ $isAr?'\u0627\u0644\u0628\u0631\u0627\u0645\u062c':'Programs' }}</span></small></div>
 </div>
 <section class="programs-hero">
     <div class="container">
-        <h1>{{ $isAr ? 'برامجنا' : 'Our Programs' }}</h1>
-        <p style="opacity:.9;margin-top:10px">{{ $isAr?'تعرّف على برامجنا الإنسانية المتنوعة':'Explore our diverse humanitarian programs' }}</p>
+        <h1>{{ $heroTitle }}</h1>
+        @if($heroDesc)
+        <p style="opacity:.9;margin-top:10px">{{ $heroDesc }}</p>
+        @endif
     </div>
 </section>
 <section class="programs-section">
     <div class="container">
         @if(($isAr ? $categories_ar : $categories_en)->count() > 0)
         <div class="filter-tabs">
-            <button class="filter-btn active" data-filter="all">{{ $isAr?'الكل':'All' }}</button>
+            <button class="filter-btn active" data-filter="all">{{ $isAr?'\u0627\u0644\u0643\u0644':'All' }}</button>
             @foreach($isAr ? $categories_ar : $categories_en as $cat)
                 <button class="filter-btn" data-filter="{{ Str::slug($cat) }}">{{ $cat }}</button>
             @endforeach
@@ -61,7 +63,7 @@
                 </div>
             </div>
             @empty
-            <div class="col-12 text-center py-5 text-muted">{{ $isAr?'لا توجد برامج حالياً':'No programs available' }}</div>
+            <div class="col-12 text-center py-5 text-muted">{{ $isAr?'\u0644\u0627 \u062a\u0648\u062c\u062f \u0628\u0631\u0627\u0645\u062c \u062d\u0627\u0644\u064a\u064b\u0627':'No programs available' }}</div>
             @endforelse
         </div>
         @if($programs->hasPages())
