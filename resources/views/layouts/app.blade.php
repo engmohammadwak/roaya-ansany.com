@@ -44,21 +44,17 @@
         }
         body { background-color: {{ $bb }}; }
 
-        /* ✅ RTL alignment fixes */
-        [dir="rtl"] .section-title,
-        [dir="rtl"] .why-donate .header h2,
-        [dir="rtl"] .why-donate .header h6,
-        [dir="rtl"] .campaign-banner h2,
-        [dir="rtl"] .campaign-banner h6,
-        [dir="rtl"] .campaign-banner p {
-            text-align: right !important;
-        }
-        [dir="ltr"] .section-title { text-align: left !important; }
+        /* ✅ RTL: section-title always right */
+        [dir="rtl"] .section-title { text-align: right !important; }
+        [dir="ltr"] .section-title { text-align: left  !important; }
 
-        /* fix flex container killing text-align in why-donate */
-        [dir="rtl"] .main-section.why-donate .header {
-            flex-direction: column;
-            align-items: flex-end !important;
+        /* ✅ why-donate header titles - target directly without touching flex */
+        [dir="rtl"] .main-section.why-donate .header h2,
+        [dir="rtl"] .main-section.why-donate .header h6,
+        .header[dir="rtl"] h2,
+        .header[dir="rtl"] h6 {
+            text-align: right !important;
+            width: 100%;
         }
 
         .main-section.support-section   { background-color: {{ $bl }} !important; }
