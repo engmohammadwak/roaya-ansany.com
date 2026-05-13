@@ -10,8 +10,12 @@ class CheckMaintenance
 {
     public function handle(Request $request, Closure $next)
     {
-        // السماح للأدمن دائماً
-        if ($request->is('admin*') || $request->is('login*')) {
+        if (
+            $request->is('admin*') ||
+            $request->is('login*') ||
+            $request->is('livewire*') ||
+            $request->is('up')
+        ) {
             return $next($request);
         }
 
