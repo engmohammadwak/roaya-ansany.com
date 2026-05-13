@@ -28,7 +28,7 @@ class SiteSettings extends Page
     public function mount(): void
     {
         $keys = [
-            'site_name', 'site_favicon', 'site_logo',
+            'site_name', 'site_favicon', 'site_logo', 'maintenance_mode',
             'color_primary', 'color_secondary',
             'color_text_dark', 'color_text_muted', 'color_text_label', 'color_placeholder',
             'color_bg_body', 'color_bg_light', 'color_bg_card',
@@ -39,7 +39,6 @@ class SiteSettings extends Page
             'contact_email',   'contact_email_2',   'contact_email_3',
             'whatsapp_number',   'whatsapp_number_2',   'whatsapp_number_3',
             'whatsapp_text_1',   'whatsapp_text_2',     'whatsapp_text_3',
-            // social media
             'social_facebook', 'social_instagram', 'social_twitter', 'social_whatsapp',
             'navbar_links_enabled',
             'navbar_sticky_only',
@@ -51,6 +50,7 @@ class SiteSettings extends Page
             $default = match($key) {
                 'navbar_links_enabled' => '1',
                 'navbar_sticky_only'   => '0',
+                'maintenance_mode'     => '0',
                 'hero_label_top'       => '12px',
                 'hero_label_left'      => '0',
                 'hero_label_right'     => '0',
@@ -81,7 +81,7 @@ class SiteSettings extends Page
         }
 
         $keys = [
-            'site_name', 'site_favicon', 'site_logo',
+            'site_name', 'site_favicon', 'site_logo', 'maintenance_mode',
             'color_primary', 'color_secondary',
             'color_text_dark', 'color_text_muted', 'color_text_label', 'color_placeholder',
             'color_bg_body', 'color_bg_light', 'color_bg_card',
@@ -99,12 +99,12 @@ class SiteSettings extends Page
             'hero_label_top', 'hero_label_left', 'hero_label_right',
         ];
 
-        $boolKeys = ['navbar_links_enabled', 'navbar_sticky_only'];
+        $boolKeys = ['navbar_links_enabled', 'navbar_sticky_only', 'maintenance_mode'];
 
         foreach ($keys as $key) {
             if (array_key_exists($key, $this->data)) {
                 $value = $this->data[$key];
-                if (in_array($key, $boolKeys)) {
+                if (in_array($key, $boolKeys, true)) {
                     $value = ($value === true || $value === '1' || $value === 1) ? '1' : '0';
                 }
                 Setting::set($key, $value ?? '');
