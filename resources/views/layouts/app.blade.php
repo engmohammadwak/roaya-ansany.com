@@ -27,9 +27,14 @@
     <link rel="shortcut icon" href="{{ $favicon }}">
     <link rel="apple-touch-icon" href="{{ $favicon }}">
 
+    <link href="https://roaya-ansany.com/website/libs/bootstrap/bootstrap.rtl.min.css" rel="stylesheet">
+    <link href="https://roaya-ansany.com/website/libs/slimselect/slimselect.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://roaya-ansany.com/website/css/main.css?v=3">
+
+    {{-- ✅ بعد main.css عشان يكتب فوق أي لون ثابت --}}
     <style>
         :root {
-            --main-color:        {{ $p }};
+            --main-color:        {{ $p }} !important;
             --main-color-hover:  #fff;
             --secondary-color:   {{ $s }};
             --dark-text-color:   {{ $td }};
@@ -82,6 +87,7 @@
         .about-roaya .our-msg             { background-color: {{ $p }} !important; }
         .mobileCarousal .carousel-indicators span.active { background-color: {{ $p }} !important; }
         footer ul li:hover a              { color: {{ $p }} !important; }
+        .main-color                       { color: {{ $p }} !important; }
 
         /* btn-donate ديناميكي */
         .btn-donate,
@@ -99,9 +105,6 @@
         }
     </style>
 
-    <link href="https://roaya-ansany.com/website/libs/bootstrap/bootstrap.rtl.min.css" rel="stylesheet">
-    <link href="https://roaya-ansany.com/website/libs/slimselect/slimselect.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://roaya-ansany.com/website/css/main.css?v=3">
     @stack('styles')
 </head>
 <body>
