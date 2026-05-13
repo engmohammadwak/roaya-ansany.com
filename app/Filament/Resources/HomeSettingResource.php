@@ -101,12 +101,20 @@ class HomeSettingResource extends Resource
                                         Forms\Components\Textarea::make('description_en')
                                             ->label('Description (English)')->rows(2),
                                     ]),
-                                    Forms\Components\FileUpload::make('icon')
-                                        ->label('صورة الأيقونة')
-                                        ->image()
-                                        ->directory('home/why-icons')
-                                        ->imagePreviewHeight('80')
-                                        ->helperText('ارفع صورة PNG أو SVG للأيقونة (يفضل 80×80 بكسل)')
+                                    Forms\Components\Grid::make(2)->schema([
+                                        Forms\Components\FileUpload::make('icon')
+                                            ->label('صورة الأيقونة')
+                                            ->image()
+                                            ->acceptedFileTypes(['image/png', 'image/jpeg', 'image/svg+xml'])
+                                            ->directory('home/why-icons')
+                                            ->imagePreviewHeight('80')
+                                            ->helperText('ارفع PNG أو SVG — اللون أدناه يطبّق على SVG فقط'),
+                                        Forms\Components\ColorPicker::make('icon_color')
+                                            ->label('لون الأيقونة (SVG فقط)')
+                                            ->helperText('يغيّر لون صورة SVG عبر CSS filter'),
+                                    ]),
+                                    Forms\Components\ColorPicker::make('color')
+                                        ->label('لون خلفية الكارت')
                                         ->columnSpanFull(),
                                 ])
                                 ->addActionLabel('+ إضافة كارت')

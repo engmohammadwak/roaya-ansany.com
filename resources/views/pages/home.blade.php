@@ -25,16 +25,7 @@
 <section class="hero-slider-section" style="position:relative">
 
     @if($heroLabel)
-    <div style="position:absolute;
-                top:12px;
-                left:351px;
-                right:0;
-                text-align:center;
-                z-index:2;
-                font-size:14px;
-                color:#555;
-                font-weight:500;
-                pointer-events:none;">
+    <div style="position:absolute;top:12px;left:351px;right:0;text-align:center;z-index:2;font-size:14px;color:#555;font-weight:500;pointer-events:none;">
         {{ $heroLabel }}
     </div>
     @endif
@@ -120,11 +111,6 @@
                     <svg viewBox="0 0 441 388" preserveAspectRatio="none" style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:0">
                         <path d="M43 0C19.2518 0 0 19.2518 0 43V345C0 368.748 19.2518 388 43 388H398C421.748 388 441 368.748 441 345V115C441 98.9837 428.016 86 412 86H329C312.984 86 300 73.0163 300 57V29C300 12.9837 287.016 0 271 0H43Z" fill="{{ $p }}" fill-opacity="0.15"/>
                     </svg>
-                    @if($heroLabel)
-                    <div style="position:absolute;top:12px;left:351px;right:0;text-align:center;z-index:2;font-size:14px;color:#555;font-weight:500;">
-                        {{ $heroLabel }}
-                    </div>
-                    @endif
                     <img width="510" height="430" src="{{ $heroImg }}" alt="banner" style="position:relative;z-index:1;width:100%;border-radius:20px">
                 </div>
             </div>
@@ -139,7 +125,7 @@
     $cbImg      = $cb['image']       ?? 'https://roaya-ansany.com/storage/uploads/pages/94VHn4ZdEJ3QxaD8xMoObV8IGHOyvRDM9jqXGtKV.jpg';
     $cbTitle    = $cb['title']       ?? ($locale==='ar' ? 'رابطة علماء فلسطين تُشيد بمؤسستنا' : 'Palestine Scholars praise us');
     $cbSubtitle = $cb['subtitle']    ?? ($locale==='ar' ? 'تؤكد الالتزام بالشفافية والضوابط الشرعية' : 'Confirms commitment to transparency and Sharia standards');
-    $cbDesc     = $cb['description'] ?? ($locale==='ar' ? 'أصدرت رابطة علماء فلسطين بيانًا رسميًا أكدت فيه التزامنا.' : 'The Palestine Scholars Association issued an official statement.');
+    $cbDesc     = $cb['description'] ?? ($locale==='ar' ? 'أصدرت رابطة علماء فلسطين بيانًا رسميًا.' : 'The Palestine Scholars Association issued an official statement.');
     $cbAlign    = $locale === 'ar' ? 'right' : 'left';
 @endphp
 <section class="main-section">
@@ -218,12 +204,12 @@
         : (App\Models\Setting::get('why_donate_title_en', '') ?: ($data['why_donate_title'] ?? 'Because we care about those in greatest need.'));
 
     $defaultCards = [
-        ['icon'=>null, 'title'=>($locale==='ar'?'الأطفال والنساء بلا مأوى':'Children & Women Without Shelter'),      'description'=>($locale==='ar'?'نهتم بالأطفال والنساء الذين هُدمت منازلهم ويعيشون في الخيام ومراكز الإيواء.':'We care for children and women whose homes were destroyed.')],
-        ['icon'=>null, 'title'=>($locale==='ar'?'الأطفال والنساء بلا غذاء':'Children & Women Without Food'),         'description'=>($locale==='ar'?'نقدّم الدعم للأسر التي تعاني من شبح المجاعة.':'We support families suffering from famine.')],
-        ['icon'=>null, 'title'=>($locale==='ar'?'الأسر النازحة':'Displaced Families'),                               'description'=>($locale==='ar'?'نهتم بالأسر التي نزحت إلى مراكز الإيواء.':'We care for families displaced to shelters.')],
-        ['icon'=>null, 'title'=>($locale==='ar'?'توزيع الطرود الغذائية':'Food Package Distribution'),                'description'=>($locale==='ar'?'نسعى إلى توفير طرود غذائية للأسر الفقيرة.':'We provide food packages for poor families.')],
-        ['icon'=>null, 'title'=>($locale==='ar'?'كفالة الأيتام والأرامل':'Orphan & Widow Sponsorship'),              'description'=>($locale==='ar'?'نساند الأيتام والنساء الأرامل.':'We support orphans and widows.')],
-        ['icon'=>null, 'title'=>($locale==='ar'?'مشاريع سقيا الماء':'Water Projects'),                              'description'=>($locale==='ar'?'ندعم حفر الآبار وتوفير المياه.':'We support well drilling and water provision.')],
+        ['icon'=>null,'icon_color'=>null,'color'=>null,'title'=>($locale==='ar'?'الأطفال والنساء بلا مأوى':'Children & Women Without Shelter'),'description'=>($locale==='ar'?'نهتم بالأطفال والنساء.':'We care for children and women.')],
+        ['icon'=>null,'icon_color'=>null,'color'=>null,'title'=>($locale==='ar'?'الأطفال والنساء بلا غذاء':'Children & Women Without Food'),'description'=>($locale==='ar'?'نقدّم الدعم للأسر.':'We support families.')],
+        ['icon'=>null,'icon_color'=>null,'color'=>null,'title'=>($locale==='ar'?'الأسر النازحة':'Displaced Families'),'description'=>($locale==='ar'?'نهتم بالأسر.':'We care for families.')],
+        ['icon'=>null,'icon_color'=>null,'color'=>null,'title'=>($locale==='ar'?'توزيع الطرود الغذائية':'Food Package Distribution'),'description'=>($locale==='ar'?'نسعى لتوفير طرود.':'We provide food packages.')],
+        ['icon'=>null,'icon_color'=>null,'color'=>null,'title'=>($locale==='ar'?'كفالة الأيتام والأرامل':'Orphan & Widow Sponsorship'),'description'=>($locale==='ar'?'نساند الأيتام.':'We support orphans.')],
+        ['icon'=>null,'icon_color'=>null,'color'=>null,'title'=>($locale==='ar'?'مشاريع سقيا الماء':'Water Projects'),'description'=>($locale==='ar'?'ندعم حفر الآبار.':'We support water provision.')],
     ];
     if (empty($whyCards)) $whyCards = $defaultCards;
     $whyAlign = $locale === 'ar' ? 'right' : 'left';
@@ -237,15 +223,40 @@
         <div class="row mt-5">
             @foreach($whyCards as $card)
             @php
-                $cardIcon = $card['icon'] ?? null;
-                $cardIconUrl = $cardIcon ? asset('storage/' . $cardIcon) : null;
+                $cardIcon     = $card['icon']       ?? null;
+                $cardColor    = $card['icon_color'] ?? null;  // لون الأيقونة (SVG)
+                $cardBg       = $card['color']      ?? null;  // لون خلفية الكارت
+                $cardIconUrl  = $cardIcon ? asset('storage/' . $cardIcon) : null;
+
+                // توليد CSS filter من الـ hex color
+                $svgFilter = '';
+                if ($cardColor) {
+                    // نستخدم hue-rotate approach بسيط — أو inline style على الـ img
+                    $svgFilter = 'style="filter: drop-shadow(0 0 0 ' . $cardColor . ') brightness(0) saturate(100%) invert(1);"';
+                    // الطريقة الأدق: نضع الـ color مباشرة عبر CSS mask
+                    $svgStyle = 'width:36px;height:36px;object-fit:contain;'
+                        . '-webkit-mask:url(' . $cardIconUrl . ') no-repeat center;'
+                        . 'mask:url(' . $cardIconUrl . ') no-repeat center;'
+                        . '-webkit-mask-size:contain;mask-size:contain;'
+                        . 'background-color:' . $cardColor . ';';
+                    $useMask = true;
+                } else {
+                    $svgStyle = 'width:36px;height:36px;object-fit:contain;';
+                    $useMask = false;
+                }
             @endphp
             <div class="col-lg-4 mb-4">
-                <div class="why-donate-card">
+                <div class="why-donate-card" @if($cardBg) style="background:{{ $cardBg }}" @endif>
                     <div class="why-icon-wrap mb-3">
                         @if($cardIconUrl)
                             <div class="why-icon-circle">
-                                <img src="{{ $cardIconUrl }}" alt="icon" style="width:36px;height:36px;object-fit:contain;">
+                                @if($useMask)
+                                    {{-- SVG مع لون مخصص عبر CSS mask --}}
+                                    <div style="{{ $svgStyle }}"></div>
+                                @else
+                                    {{-- PNG أو SVG بدون تلوين --}}
+                                    <img src="{{ $cardIconUrl }}" alt="icon" style="{{ $svgStyle }}">
+                                @endif
                             </div>
                         @else
                             <div class="why-icon-circle">
@@ -375,13 +386,7 @@
 @php
     $support      = $data['support'] ?? [];
     $supportImg   = $support['image'] ?? 'https://roaya-ansany.com/storage/uploads/pages/JDqjlXwu5odPJit3bTMC8NQxssv8OKDDNyPeVwPS.jpg';
-    $supportItems = $support['items'] ?? [
-        ($locale==='ar'?'مشاريع إغاثة المياه':'Water relief projects'),
-        ($locale==='ar'?'برامج كفالة الأيتام':'Orphan sponsorship programs'),
-        ($locale==='ar'?'توفير طرود غذائية ووجبات':'Food packages and meals'),
-        ($locale==='ar'?'تجديد مراكز الإيواء':'Shelter renovation'),
-        ($locale==='ar'?'تقديم مساعدات نقدية':'Cash assistance'),
-    ];
+    $supportItems = $support['items'] ?? [];
 @endphp
 <section class="main-section">
     <div class="container">
@@ -391,7 +396,7 @@
                 <div class="col-md-7">
                     <div class="content">
                         <h2 class="section-title mb-4">{{ $locale==='ar'?'من نحن':'About Us' }}</h2>
-                        <p class="muted-color">{{ $locale==='ar'?'مؤسسة خيرية غير ربحية تعمل في المجال الإنساني.':'A non-profit organization in the humanitarian field.' }}</p>
+                        <p class="muted-color">{{ $locale==='ar'?'مؤسسة خيرية غير ربحية.':'A non-profit organization.' }}</p>
                         <div class="container my-5" dir="{{ $locale === 'ar' ? 'rtl' : 'ltr' }}">
                             <div class="row g-3 justify-content-center">
                                 <div class="col-12 col-md-6">
@@ -418,25 +423,16 @@
 </section>
 
 {{-- ============ PARTNERS ============ --}}
-@php
-    $partners = $data['partners'] ?? [];
-    $defaultPartners = [
-        ['name'=>($locale==='ar'?'هيئة الزكاة الفلسطينية':'Palestinian Zakat Authority'), 'icon'=>'fa-hand-holding-dollar','color'=>'#e8f4fd'],
-        ['name'=>($locale==='ar'?'معهد الأمل للأيتام':'Al-Amal Institute for Orphans'),  'icon'=>'fa-children',           'color'=>'#edf7ee'],
-        ['name'=>($locale==='ar'?'وزارة التنمية الاجتماعية':'Ministry of Social Development'),'icon'=>'fa-building-columns','color'=>'#fdf3e7'],
-    ];
-    if (empty($partners)) $partners = $defaultPartners;
-@endphp
+@php $partners = $data['partners'] ?? []; @endphp
+@if(!empty($partners))
 <section class="main-section">
     <div class="container">
         <p class="color-67 text-center"><i class="fa-solid fa-handshake me-2" style="color:var(--main-color)"></i>{{ $locale==='ar'?'الشركاء':'Partners' }}</p>
-        <h2 class="text-center section-title mx-auto my-3">{{ $locale==='ar'?'موثوق بها من جهات إنسانية وخيرية':'Trusted by humanitarian organizations' }}</h2>
-        <p class="color-67 text-center mb-5">{{ $locale==='ar'?'هل ستنقذ روحًا؟':'Will you save a soul?' }} <a href="{{ url($locale.'/donate') }}" style="color:var(--main-color);font-weight:bold">{{ $locale==='ar'?'تبرع الآن':'Donate Now' }}</a></p>
+        <h2 class="text-center section-title mx-auto my-3">{{ $locale==='ar'?'موثوق بها':'Trusted Partners' }}</h2>
         <div class="row justify-content-center g-4">
             @foreach($partners as $partner)
             @php
                 $pName  = $partner['name']  ?? '';
-                $pIcon  = $partner['icon']  ?? 'fa-handshake';
                 $pColor = $partner['color'] ?? '#f0f7ff';
                 $pImg   = $partner['image'] ?? $partner['logo'] ?? null;
             @endphp
@@ -444,10 +440,6 @@
                 <div class="partner-card text-center p-4" style="background:{{ $pColor }};border-radius:16px;border:1px solid rgba(0,0,0,0.06)">
                     @if($pImg)
                     <img src="{{ $pImg }}" alt="{{ $pName }}" class="img-fluid mb-3" style="max-height:70px;object-fit:contain">
-                    @else
-                    <div style="width:60px;height:60px;border-radius:50%;background:white;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;box-shadow:0 2px 8px rgba(0,0,0,0.1)">
-                        <i class="fa-solid {{ $pIcon }} fa-lg" style="color:var(--main-color)"></i>
-                    </div>
                     @endif
                     <h6 class="mb-0" style="font-size:14px;font-weight:600">{{ $pName }}</h6>
                 </div>
@@ -456,16 +448,15 @@
         </div>
     </div>
 </section>
+@endif
 
 {{-- ============ FAQ ============ --}}
 @php
     $faqs = $data['faqs'] ?? [];
     $defaultFaqs = [
-        ['question'=>($locale==='ar'?'كيف يمكنني التبرع؟':'How can I donate?'), 'answer'=>($locale==='ar'?'عبر الموقع مباشرةً باختيار المشروع وإدخال المبلغ.':'Through the website by selecting a project and entering the amount.')],
-        ['question'=>($locale==='ar'?'هل تبرعاتي تصل؟':'Do my donations reach?'), 'answer'=>($locale==='ar'?'نعم، 100% تصل للمستحقين عبر شركاء موثوقين.':'Yes, 100% reaches beneficiaries through trusted partners.')],
-        ['question'=>($locale==='ar'?'هل يمكنني متابعة مشروعي؟':'Can I follow my project?'), 'answer'=>($locale==='ar'?'نعم، تقارير دورية وصور ميدانية لكل مشروع.':'Yes, periodic reports and field photos for each project.')],
-        ['question'=>($locale==='ar'?'ما هي مشاريعكم؟':'What are your projects?'), 'answer'=>($locale==='ar'?'كفالة الأيتام، طرود غذائية، حفر آبار، بناء مساجد، دعم مرضى.':'Orphan sponsorship, food packages, well drilling, mosque construction.')],
-        ['question'=>($locale==='ar'?'كيف أتواصل معكم؟':'How to contact you?'), 'answer'=>($locale==='ar'?'عبر صفحة اتصل بنا أو حساباتنا على التواصل الاجتماعي.':'Through the Contact Us page or our social media accounts.')],
+        ['question'=>($locale==='ar'?'كيف يمكنني التبرع؟':'How can I donate?'),'answer'=>($locale==='ar'?'عبر الموقع مباشرةً.':'Through the website directly.')],
+        ['question'=>($locale==='ar'?'هل تبرعاتي تصل؟':'Do my donations reach?'),'answer'=>($locale==='ar'?'نعم، 100%.':'Yes, 100%.')],
+        ['question'=>($locale==='ar'?'هل يمكنني متابعة مشروعي؟':'Can I follow my project?'),'answer'=>($locale==='ar'?'نعم، تقارير دورية.':'Yes, periodic reports.')],
     ];
     if (empty($faqs)) $faqs = $defaultFaqs;
 @endphp
@@ -474,8 +465,7 @@
         <div class="row">
             <div class="col-lg-5 mb-4 mb-lg-0">
                 <h6>{{ $locale==='ar'?'الأسئلة الشائعة':'FAQ' }}</h6>
-                <h2 class="section-title mb-4">{{ $locale==='ar'?'أسئلة وأجوبة حول التبرع':'Q&A About Donating' }}</h2>
-                <p class="muted-color mb-4">{{ $locale==='ar'?'إذا لم تجد إجابتك، تواصل معنا.':'If you don\'t find your answer, contact us.' }}</p>
+                <h2 class="section-title mb-4">{{ $locale==='ar'?'أسئلة وأجوبة':'Q&A' }}</h2>
                 <a href="{{ url($locale.'/contact') }}" class="btn-donate d-inline-block">{{ $locale==='ar'?'تواصل معنا':'Contact Us' }}</a>
             </div>
             <div class="col-lg-7">
@@ -484,7 +474,7 @@
                     <div class="accordion-item faq-item mb-3">
                         <h2 class="accordion-header">
                             <button class="accordion-button {{ $fi>0?'collapsed':'' }} faq-btn" type="button"
-                                data-bs-toggle="collapse" data-bs-target="#faqC{{ $fi }}" aria-expanded="{{ $fi===0?'true':'false' }}">
+                                data-bs-toggle="collapse" data-bs-target="#faqC{{ $fi }}">
                                 {{ $faq['question'] ?? '' }}
                             </button>
                         </h2>
@@ -501,13 +491,12 @@
 
 {{-- ============ NEWSLETTER ============ --}}
 @php
-    $nlTitle = $data['newsletter_title'] ?? ($locale==='ar'?'اشترك في نشرتنا البريدية':'Subscribe to Our Newsletter');
-    $nlDesc  = $data['newsletter_description'] ?? ($locale==='ar'?'احصل على آخر أخبار المشاريع مباشرةً في بريدك.':'Get the latest project news directly in your inbox.');
+    $nlTitle = $data['newsletter_title'] ?? ($locale==='ar'?'اشترك في نشرتنا':'Subscribe to Our Newsletter');
+    $nlDesc  = $data['newsletter_description'] ?? ($locale==='ar'?'احصل على آخر الأخبار.':'Get the latest news.');
 @endphp
 <section class="main-section newsletter-section">
     <div class="container">
         <div class="newsletter-box text-center">
-            <h6>{{ $locale==='ar'?'ابقَ على اطلاع':'Stay Updated' }}</h6>
             <h2 class="section-title mb-3">{{ $nlTitle }}</h2>
             <p class="muted-color mb-4">{{ $nlDesc }}</p>
             <form action="#" method="POST" class="d-flex justify-content-center gap-3 flex-wrap">
@@ -525,8 +514,7 @@
     <div class="container">
         <div class="donate overflow-hidden">
             <div class="content">
-                <h2 class="main-title text-white mb-4">{{ $locale==='ar'?'تبرّع الآن — أنقذ حياة':'Donate Now — Save Lives' }}</h2>
-                <p>{{ $locale==='ar'?'تبرّعك، مهما كان صغيرًا، يصنع تأثيرًا دائمًا.':'Your contribution, no matter how small, makes a lasting impact.' }}</p>
+                <h2 class="main-title text-white mb-4">{{ $locale==='ar'?'تبرّع الآن':'Donate Now' }}</h2>
                 <div class="mt-4 holder">
                     <input type="text" name="amount" class="form-input" placeholder="{{ $locale==='ar'?'ادخل المبلغ':'Enter amount' }}">
                     <button type="button" class="btn-donate">{{ $locale==='ar'?'تبرع':'Donate' }}</button>
@@ -539,31 +527,9 @@
 
 @push('styles')
 <style>
-/* ===== WHY DONATE HEADER FIX ===== */
-.why-donate-header {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    width: 100%;
-}
-html[dir="ltr"] .why-donate-header {
-    align-items: flex-start;
-}
-.why-donate-header h6 {
-    display: block !important;
-    width: 100% !important;
-    font-weight: 600 !important;
-}
-
-/* ===== WHY ICON ===== */
-.why-icon-circle {
-    width:64px; height:64px; border-radius:50%;
-    background: linear-gradient(135deg, color-mix(in srgb, {{ $p }} 15%, transparent), color-mix(in srgb, {{ $p }} 5%, transparent));
-    display:flex; align-items:center; justify-content:center;
-    margin:0 auto;
-    border: 2px solid color-mix(in srgb, {{ $p }} 30%, transparent);
-}
-.why-icon-circle i { color: color-mix(in srgb, {{ $p }} 70%, #000); }
+.why-donate-header { display:flex;flex-direction:column;align-items:flex-end;width:100%; }
+html[dir="ltr"] .why-donate-header { align-items:flex-start; }
+.why-icon-circle { width:64px;height:64px;border-radius:50%;background:rgba(157,204,107,0.1);display:flex;align-items:center;justify-content:center;margin:0 auto;border:2px solid rgba(157,204,107,0.3); }
 .why-icon-wrap { text-align:center; }
 .partner-card { transition:transform 0.2s,box-shadow 0.2s; }
 .partner-card:hover { transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,0.1); }
