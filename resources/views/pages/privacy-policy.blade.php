@@ -83,6 +83,9 @@
     </div>
 </section>
 
+{{-- ===== Donate CTA ===== --}}
+@include('partials.donate-cta')
+
 @push('styles')
 <style>
 .page-hero-section { background:linear-gradient(135deg,#f8fdf4,#eef7e6); padding:60px 0 40px; }
