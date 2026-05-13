@@ -801,6 +801,7 @@ html[dir="ltr"] .clipped-image img {
 
     .main-section.why-donate .header h2 {
         line-height: 1.7;
+        margin-bottom: 20px;
     }
 
     .why-donate-card div input {
@@ -1199,25 +1200,33 @@ footer .footer-bottom {
     font-size: 18px;
     width: 55%;
 }
+
+/* ===== float-section: relative flow (no absolute) ===== */
 .float-section-container {
     position: relative;
-    margin-bottom: 68%;
+    margin-bottom: 0;
+    padding-bottom: 40px;
+    background-color: #F6F6F6;
 }
 
 .float-section {
-    position: absolute;
-    top: -9rem;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 940px;
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+    width: 100%;
+    max-width: 940px;
+    margin: -9rem auto 0;
     background-color: #fff;
     border-radius: 24px;
     padding: 37px 15px;
     box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+    z-index: 2;
 }
+/* ================================================== */
 
 .terms-float-section {
-    top: -6rem !important;
+    top: auto !important;
 }
 
 .float-section .title {
@@ -1305,6 +1314,7 @@ footer .footer-bottom {
         inset-inline-end: initial;
         transform: initial;
         width: initial;
+        margin-top: 0;
     }
 
     .blank-banner p.desc {
