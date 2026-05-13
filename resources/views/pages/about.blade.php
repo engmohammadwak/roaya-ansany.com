@@ -77,8 +77,18 @@
                     <div class="users-rate">
                         <div class="d-flex align-items-center mb-3">
                             <div class="content">
-                                <p class="mb-2">{{ $isAr ? 'نسعى إلى مدّ يد العون للمحتاجين والمنكوبين' : 'We reach out to those in need' }}</p>
-                                <p>{{ $isAr ? 'أينما كانوا' : 'Wherever they are' }}</p>
+                                <p class="mb-2">
+                                    {{ $isAr
+                                        ? ($about?->hero_badge_title_ar ?? 'نسعى إلى مدّ يد العون للمحتاجين والمنكوبين')
+                                        : ($about?->hero_badge_title_en ?? 'We reach out to those in need')
+                                    }}
+                                </p>
+                                <p>
+                                    {{ $isAr
+                                        ? ($about?->hero_badge_subtitle_ar ?? 'أينما كانوا')
+                                        : ($about?->hero_badge_subtitle_en ?? 'Wherever they are')
+                                    }}
+                                </p>
                             </div>
                         </div>
                         <div class="stars">

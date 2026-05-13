@@ -36,6 +36,24 @@ class AboutPageResource extends Resource
                         Forms\Components\Textarea::make('hero_description_en')
                             ->label('وصف الهيرو (إنجليزي)')->rows(4),
                     ]),
+
+                    Forms\Components\Section::make('🏷️ البطاقة الصغيرة (Hero Badge)')->schema([
+                        Forms\Components\Grid::make(2)->schema([
+                            Forms\Components\TextInput::make('hero_badge_title_ar')
+                                ->label('العنوان الرئيسي (عربي)')
+                                ->placeholder('نسعى إلى مدّ يد العون للمحتاجين والمنكوبين'),
+                            Forms\Components\TextInput::make('hero_badge_title_en')
+                                ->label('العنوان الرئيسي (إنجليزي)')
+                                ->placeholder('We reach out to those in need'),
+                            Forms\Components\TextInput::make('hero_badge_subtitle_ar')
+                                ->label('العنوان الفرعي (عربي)')
+                                ->placeholder('أينما كانوا'),
+                            Forms\Components\TextInput::make('hero_badge_subtitle_en')
+                                ->label('العنوان الفرعي (إنجليزي)')
+                                ->placeholder('Wherever they are'),
+                        ]),
+                    ]),
+
                     Forms\Components\FileUpload::make('hero_image_1')
                         ->label('صورة الهيرو')
                         ->image()
