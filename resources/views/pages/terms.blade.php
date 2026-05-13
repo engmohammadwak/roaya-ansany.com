@@ -12,6 +12,7 @@
         : ($terms?->banner_desc_en ?: 'These terms clarify your rights and responsibilities when using our services.');
 @endphp
 @section('title', ($isAr ? 'الشروط والأحكام' : 'Terms of Use') . ' | ' . config('app.name'))
+@section('body_class', 'terms')
 
 @section('content')
 
