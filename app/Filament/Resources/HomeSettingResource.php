@@ -179,6 +179,20 @@ class HomeSettingResource extends Resource
                     // ======= SUPPORT =======
                     Forms\Components\Tabs\Tab::make('🤝 قسم الدعم')
                         ->schema([
+                            Forms\Components\Grid::make(2)->schema([
+                                Forms\Components\TextInput::make('support_title_ar')
+                                    ->label('العنوان (عربي)')
+                                    ->placeholder('من نحن'),
+                                Forms\Components\TextInput::make('support_title_en')
+                                    ->label('Title (English)')
+                                    ->placeholder('About Us'),
+                                Forms\Components\Textarea::make('support_description_ar')
+                                    ->label('الوصف (عربي)')->rows(3)
+                                    ->placeholder('مؤسسة خيرية غير ربحية.'),
+                                Forms\Components\Textarea::make('support_description_en')
+                                    ->label('Description (English)')->rows(3)
+                                    ->placeholder('A non-profit charitable organization.'),
+                            ]),
                             Forms\Components\FileUpload::make('support_image')
                                 ->label('الصورة')->image()->directory('home/support')
                                 ->columnSpanFull(),

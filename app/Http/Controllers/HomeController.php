@@ -66,8 +66,10 @@ class HomeController extends Controller
                 'image'       => $hs->about_image ? asset('storage/'.$hs->about_image) : null,
             ],
             'support' => [
-                'image' => $hs->support_image ? asset('storage/'.$hs->support_image) : null,
-                'items' => $hs->support_items ?? [],
+                'image'       => $hs->support_image ? asset('storage/'.$hs->support_image) : null,
+                'title'       => $locale === 'ar' ? $hs->support_title_ar       : $hs->support_title_en,
+                'description' => $locale === 'ar' ? $hs->support_description_ar : $hs->support_description_en,
+                'items'       => $hs->support_items ?? [],
             ],
             'faqs'     => $hs->faqs ?? [],
             'partners' => $dbPartners,

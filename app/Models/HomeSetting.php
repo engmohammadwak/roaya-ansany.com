@@ -31,6 +31,8 @@ class HomeSetting extends Model
         'about_image',
         // Support
         'support_image',
+        'support_title_ar', 'support_title_en',
+        'support_description_ar', 'support_description_en',
         'support_items',
         // FAQ
         'faqs',
