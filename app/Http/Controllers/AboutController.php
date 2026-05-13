@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AboutPage;
+use App\Models\HomeSetting;
 use Illuminate\Http\Request;
 
 class AboutController extends Controller
@@ -28,6 +29,8 @@ class AboutController extends Controller
             }
         }
 
-        return view('pages.about', compact('about'));
+        $hs = HomeSetting::instance();
+
+        return view('pages.about', compact('about', 'hs'));
     }
 }

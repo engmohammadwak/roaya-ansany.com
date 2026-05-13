@@ -3,10 +3,16 @@
     $locale = app()->getLocale();
     $isAr   = $locale === 'ar';
 
-    // CTA image — same logic as home page
-    $ctaImgRaw = \App\Models\Setting::get('cta_image', null);
-    $ctaImg = $ctaImgRaw
-        ? asset('storage/' . $ctaImgRaw)
+    $ctaTitle = $isAr
+        ? ($hs->cta_title_ar ?? ($about?->cta_title_ar ?? 'تبرّع الآن — أنقذ حياة'))
+        : ($hs->cta_title_en ?? ($about?->cta_title_en ?? 'Donate Now — Save a Life'));
+
+    $ctaDesc = $isAr
+        ? ($hs->cta_description_ar ?? ($about?->cta_description_ar ?? ''))
+        : ($hs->cta_description_en ?? ($about?->cta_description_en ?? ''));
+
+    $ctaImg = $hs->cta_image
+        ? asset('storage/' . $hs->cta_image)
         : asset('website/images/donate-child.svg');
 @endphp
 @section('title', ($isAr ? 'من نحن' : 'About Us') . ' | ' . config('app.name'))
@@ -129,7 +135,6 @@
                 <div class="stats mt-5">
                     <div class="row">
 
-                        {{-- VISION card (dark) --}}
                         <div class="col-md-4 mb-4">
                             <div class="stat vision">
                                 <div class="intro mb-5">
@@ -149,7 +154,6 @@
                             </div>
                         </div>
 
-                        {{-- GOALS card (green / our-msg) --}}
                         <div class="col-md-4 mb-4">
                             <div class="stat d-block our-msg">
                                 <div class="intro">
@@ -180,7 +184,6 @@
                             </div>
                         </div>
 
-                        {{-- MISSION card (beige) --}}
                         <div class="col-md-4 mb-4">
                             <div class="stat mission">
                                 <div class="intro mb-5">
@@ -195,7 +198,7 @@
                             </div>
                         </div>
 
-                    </div>{{-- /row --}}
+                    </div>
                 </div>
 
             </div>
@@ -271,17 +274,10 @@
             <div class="donate overflow-hidden">
 
                 <div class="content">
-                    <h2 class="main-title text-white mb-4">
-                        {{ $isAr
-                            ? ($about?->cta_title_ar ?? 'تبرّع الآن — أنقذ حياة')
-                            : ($about?->cta_title_en ?? 'Donate Now — Save a Life')
-                        }}
-                    </h2>
+                    <h2 class="main-title text-white mb-4">{{ $ctaTitle }}</h2>
 
-                    @if($isAr ? $about?->cta_description_ar : $about?->cta_description_en)
-                    <p class="text-white mb-4" style="font-size:15px;line-height:1.9;opacity:.9">
-                        {{ $isAr ? $about->cta_description_ar : $about->cta_description_en }}
-                    </p>
+                    @if($ctaDesc)
+                    <p class="text-white mb-4" style="font-size:15px;line-height:1.9;opacity:.9">{{ $ctaDesc }}</p>
                     @endif
 
                     <div class="mt-4 holder">
