@@ -342,12 +342,11 @@
     </div>
 </section>
 
-{{-- ============ STATS CARD (الأرقام والعنوان من الداشبورد) ============ --}}
+{{-- ============ STATS CARD ============ --}}
 @php
     $statsImg   = $data['stats_image'] ?? 'https://roaya-ansany.com/website/images/stats-card.png';
     $statsTitle = $data['stats_title'] ?? ($locale==='ar' ? 'الإغاثة العاجلة لأهل غزة، لبنان، شمال سوريا، السودان ودعم المحتاجين في تركيا' : 'Emergency relief for Gaza, Lebanon, North Syria, Sudan and Turkey');
 
-    // الأرقام من donation_counter في الداشبورد أولاً، ثم fallback لمجموع المشاريع
     $counter  = $data['donation_counter'] ?? [];
     $dcGoal   = (float)($counter['goal']   ?? collect($projects['data'] ?? [])->sum('goal_amount'));
     $dcRaised = (float)($counter['raised'] ?? collect($projects['data'] ?? [])->sum('raised_amount'));
@@ -380,8 +379,10 @@
 {{-- ============ SUPPORT ============ --}}
 @php
     $support      = $data['support'] ?? [];
-    $supportImg   = $support['image'] ?? 'https://roaya-ansany.com/storage/uploads/pages/JDqjlXwu5odPJit3bTMC8NQxssv8OKDDNyPeVwPS.jpg';
-    $supportItems = $support['items'] ?? [];
+    $supportImg   = $support['image']       ?? 'https://roaya-ansany.com/storage/uploads/pages/JDqjlXwu5odPJit3bTMC8NQxssv8OKDDNyPeVwPS.jpg';
+    $supportTitle = $support['title']       ?? ($locale==='ar' ? 'من نحن' : 'About Us');
+    $supportDesc  = $support['description'] ?? ($locale==='ar' ? 'مؤسسة خيرية غير ربحية.' : 'A non-profit charitable organization.');
+    $supportItems = $support['items']       ?? [];
 @endphp
 <section class="main-section">
     <div class="container">
@@ -390,8 +391,8 @@
                 <div class="col-md-5 mb-5"><img class="w-lg-100 img-fluid" src="{{ $supportImg }}" alt="support"></div>
                 <div class="col-md-7">
                     <div class="content">
-                        <h2 class="section-title mb-4">{{ $locale==='ar'?'من نحن':'About Us' }}</h2>
-                        <p class="muted-color">{{ $locale==='ar'?'مؤسسة خيرية غير ربحية.':'A non-profit organization.' }}</p>
+                        <h2 class="section-title mb-4">{{ $supportTitle }}</h2>
+                        <p class="muted-color">{{ $supportDesc }}</p>
                         <div class="container my-5" dir="{{ $locale === 'ar' ? 'rtl' : 'ltr' }}">
                             <div class="row g-3 justify-content-center">
                                 <div class="col-12 col-md-6">
