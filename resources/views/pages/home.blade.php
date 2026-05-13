@@ -212,7 +212,12 @@
 @php
     $whyCards = $data['why_donate'] ?? [];
     $whyLabel = $data['why_donate_label'] ?? ($locale==='ar' ? 'لماذا تتبرع لنا؟' : 'Why donate to us?');
-    $whyTitle = $data['why_donate_title'] ?? ($locale==='ar' ? 'لأننا نهتم بالحالات الأكثر احتياجًا.' : 'Because we care about those in greatest need.');
+
+    // استخدام المفتاح الصحيح حسب اللغة
+    $whyTitle = $locale === 'ar'
+        ? (App\Models\Setting::get('why_donate_title_ar', '') ?: ($data['why_donate_title'] ?? 'لأننا نهتم بالحالات الأكثر احتياجًا.'))
+        : (App\Models\Setting::get('why_donate_title_en', '') ?: ($data['why_donate_title'] ?? 'Because we care about those in greatest need.'));
+
     $defaultCards = [
         ['icon'=>'fa-house-crack',   'title'=>($locale==='ar'?'الأطفال والنساء بلا مأوى':'Children & Women Without Shelter'),      'description'=>($locale==='ar'?'نهتم بالأطفال والنساء الذين هُدمت منازلهم ويعيشون في الخيام ومراكز الإيواء.':'We care for children and women whose homes were destroyed.')],
         ['icon'=>'fa-bowl-food',     'title'=>($locale==='ar'?'الأطفال والنساء بلا غذاء':'Children & Women Without Food'),         'description'=>($locale==='ar'?'نقدّم الدعم للأسر التي تعاني من شبح المجاعة.':'We support families suffering from famine.')],
@@ -227,8 +232,9 @@
 <section class="main-section why-donate">
     <div class="container">
         <div class="header" dir="{{ $locale === 'ar' ? 'rtl' : 'ltr' }}">
-            <h6 style="color:var(--main-color);font-size:15px;font-weight:600;text-align:{{ $whyAlign }};width:100%">{{ $whyLabel }}</h6>
-            <h2 class="section-title" style="text-align:{{ $whyAlign }};width:100%">{{ $whyTitle }}</h2>
+            <h6 style="color:var(--main-color);font-size:15px;font-weight:600;">{{ $whyLabel }}</h6>
+            {{-- العنوان الكبير: h6 بنفس style بدون مشاكل flex --}}
+            <h6 style="font-size:32px;font-weight:600;color:var(--dark-text-color);margin:0;">{{ $whyTitle }}</h6>
         </div>
         <div class="row mt-5">
             @foreach($whyCards as $card)
