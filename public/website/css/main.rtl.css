@@ -46,3 +46,16 @@ h1.main-title {
     color: #fff !important;
     box-shadow: 0 0 0 0.2rem rgba(157, 204, 107, 0.5) !important;
 }
+
+/* RTL: align titles and headers to the right */
+.section-title {
+    text-align: right !important;
+}
+
+.why-donate .header h6,
+.why-donate .header h2,
+.campaign-banner .col-md-7 h2,
+.campaign-banner .col-md-7 h6,
+.campaign-banner .col-md-7 p {
+    text-align: right !important;
+}
