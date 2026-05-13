@@ -75,6 +75,20 @@ class HomeSettingResource extends Resource
                     // ======= WHY DONATE =======
                     Forms\Components\Tabs\Tab::make('🎯 لماذا تتبرع؟')
                         ->schema([
+                            Forms\Components\Grid::make(2)->schema([
+                                Forms\Components\TextInput::make('why_donate_label_ar')
+                                    ->label('النص الصغير فوق العنوان (عربي)')
+                                    ->placeholder('لماذا تتبرع لنا؟'),
+                                Forms\Components\TextInput::make('why_donate_label_en')
+                                    ->label('Small Label (English)')
+                                    ->placeholder('Why donate to us?'),
+                                Forms\Components\TextInput::make('why_donate_title_ar')
+                                    ->label('العنوان الكبير (عربي)')
+                                    ->placeholder('لأننا نهتم بالحالات الأكثر احتياجًا.'),
+                                Forms\Components\TextInput::make('why_donate_title_en')
+                                    ->label('Main Title (English)')
+                                    ->placeholder('Because we care about those in greatest need.'),
+                            ]),
                             Forms\Components\Repeater::make('why_cards')
                                 ->label('كروت لماذا تتبرع')
                                 ->schema([

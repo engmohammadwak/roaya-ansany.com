@@ -9,7 +9,6 @@
     $heroDesc  = $hero['description'] ?? ($locale==='ar' ? 'ملايين المدنيين يواجهون الجوع والتشرد.' : 'Millions face hunger and displacement.');
     $heroImg   = $hero['image']       ?? 'https://roaya-ansany.com/storage/uploads/pages/3PCwY0bnxr9NmLyHvTlL7wlNmBC5ir5vBG5gv0Wz.png';
 
-    // يقرأ من الداشبورد فقط
     $heroLabel = $locale === 'ar'
         ? App\Models\Setting::get('hero_label_ar', '')
         : App\Models\Setting::get('hero_label_en', '');
@@ -122,15 +121,7 @@
                         <path d="M43 0C19.2518 0 0 19.2518 0 43V345C0 368.748 19.2518 388 43 388H398C421.748 388 441 368.748 441 345V115C441 98.9837 428.016 86 412 86H329C312.984 86 300 73.0163 300 57V29C300 12.9837 287.016 0 271 0H43Z" fill="{{ $p }}" fill-opacity="0.15"/>
                     </svg>
                     @if($heroLabel)
-                    <div style="position:absolute;
-                                top:12px;
-                                left:351px;
-                                right:0;
-                                text-align:center;
-                                z-index:2;
-                                font-size:14px;
-                                color:#555;
-                                font-weight:500;">
+                    <div style="position:absolute;top:12px;left:351px;right:0;text-align:center;z-index:2;font-size:14px;color:#555;font-weight:500;">
                         {{ $heroLabel }}
                     </div>
                     @endif
@@ -158,9 +149,9 @@
                     <img src="{{ $cbImg }}" class="img-fluid rounded-3" alt="campaign">
                 </div>
                 <div class="col-md-7 order-1 order-lg-2 ps-lg-5">
-                    <h2 class="section-title mt-4 text-start">{{ $cbTitle }}</h2>
-                    <h6 class="mt-2 mb-3 text-start" style="font-size:15px;font-weight:600;color:var(--main-color)">{{ $cbSubtitle }}</h6>
-                    <p class="color-67 text-start" style="font-size:14px;line-height:1.9">{{ $cbDesc }}</p>
+                    <h2 class="section-title mt-4 text-end">{{ $cbTitle }}</h2>
+                    <h6 class="mt-2 mb-3 text-end" style="font-size:15px;font-weight:600;color:var(--main-color)">{{ $cbSubtitle }}</h6>
+                    <p class="color-67 text-end" style="font-size:14px;line-height:1.9">{{ $cbDesc }}</p>
                     <form action="#" class="mt-4">
                         <div class="row">
                             <div class="col-9"><input type="text" name="amount" class="form-input gray w-100" placeholder="{{ $locale==='ar'?'ادخل المبلغ':'Enter amount' }}"></div>
@@ -202,7 +193,7 @@
                         <h5 class="campaign-card-title mb-3">{{ $pTitle }}</h5>
                         <div class="progress-container mb-2"><div class="progress-bar"><div class="progress-fill" style="width:{{ $pPct }}%"></div></div></div>
                         <div class="d-flex justify-content-between text-muted mb-3" style="font-size:13px">
-                            <div class="text-center"><div class="fw-bold main-color">${{ number_format($pRaised) }}</div><div>{{ $locale==='ar'?'تم جمعه':'Raised' }}</div></div>
+                            <div class="text-center"><div class="fw-bold" style="color:var(--main-color)">${{ number_format($pRaised) }}</div><div>{{ $locale==='ar'?'تم جمعه':'Raised' }}</div></div>
                             <div class="text-center"><div class="fw-bold">{{ $pPct }}%</div><div>{{ $locale==='ar'?'مكتمل':'Complete' }}</div></div>
                             <div class="text-center"><div class="fw-bold">${{ number_format($pGoal) }}</div><div>{{ $locale==='ar'?'الهدف':'Goal' }}</div></div>
                         </div>
@@ -219,6 +210,8 @@
 {{-- ============ WHY DONATE ============ --}}
 @php
     $whyCards = $data['why_donate'] ?? [];
+    $whyLabel = $data['why_donate_label'] ?? ($locale==='ar' ? 'لماذا تتبرع لنا؟' : 'Why donate to us?');
+    $whyTitle = $data['why_donate_title'] ?? ($locale==='ar' ? 'لأننا نهتم بالحالات الأكثر احتياجًا.' : 'Because we care about those in greatest need.');
     $defaultCards = [
         ['icon'=>'fa-house-crack',   'title'=>($locale==='ar'?'الأطفال والنساء بلا مأوى':'Children & Women Without Shelter'),      'description'=>($locale==='ar'?'نهتم بالأطفال والنساء الذين هُدمت منازلهم ويعيشون في الخيام ومراكز الإيواء.':'We care for children and women whose homes were destroyed.')],
         ['icon'=>'fa-bowl-food',     'title'=>($locale==='ar'?'الأطفال والنساء بلا غذاء':'Children & Women Without Food'),         'description'=>($locale==='ar'?'نقدّم الدعم للأسر التي تعاني من شبح المجاعة.':'We support families suffering from famine.')],
@@ -232,8 +225,8 @@
 <section class="main-section why-donate">
     <div class="container">
         <div class="header text-end" dir="rtl">
-            <h6 style="color:var(--main-color);font-size:15px;font-weight:600">{{ $locale==='ar'?'لماذا تتبرع لنا؟':'Why donate to us?' }}</h6>
-            <h2 class="section-title text-end">{{ $locale==='ar'?'لأننا نهتم بالحالات الأكثر احتياجًا.':'Because we care about those in greatest need.' }}</h2>
+            <h6 style="color:var(--main-color);font-size:15px;font-weight:600">{{ $whyLabel }}</h6>
+            <h2 class="section-title" style="text-align:right !important">{{ $whyTitle }}</h2>
         </div>
         <div class="row mt-5">
             @foreach($whyCards as $card)
@@ -347,7 +340,7 @@
             <div class="stats mt-5">
                 <div class="row">
                     <div class="col-md-4"><div class="stat w-100 mb-3"><span>{{ $locale==='ar'?'المتبقي':'Remaining' }}</span><span>${{ number_format($totalRemain) }}</span></div></div>
-                    <div class="col-md-4"><div class="stat w-100 mb-3"><span>{{ $locale==='ar'?'المبلغ المُجمَّع':'Raised' }}</span><span>${{ number_format($totalRaised) }}</span></div></div>
+                    <div class="col-md-4"><div class="stat w-100 mb-3"><span>{{ $locale==='ar'?'المبلغ المُجَمَع':'Raised' }}</span><span>${{ number_format($totalRaised) }}</span></div></div>
                     <div class="col-md-4"><div class="stat w-100 mb-3"><span>{{ $locale==='ar'?'الهدف':'Goal' }}</span><span>${{ number_format($totalGoal) }}</span></div></div>
                 </div>
             </div>
@@ -419,9 +412,9 @@
 @endphp
 <section class="main-section">
     <div class="container">
-        <p class="color-67 text-center"><i class="fa-solid fa-handshake main-color me-2"></i>{{ $locale==='ar'?'الشركاء':'Partners' }}</p>
+        <p class="color-67 text-center"><i class="fa-solid fa-handshake me-2" style="color:var(--main-color)"></i>{{ $locale==='ar'?'الشركاء':'Partners' }}</p>
         <h2 class="text-center section-title mx-auto my-3">{{ $locale==='ar'?'موثوق بها من جهات إنسانية وخيرية':'Trusted by humanitarian organizations' }}</h2>
-        <p class="color-67 text-center mb-5">{{ $locale==='ar'?'هل ستنقذ روحًا؟':'Will you save a soul?' }} <a href="{{ url($locale.'/donate') }}" class="main-color fw-bold">{{ $locale==='ar'?'تبرع الآن':'Donate Now' }}</a></p>
+        <p class="color-67 text-center mb-5">{{ $locale==='ar'?'هل ستنقذ روحًا؟':'Will you save a soul?' }} <a href="{{ url($locale.'/donate') }}" style="color:var(--main-color);font-weight:bold">{{ $locale==='ar'?'تبرع الآن':'Donate Now' }}</a></p>
         <div class="row justify-content-center g-4">
             @foreach($partners as $partner)
             @php
@@ -436,7 +429,7 @@
                     <img src="{{ $pImg }}" alt="{{ $pName }}" class="img-fluid mb-3" style="max-height:70px;object-fit:contain">
                     @else
                     <div style="width:60px;height:60px;border-radius:50%;background:white;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;box-shadow:0 2px 8px rgba(0,0,0,0.1)">
-                        <i class="fa-solid {{ $pIcon }} fa-lg main-color"></i>
+                        <i class="fa-solid {{ $pIcon }} fa-lg" style="color:var(--main-color)"></i>
                     </div>
                     @endif
                     <h6 class="mb-0" style="font-size:14px;font-weight:600">{{ $pName }}</h6>
