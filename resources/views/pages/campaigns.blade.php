@@ -25,10 +25,10 @@
             </div>
 
             <div class="col-md-8 col-lg-6 mx-auto text-center">
-                <h1 class="mt-3 mb-4 section-title fw-meduim text-center">
+                <h1 class="mt-3 mb-4 section-title fw-meduim" style="text-align: center !important">
                     {{ $heroTitle }}
                 </h1>
-                <p class="color-67 text-center">
+                <p class="color-67" style="text-align: center !important">
                     {{ $heroDesc }}
                 </p>
             </div>
