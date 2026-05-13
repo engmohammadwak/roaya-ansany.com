@@ -155,16 +155,6 @@ class AboutPageResource extends Resource
 
                 ]),
 
-                // =================== CTA ===================
-                Forms\Components\Tabs\Tab::make('📬 قسم التبرع (CTA)')->schema([
-                    Forms\Components\Grid::make(2)->schema([
-                        Forms\Components\Textarea::make('cta_description_ar')
-                            ->label('وصف القسم (عربي)')->rows(5),
-                        Forms\Components\Textarea::make('cta_description_en')
-                            ->label('وصف القسم (إنجليزي)')->rows(5),
-                    ]),
-                ]),
-
             ])->columnSpanFull(),
         ]);
     }
@@ -194,7 +184,6 @@ class AboutPageResource extends Resource
         ];
     }
 
-    // redirect index directly to edit the first record
     public static function getNavigationUrl(): string
     {
         $record = AboutPage::first();
