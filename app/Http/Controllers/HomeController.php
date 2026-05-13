@@ -21,14 +21,11 @@ class HomeController extends Controller
     {
         $locale = app()->getLocale();
 
-        // جلب البيانات من API مع cache 10 دقائق
         $projects = Cache::remember('home_projects_'.$locale, 600, fn() => $this->api->getProjects());
         $programs = Cache::remember('home_programs_'.$locale, 600, fn() => $this->api->getPrograms() ?? []);
 
-        // إعدادات الصفحة الرئيسية من DB
         $hs = HomeSetting::instance();
 
-        // الشركاء من DB
         $dbPartners = Partner::active()->get()->map(function ($p) use ($locale) {
             return [
                 'name'  => $locale === 'ar' ? $p->name_ar : ($p->name_en ?: $p->name_ar),
@@ -38,12 +35,10 @@ class HomeController extends Controller
             ];
         })->toArray();
 
-        // موضع النص من جدول Settings (ManageSettings)
         $heroLabelTop   = Setting::get('hero_label_top',   '');
         $heroLabelLeft  = Setting::get('hero_label_left',  '');
         $heroLabelRight = Setting::get('hero_label_right', '');
 
-        // بناء مصفوفة $data من DB (أولوية على API)
         $data = [
             'hero' => [
                 'title'       => $locale === 'ar' ? $hs->hero_title_ar       : $hs->hero_title_en,
@@ -60,7 +55,9 @@ class HomeController extends Controller
                 'description' => $locale === 'ar' ? $hs->cb_description_ar : $hs->cb_description_en,
                 'image'       => $hs->cb_image ? asset('storage/'.$hs->cb_image) : null,
             ],
-            'why_donate'  => $hs->why_cards ?? [],
+            'why_donate'       => $hs->why_cards ?? [],
+            'why_donate_label' => $locale === 'ar' ? $hs->why_donate_label_ar : $hs->why_donate_label_en,
+            'why_donate_title' => $locale === 'ar' ? $hs->why_donate_title_ar : $hs->why_donate_title_en,
             'stats_title' => $locale === 'ar' ? $hs->stats_title_ar : $hs->stats_title_en,
             'stats_image' => $hs->stats_image ? asset('storage/'.$hs->stats_image) : null,
             'about' => [
@@ -79,6 +76,8 @@ class HomeController extends Controller
                 'raised'   => $hs->donation_raised,
                 'currency' => $hs->donation_currency ?? '$',
             ],
+            'newsletter_title'       => $locale === 'ar' ? $hs->newsletter_title_ar       : $hs->newsletter_title_en,
+            'newsletter_description' => $locale === 'ar' ? $hs->newsletter_description_ar : $hs->newsletter_description_en,
         ];
 
         return view('pages.home', compact('data', 'projects', 'programs'));
