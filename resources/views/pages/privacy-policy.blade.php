@@ -2,6 +2,32 @@
 @php $locale = app()->getLocale(); @endphp
 @section('title', ($locale==='ar'?'سياسة الخصوصية':'Privacy Policy') . ' | مؤسسة رؤيا الإنسانية')
 
+@push('styles')
+<style>
+/* عدم تداخل float-section مع donate-cta في صفحة الخصوصية */
+main .float-section-container {
+    position: static !important;
+    margin-bottom: 0 !important;
+}
+main .float-section {
+    position: static !important;
+    top: auto !important;
+    left: auto !important;
+    transform: none !important;
+    width: 100% !important;
+    max-width: 940px;
+    margin: 0 auto;
+}
+.page-hero-section { background:linear-gradient(135deg,#f8fdf4,#eef7e6); padding:60px 0 40px; }
+.page-hero-section .breadcrumb-item a { color:#5a9e2f; text-decoration:none; }
+.legal-content { background:white; border-radius:20px; padding:40px; box-shadow:0 4px 20px rgba(0,0,0,0.06); border:1px solid #e8f4d9; }
+.legal-section { border-bottom:1px solid #f0f7e6; padding-bottom:24px; }
+.legal-section:last-child { border-bottom:none; }
+.legal-title { font-size:17px; font-weight:700; color:#5a9e2f; margin-bottom:12px; }
+.legal-body { color:#555; line-height:1.9; font-size:15px; }
+</style>
+@endpush
+
 @section('content')
 
 <section class="page-hero-section">
@@ -86,15 +112,4 @@
 {{-- ===== Donate CTA ===== --}}
 @include('partials.donate-cta')
 
-@push('styles')
-<style>
-.page-hero-section { background:linear-gradient(135deg,#f8fdf4,#eef7e6); padding:60px 0 40px; }
-.page-hero-section .breadcrumb-item a { color:#5a9e2f; text-decoration:none; }
-.legal-content { background:white; border-radius:20px; padding:40px; box-shadow:0 4px 20px rgba(0,0,0,0.06); border:1px solid #e8f4d9; }
-.legal-section { border-bottom:1px solid #f0f7e6; padding-bottom:24px; }
-.legal-section:last-child { border-bottom:none; }
-.legal-title { font-size:17px; font-weight:700; color:#5a9e2f; margin-bottom:12px; }
-.legal-body { color:#555; line-height:1.9; font-size:15px; }
-</style>
-@endpush
 @endsection
