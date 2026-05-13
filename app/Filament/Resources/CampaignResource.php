@@ -55,14 +55,7 @@ class CampaignResource extends Resource
                 ->deletable(true)->openable(true)->downloadable(true)
                 ->maxSize(102400)->acceptedFileTypes(['image/jpeg','image/png','image/webp','image/gif'])
                 ->columnSpanFull()->uploadingMessage('جاري رفع الصورة...')
-                ->helperText('الحد الأقصى 100 ميجابايت')
-                ->afterStateHydrated(function (FileUpload $component, $state) {
-                    if (is_string($state) && $state !== '') $component->state([$state => $state]);
-                })
-                ->dehydrateStateUsing(function ($state) {
-                    if (is_array($state) && count($state) > 0) return array_values($state)[0];
-                    return null;
-                }),
+                ->helperText('الحد الأقصى 100 ميجابايت'),
 
             Forms\Components\TextInput::make('target_amount')->label('المبلغ المستهدف')->numeric()->required(),
             Forms\Components\TextInput::make('collected_amount')->label('المبلغ المجموع')->numeric()->default(0),
