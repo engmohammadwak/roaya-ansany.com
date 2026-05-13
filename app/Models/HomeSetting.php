@@ -43,12 +43,16 @@ class HomeSetting extends Model
         'donation_goal',
         'donation_raised',
         'donation_currency',
+        // CTA Section
+        'cta_title_ar', 'cta_title_en',
+        'cta_description_ar', 'cta_description_en',
+        'cta_image',
     ];
 
     protected $casts = [
-        'why_cards'     => 'array',
-        'support_items' => 'array',
-        'faqs'          => 'array',
+        'why_cards'       => 'array',
+        'support_items'   => 'array',
+        'faqs'            => 'array',
         'donation_goal'   => 'float',
         'donation_raised' => 'float',
     ];
