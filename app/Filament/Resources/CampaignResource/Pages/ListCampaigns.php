@@ -7,11 +7,8 @@ use App\Models\Program;
 use App\Models\Project;
 use App\Models\Setting;
 use Filament\Actions;
-use Filament\Forms;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
-use Filament\Resources\Pages\ListRecords\Concerns\Translatable;
-use Livewire\Attributes\On;
 
 class ListCampaigns extends ListRecords
 {
@@ -35,12 +32,12 @@ class ListCampaigns extends ListRecords
         return [
             // ---- New Campaign ----
             Actions\CreateAction::make()
-                ->label('\u0625\u0636\u0627\u0641\u0629 \u062d\u0645\u0644\u0629')
+                ->label('إضافة حملة')
                 ->visible(fn () => $this->activeSection === 'campaigns'),
 
             // ---- New Project ----
             Actions\Action::make('new_project')
-                ->label('\u0625\u0636\u0627\u0641\u0629 \u0645\u0634\u0631\u0648\u0639')
+                ->label('إضافة مشروع')
                 ->icon('heroicon-o-plus')
                 ->visible(fn () => $this->activeSection === 'projects')
                 ->action(function () {
@@ -51,7 +48,7 @@ class ListCampaigns extends ListRecords
 
             // ---- New Program ----
             Actions\Action::make('new_program')
-                ->label('\u0625\u0636\u0627\u0641\u0629 \u0628\u0631\u0646\u0627\u0645\u062c')
+                ->label('إضافة برنامج')
                 ->icon('heroicon-o-plus')
                 ->visible(fn () => $this->activeSection === 'programs')
                 ->action(function () {
@@ -62,7 +59,7 @@ class ListCampaigns extends ListRecords
 
             // ---- Page Settings ----
             Actions\Action::make('page_settings')
-                ->label('\u0625\u0639\u062f\u0627\u062f\u0627\u062a \u0627\u0644\u0635\u0641\u062d\u0629')
+                ->label('إعدادات الصفحة')
                 ->icon('heroicon-o-adjustments-horizontal')
                 ->color('gray')
                 ->action(function () {
@@ -90,10 +87,10 @@ class ListCampaigns extends ListRecords
         $data = $this->projectData;
         if ($this->editingProjectId) {
             Project::findOrFail($this->editingProjectId)->update($data);
-            Notification::make()->title('\u062a\u0645 \u0627\u0644\u062a\u062d\u062f\u064a\u062b \u2705')->success()->send();
+            Notification::make()->title('تم التحديث ✅')->success()->send();
         } else {
             Project::create($data);
-            Notification::make()->title('\u062a\u0645 \u0627\u0644\u0625\u0636\u0627\u0641\u0629 \u2705')->success()->send();
+            Notification::make()->title('تم الإضافة ✅')->success()->send();
         }
         $this->showProjectModal  = false;
         $this->editingProjectId  = null;
@@ -111,7 +108,7 @@ class ListCampaigns extends ListRecords
     public function deleteProject(int $id): void
     {
         Project::findOrFail($id)->delete();
-        Notification::make()->title('\u062a\u0645 \u0627\u0644\u062d\u0630\u0641')->success()->send();
+        Notification::make()->title('تم الحذف')->success()->send();
     }
 
     // ---- save program ----
@@ -120,10 +117,10 @@ class ListCampaigns extends ListRecords
         $data = $this->programData;
         if ($this->editingProgramId) {
             Program::findOrFail($this->editingProgramId)->update($data);
-            Notification::make()->title('\u062a\u0645 \u0627\u0644\u062a\u062d\u062f\u064a\u062b \u2705')->success()->send();
+            Notification::make()->title('تم التحديث ✅')->success()->send();
         } else {
             Program::create($data);
-            Notification::make()->title('\u062a\u0645 \u0627\u0644\u0625\u0636\u0627\u0641\u0629 \u2705')->success()->send();
+            Notification::make()->title('تم الإضافة ✅')->success()->send();
         }
         $this->showProgramModal  = false;
         $this->editingProgramId  = null;
@@ -141,7 +138,7 @@ class ListCampaigns extends ListRecords
     public function deleteProgram(int $id): void
     {
         Program::findOrFail($id)->delete();
-        Notification::make()->title('\u062a\u0645 \u0627\u0644\u062d\u0630\u0641')->success()->send();
+        Notification::make()->title('تم الحذف')->success()->send();
     }
 
     // ---- save settings ----
@@ -152,10 +149,10 @@ class ListCampaigns extends ListRecords
             Setting::set($section.'_'.$key, $value ?? '');
         }
         $this->showSettingsModal = false;
-        Notification::make()->title('\u062a\u0645 \u062d\u0641\u0638 \u0627\u0644\u0625\u0639\u062f\u0627\u062f\u0627\u062a \u2705')->success()->send();
+        Notification::make()->title('تم حفظ الإعدادات ✅')->success()->send();
     }
 
-    protected function getView(): string
+    public function getView(): string
     {
         return 'filament.resources.campaign-resource.pages.list-campaigns';
     }
