@@ -126,36 +126,61 @@
         #nl-popup {
             background: #fff;
             border-radius: 20px;
-            padding: 40px 36px 32px;
-            max-width: 480px;
+            padding: 44px 40px 36px;
+            max-width: 500px;
             width: 92%;
             position: relative;
             text-align: center;
             box-shadow: 0 20px 60px rgba(0,0,0,.18);
             animation: nlPop .35s ease;
+            direction: {{ $locale === 'ar' ? 'rtl' : 'ltr' }};
         }
         @keyframes nlPop {
             from { transform: scale(.85); opacity: 0; }
             to   { transform: scale(1);   opacity: 1; }
         }
         #nl-popup .nl-icon {
-            width: 64px; height: 64px;
-            background: color-mix(in srgb, {{ $p }} 15%, #fff);
+            width: 72px;
+            height: 72px;
+            background: color-mix(in srgb, {{ $p }} 12%, #fff);
+            border: 2px solid color-mix(in srgb, {{ $p }} 30%, #fff);
             border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            margin: 0 auto 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
         }
-        #nl-popup h3 { font-size: 20px; font-weight: 700; margin-bottom: 10px; color: {{ $td }}; }
-        #nl-popup p  { font-size: 14px; color: {{ $tm }}; line-height: 1.8; margin-bottom: 22px; }
-        #nl-popup .nl-form { display: flex; gap: 10px; flex-wrap: wrap; }
+        #nl-popup h3 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: {{ $td }};
+            line-height: 1.4;
+        }
+        #nl-popup p {
+            font-size: 14px;
+            color: {{ $tm }};
+            line-height: 1.9;
+            margin-bottom: 26px;
+        }
+        #nl-popup .nl-form {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
         #nl-popup .nl-form input {
-            flex: 1; min-width: 0;
+            flex: 1;
+            min-width: 180px;
             border: 1.5px solid #e0e0e0;
             border-radius: 10px;
-            padding: 10px 14px;
+            padding: 11px 16px;
             font-size: 14px;
             outline: none;
             transition: border-color .2s;
+            font-family: inherit;
+            text-align: {{ $locale === 'ar' ? 'right' : 'left' }};
+            direction: {{ $locale === 'ar' ? 'rtl' : 'ltr' }};
         }
         #nl-popup .nl-form input:focus { border-color: {{ $p }}; }
         #nl-popup .nl-form button {
@@ -163,30 +188,53 @@
             color: #fff;
             border: none;
             border-radius: 10px;
-            padding: 10px 22px;
+            padding: 11px 24px;
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             transition: opacity .2s;
+            white-space: nowrap;
+            font-family: inherit;
         }
         #nl-popup .nl-form button:hover { opacity: .88; }
         #nl-popup-close {
             position: absolute;
-            top: 14px; {{ $locale === 'ar' ? 'left' : 'right' }}: 16px;
-            background: none; border: none;
-            font-size: 22px; color: #aaa;
-            cursor: pointer; line-height: 1;
+            top: 16px;
+            {{ $locale === 'ar' ? 'left' : 'right' }}: 18px;
+            background: #f5f5f5;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-size: 18px;
+            color: #888;
+            cursor: pointer;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background .2s;
         }
-        #nl-popup-close:hover { color: #555; }
+        #nl-popup-close:hover { background: #e8e8e8; color: #333; }
         #nl-popup .nl-skip {
             display: block;
-            margin-top: 14px;
-            font-size: 12px;
+            margin-top: 16px;
+            font-size: 13px;
             color: #bbb;
             cursor: pointer;
             text-decoration: underline;
+            text-underline-offset: 3px;
         }
         #nl-popup .nl-skip:hover { color: #888; }
+        #nl-popup .nl-success {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 0 8px;
+        }
+        #nl-popup .nl-success svg { color: {{ $p }}; }
+        #nl-popup .nl-success p { margin: 0; font-size: 16px; font-weight: 600; color: {{ $td }}; }
     </style>
 
     @stack('styles')
@@ -198,24 +246,37 @@
 
     {{-- ===== Newsletter Popup ===== --}}
     <div id="nl-popup-overlay">
-        <div id="nl-popup" role="dialog" aria-modal="true">
+        <div id="nl-popup" role="dialog" aria-modal="true" aria-labelledby="nl-popup-title">
             <button id="nl-popup-close" aria-label="close">&times;</button>
+
             <div class="nl-icon">
-                <svg width="28" height="28" fill="none" viewBox="0 0 24 24">
+                <svg width="30" height="30" fill="none" viewBox="0 0 24 24">
                     <path d="M2 6.5A2.5 2.5 0 0 1 4.5 4h15A2.5 2.5 0 0 1 22 6.5v11A2.5 2.5 0 0 1 19.5 20h-15A2.5 2.5 0 0 1 2 17.5v-11Z" stroke="{{ $p }}" stroke-width="1.6"/>
                     <path d="m2 7 10 7 10-7" stroke="{{ $p }}" stroke-width="1.6" stroke-linecap="round"/>
                 </svg>
             </div>
-            <h3>{{ $locale === 'ar' ? 'اشترك في نشرتنا البريدية' : 'Subscribe to Our Newsletter' }}</h3>
-            <p>{{ $locale === 'ar'
-                ? 'كن أول من يعلم بمشاريعنا الجديدة، قصص المستفيدين، وتأثير تبرعاتك. لا بريد مزعج.. فقط أثر يصل إلى قلبك.'
-                : 'Be the first to know about our new projects, beneficiary stories, and the impact of your donations. No spam — just impact.' }}</p>
+
+            <h3 id="nl-popup-title">
+                {{ $locale === 'ar' ? 'اشترك في نشرتنا البريدية' : 'Subscribe to Our Newsletter' }}
+            </h3>
+            <p>
+                {{ $locale === 'ar'
+                    ? 'كن أول من يعلم بمشاريعنا الجديدة، قصص المستفيدين، وتأثير تبرعاتك. لا بريد مزعج.. فقط أثر يصل إلى قلبك.'
+                    : 'Be the first to know about our new projects, beneficiary stories, and the impact of your donations. No spam — just impact.' }}
+            </p>
+
             <form class="nl-form" id="nl-popup-form" action="#" method="POST">
                 @csrf
                 <input type="email" name="email" required
                     placeholder="{{ $locale === 'ar' ? 'بريدك الإلكتروني' : 'Your email address' }}">
                 <button type="submit">{{ $locale === 'ar' ? 'اشترك الآن' : 'Subscribe' }}</button>
             </form>
+
+            <div class="nl-success" id="nl-success">
+                <svg width="40" height="40" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="{{ $p }}" stroke-width="1.6"/><path d="m8 12 3 3 5-5" stroke="{{ $p }}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <p>{{ $locale === 'ar' ? 'شكرًا! تم تسجيلك بنجاح ✨' : 'Thank you! You\'re subscribed ✨' }}</p>
+            </div>
+
             <span class="nl-skip" id="nl-popup-skip">
                 {{ $locale === 'ar' ? 'ليس الآن، شكرًا' : 'Not now, thanks' }}
             </span>
@@ -233,32 +294,32 @@
 
     // ===== Newsletter Popup =====
     (function(){
-        const KEY = 'nl_subscribed_v1';
+        const KEY     = 'nl_subscribed_v1';
         const overlay = document.getElementById('nl-popup-overlay');
-        const closeBtn = document.getElementById('nl-popup-close');
-        const skipBtn  = document.getElementById('nl-popup-skip');
-        const form     = document.getElementById('nl-popup-form');
+        const closeBtn= document.getElementById('nl-popup-close');
+        const skipBtn = document.getElementById('nl-popup-skip');
+        const form    = document.getElementById('nl-popup-form');
+        const success = document.getElementById('nl-success');
 
         function closePopup() {
             overlay.classList.remove('show');
             localStorage.setItem(KEY, '1');
         }
 
-        // أظهر بعد 2.5 ثانية إذا لم يشترك مسبقاً
         if (!localStorage.getItem(KEY)) {
             setTimeout(function(){ overlay.classList.add('show'); }, 2500);
         }
 
         closeBtn.addEventListener('click', closePopup);
         skipBtn.addEventListener('click',  closePopup);
-        overlay.addEventListener('click', function(e){
-            if (e.target === overlay) closePopup();
-        });
+        overlay.addEventListener('click',  function(e){ if(e.target===overlay) closePopup(); });
 
         form.addEventListener('submit', function(e){
             e.preventDefault();
-            // تقدر ترسل fetch request هنا لاحقًا
-            closePopup();
+            form.style.display = 'none';
+            success.style.display = 'flex';
+            localStorage.setItem(KEY, '1');
+            setTimeout(closePopup, 2200);
         });
     })();
     </script>

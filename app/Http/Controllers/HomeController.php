@@ -37,7 +37,6 @@ class HomeController extends Controller
             ];
         })->toArray();
 
-        // قراءة الأسئلة من جدول faqs مباشرة
         $dbFaqs = Faq::orderBy('sort_order')->get()->map(function ($f) use ($locale) {
             return [
                 'question' => $locale === 'ar' ? $f->question_ar : ($f->question_en ?: $f->question_ar),
@@ -46,7 +45,6 @@ class HomeController extends Controller
             ];
         })->filter(fn($f) => $f['is_active'])->values()->toArray();
 
-        // إذا ما في أسئلة بالداتابيس نستخدم القديمة من HomeSetting
         $faqs = !empty($dbFaqs) ? $dbFaqs : ($hs->faqs ?? []);
 
         $heroLabelTop   = Setting::get('hero_label_top',   '');
@@ -92,9 +90,10 @@ class HomeController extends Controller
                 'raised'   => $hs->donation_raised,
                 'currency' => $hs->donation_currency ?? '$',
             ],
-            'newsletter_title'       => $locale === 'ar' ? $hs->newsletter_title_ar       : $hs->newsletter_title_en,
-            'newsletter_description' => $locale === 'ar' ? $hs->newsletter_description_ar : $hs->newsletter_description_en,
-            // عناوين قسم الأسئلة في الصفحة الرئيسية
+            // CTA section
+            'cta_title'       => $locale === 'ar' ? ($hs->cta_title_ar ?? '') : ($hs->cta_title_en ?? ''),
+            'cta_description' => $locale === 'ar' ? ($hs->cta_description_ar ?? '') : ($hs->cta_description_en ?? ''),
+            'cta_image'       => $hs->cta_image ?? null,
             'faq_section_label' => $locale === 'ar'
                 ? Setting::get('home_faq_label_ar', 'الأسئلة الشائعة')
                 : Setting::get('home_faq_label_en', 'FAQ'),

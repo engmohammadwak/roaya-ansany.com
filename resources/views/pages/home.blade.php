@@ -420,12 +420,8 @@
 {{-- ============ FAQ ============ --}}
 @php
     $faqs = $data['faqs'] ?? [];
-    $faqSectionLabel = $locale === 'ar'
-        ? App\Models\Setting::get('home_faq_label_ar')
-        : App\Models\Setting::get('home_faq_label_en');
-    $faqSectionTitle = $locale === 'ar'
-        ? App\Models\Setting::get('home_faq_title_ar')
-        : App\Models\Setting::get('home_faq_title_en');
+    $faqSectionLabel = $data['faq_section_label'] ?? ($locale==='ar' ? 'الأسئلة الشائعة' : 'FAQ');
+    $faqSectionTitle = $data['faq_section_title'] ?? ($locale==='ar' ? 'أسئلة وأجوبة' : 'Q&A');
     $defaultFaqs = [
         ['question'=>($locale==='ar'?'كيف يمكنني التبرع؟':'How can I donate?'),'answer'=>($locale==='ar'?'عبر الموقع مباشرةً.':'Through the website directly.')],
         ['question'=>($locale==='ar'?'هل تبرعاتي تصل؟':'Do my donations reach?'),'answer'=>($locale==='ar'?'نعم، 100%.':'Yes, 100%.')],
@@ -462,34 +458,10 @@
     </div>
 </section>
 
-{{-- ============ NEWSLETTER ============ --}}
+{{-- ============ CTA — تبرّع الآن ============ --}}
 @php
-    $nlTitle=$data['newsletter_title']??($locale==='ar'?'اشترك في نشرتنا':' Subscribe to Our Newsletter');
-    $nlDesc=$data['newsletter_description']??($locale==='ar'?'احصل على آخر الأخبار.':'Get the latest news.');
-@endphp
-<section class="main-section newsletter-section">
-    <div class="container">
-        <div class="newsletter-box text-center">
-            <h2 class="section-title mb-3">{{ $nlTitle }}</h2>
-            <p class="muted-color mb-4">{{ $nlDesc }}</p>
-            <form action="#" method="POST" class="d-flex justify-content-center gap-3 flex-wrap">
-                @csrf
-                <input type="email" name="email" class="form-input" style="max-width:380px;flex:1"
-                    placeholder="{{ $locale==='ar'?'أدخل بريدك الإلكتروني':'Enter your email' }}" required>
-                <button type="submit" class="btn-donate">{{ $locale==='ar'?'اشترك الآن':'Subscribe Now' }}</button>
-            </form>
-        </div>
-    </div>
-</section>
-
-{{-- ============ CTA — يقرأ من HomeSetting ============ --}}
-@php
-    $ctaTitle = $locale === 'ar'
-        ? ($data['cta_title'] ?? 'تبرّع الآن')
-        : ($data['cta_title_en'] ?? 'Donate Now');
-    $ctaDesc = $locale === 'ar'
-        ? ($data['cta_description'] ?? '')
-        : ($data['cta_description_en'] ?? '');
+    $ctaTitle = $data['cta_title'] ?: ($locale==='ar' ? 'تبرّع الآن' : 'Donate Now');
+    $ctaDesc  = $data['cta_description'] ?? '';
     $ctaImgRaw = $data['cta_image'] ?? null;
     $ctaImg = $ctaImgRaw
         ? asset('storage/' . $ctaImgRaw)
