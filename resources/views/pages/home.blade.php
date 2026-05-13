@@ -150,9 +150,9 @@
                     <img src="{{ $cbImg }}" class="img-fluid rounded-3" alt="campaign">
                 </div>
                 <div class="col-md-7 order-1 order-lg-2 ps-lg-5" dir="{{ $locale === 'ar' ? 'rtl' : 'ltr' }}">
-                    <h2 class="section-title mt-4">{{ $cbTitle }}</h2>
-                    <h6 class="mt-2 mb-3" style="font-size:15px;font-weight:600;color:var(--main-color)">{{ $cbSubtitle }}</h6>
-                    <p class="color-67" style="font-size:14px;line-height:1.9">{{ $cbDesc }}</p>
+                    <h2 class="section-title mt-4" style="text-align:{{ $cbAlign }}">{{ $cbTitle }}</h2>
+                    <h6 class="mt-2 mb-3" style="font-size:15px;font-weight:600;color:var(--main-color);text-align:{{ $cbAlign }}">{{ $cbSubtitle }}</h6>
+                    <p class="color-67" style="font-size:14px;line-height:1.9;text-align:{{ $cbAlign }}">{{ $cbDesc }}</p>
                     <form action="#" class="mt-4">
                         <div class="row">
                             <div class="col-9"><input type="text" name="amount" class="form-input gray w-100" placeholder="{{ $locale==='ar'?'ادخل المبلغ':'Enter amount' }}"></div>
@@ -222,12 +222,13 @@
         ['icon'=>'fa-droplet',       'title'=>($locale==='ar'?'مشاريع سقيا الماء':'Water Projects'),                              'description'=>($locale==='ar'?'ندعم حفر الآبار وتوفير المياه.':'We support well drilling and water provision.')],
     ];
     if (empty($whyCards)) $whyCards = $defaultCards;
+    $whyAlign = $locale === 'ar' ? 'right' : 'left';
 @endphp
 <section class="main-section why-donate">
     <div class="container">
         <div class="header" dir="{{ $locale === 'ar' ? 'rtl' : 'ltr' }}">
-            <h6 style="color:var(--main-color);font-size:15px;font-weight:600">{{ $whyLabel }}</h6>
-            <h2 class="section-title">{{ $whyTitle }}</h2>
+            <h6 style="color:var(--main-color);font-size:15px;font-weight:600;text-align:{{ $whyAlign }};width:100%">{{ $whyLabel }}</h6>
+            <h2 class="section-title" style="text-align:{{ $whyAlign }};width:100%">{{ $whyTitle }}</h2>
         </div>
         <div class="row mt-5">
             @foreach($whyCards as $card)
