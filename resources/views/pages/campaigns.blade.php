@@ -24,11 +24,11 @@
                 </a>
             </div>
 
-            <div class="text-center col-md-8 col-lg-6 mx-auto">
-                <h1 class="mt-3 mb-4 section-title fw-meduim">
+            <div class="col-md-8 col-lg-6 mx-auto text-center">
+                <h1 class="mt-3 mb-4 section-title fw-meduim text-center">
                     {{ $heroTitle }}
                 </h1>
-                <p class="color-67">
+                <p class="color-67 text-center">
                     {{ $heroDesc }}
                 </p>
             </div>
