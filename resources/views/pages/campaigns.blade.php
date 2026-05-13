@@ -24,7 +24,7 @@
                 </a>
             </div>
 
-            <div class="text-center mx-auto w-60">
+            <div class="text-center col-md-8 col-lg-6 mx-auto">
                 <h1 class="mt-3 mb-4 section-title fw-meduim">
                     {{ $heroTitle }}
                 </h1>
