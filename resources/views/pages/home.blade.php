@@ -231,9 +231,9 @@
 @endphp
 <section class="main-section why-donate">
     <div class="container">
-        <div class="header" dir="{{ $locale === 'ar' ? 'rtl' : 'ltr' }}">
-            <h6 style="color:var(--main-color);font-size:15px;font-weight:600;text-align:{{ $whyAlign }};width:100%;">{{ $whyLabel }}</h6>
-            <h6 style="font-size:32px;font-weight:600;color:var(--dark-text-color);margin:0;text-align:{{ $whyAlign }};width:100%;">{{ $whyTitle }}</h6>
+        <div class="why-donate-header" dir="{{ $locale === 'ar' ? 'rtl' : 'ltr' }}">
+            <h6 style="color:var(--main-color);font-size:15px;font-weight:600;text-align:{{ $whyAlign }};width:100%;display:block;">{{ $whyLabel }}</h6>
+            <h6 style="font-size:32px;font-weight:600;color:var(--dark-text-color);margin:0;text-align:{{ $whyAlign }};width:100%;display:block;">{{ $whyTitle }}</h6>
         </div>
         <div class="row mt-5">
             @foreach($whyCards as $card)
@@ -529,6 +529,25 @@
 
 @push('styles')
 <style>
+/* ===== WHY DONATE HEADER FIX ===== */
+/* الـ .header الأصلي عنده flex + justify-content:space-between
+   اللي بيكسر الـ text-align، فبنستخدم class جديد why-donate-header */
+.why-donate-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; /* RTL default */
+    width: 100%;
+}
+html[dir="ltr"] .why-donate-header {
+    align-items: flex-start;
+}
+.why-donate-header h6 {
+    display: block !important;
+    width: 100% !important;
+    font-weight: 600 !important;
+}
+
+/* ===== WHY ICON ===== */
 .why-icon-circle {
     width:64px; height:64px; border-radius:50%;
     background: linear-gradient(135deg, color-mix(in srgb, {{ $p }} 15%, transparent), color-mix(in srgb, {{ $p }} 5%, transparent));
