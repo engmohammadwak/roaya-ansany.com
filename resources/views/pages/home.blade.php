@@ -342,18 +342,18 @@
     </div>
 </section>
 
-{{-- ============ STATS CARD + DONATION COUNTER (من الداشبورد) ============ --}}
+{{-- ============ STATS CARD (الأرقام والعنوان من الداشبورد) ============ --}}
 @php
     $statsImg   = $data['stats_image'] ?? 'https://roaya-ansany.com/website/images/stats-card.png';
-    $statsTitle = $data['stats_title'] ?? ($locale==='ar'?'الإغاثة العاجلة لأهل غزة، لبنان، شمال سوريا، السودان ودعم المحتاجين في تركيا':'Emergency relief for Gaza, Lebanon, North Syria, Sudan and Turkey');
+    $statsTitle = $data['stats_title'] ?? ($locale==='ar' ? 'الإغاثة العاجلة لأهل غزة، لبنان، شمال سوريا، السودان ودعم المحتاجين في تركيا' : 'Emergency relief for Gaza, Lebanon, North Syria, Sudan and Turkey');
 
-    {{-- الأرقام من الداشبورد أولاً، ثم fallback لمجموع المشاريع --}}
-    $counter    = $data['donation_counter'] ?? [];
-    $dcGoal     = (float)($counter['goal']     ?? collect($projects['data'] ?? [])->sum('goal_amount'));
-    $dcRaised   = (float)($counter['raised']   ?? collect($projects['data'] ?? [])->sum('raised_amount'));
-    $dcCurr     = $counter['currency'] ?? '$';
-    $dcRemain   = max(0, $dcGoal - $dcRaised);
-    $dcPct      = $dcGoal > 0 ? min(100, round(($dcRaised / $dcGoal) * 100)) : 0;
+    // الأرقام من donation_counter في الداشبورد أولاً، ثم fallback لمجموع المشاريع
+    $counter  = $data['donation_counter'] ?? [];
+    $dcGoal   = (float)($counter['goal']   ?? collect($projects['data'] ?? [])->sum('goal_amount'));
+    $dcRaised = (float)($counter['raised'] ?? collect($projects['data'] ?? [])->sum('raised_amount'));
+    $dcCurr   = $counter['currency'] ?? '$';
+    $dcRemain = max(0, $dcGoal - $dcRaised);
+    $dcPct    = $dcGoal > 0 ? min(100, round(($dcRaised / $dcGoal) * 100)) : 0;
 @endphp
 <section class="main-section">
     <div class="container">
@@ -361,10 +361,8 @@
             <img src="{{ $statsImg }}" class="img-fluid" alt="kids">
             <div class="text-center pt-5">
                 <p class="text-white">{{ $locale==='ar'?'مشاريعنا تقدم لـ':'Our projects offer' }}</p>
-                {{-- ✅ العنوان من الداشبورد --}}
                 <h2 class="text-white mt-4 section-title" style="text-align:center !important;">{{ $statsTitle }}</h2>
             </div>
-            {{-- ✅ الأرقام من الداشبورد --}}
             <div class="stats mt-5">
                 <div class="row">
                     <div class="col-md-4"><div class="stat w-100 mb-3"><span>{{ $locale==='ar'?'المتبقي':'Remaining' }}</span><span>{{ $dcCurr }}{{ number_format($dcRemain) }}</span></div></div>
