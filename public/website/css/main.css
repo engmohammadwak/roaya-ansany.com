@@ -745,13 +745,13 @@ html[dir="ltr"] .clipped-image img {
 .main-section.why-donate .header {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    align-items: flex-start;
+    width: 100%;
 }
 
 .main-section.why-donate .header h6 {
-    color: var(--color-67);
-    font-size: 14px;
-    font-weight: 400;
+    width: 100%;
+    text-align: right;
 }
 
 .main-section.why-donate .header .followors {
@@ -792,6 +792,10 @@ html[dir="ltr"] .clipped-image img {
 @media(max-width:992px) {
     .main-section.why-donate .header {
         align-items: center;
+        text-align: center;
+    }
+
+    .main-section.why-donate .header h6 {
         text-align: center;
     }
 
