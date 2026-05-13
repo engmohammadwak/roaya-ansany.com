@@ -39,6 +39,8 @@ class SiteSettings extends Page
             'contact_email',   'contact_email_2',   'contact_email_3',
             'whatsapp_number',   'whatsapp_number_2',   'whatsapp_number_3',
             'whatsapp_text_1',   'whatsapp_text_2',     'whatsapp_text_3',
+            // social media
+            'social_facebook', 'social_instagram', 'social_twitter', 'social_whatsapp',
             'navbar_links_enabled',
             'navbar_sticky_only',
             'hero_label_ar', 'hero_label_en',
@@ -90,6 +92,7 @@ class SiteSettings extends Page
             'contact_email',   'contact_email_2',   'contact_email_3',
             'whatsapp_number',   'whatsapp_number_2',   'whatsapp_number_3',
             'whatsapp_text_1',   'whatsapp_text_2',     'whatsapp_text_3',
+            'social_facebook', 'social_instagram', 'social_twitter', 'social_whatsapp',
             'navbar_links_enabled',
             'navbar_sticky_only',
             'hero_label_ar', 'hero_label_en',

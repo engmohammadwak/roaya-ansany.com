@@ -28,7 +28,7 @@
                 @if($logo)
                     <img src="{{ asset('storage/' . $logo) }}" alt="Logo" class="h-16 mb-2 rounded">
                 @else
-                    <div class="h-16 mb-2 flex items-center justify-center bg-gray-100 dark:bg-gray-700 rounded text-gray-400 text-xs">لا يوجد لوجو — سيستخدم الافتراضي</div>
+                    <div class="h-16 mb-2 flex items-center justify-center bg-gray-100 dark:bg-gray-700 rounded text-gray-400 text-xs">لا يوجد لوجو</div>
                 @endif
                 <input type="file" wire:model="logo_upload" accept="image/*"
                     class="fi-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-800">
@@ -79,22 +79,19 @@
             <p class="text-sm font-medium mb-3">📐 موضع النص فوق الصورة</p>
             <div class="grid grid-cols-3 gap-4">
                 <div>
-                    <label class="block text-xs text-gray-500 mb-1">Top (من الأعلى)</label>
+                    <label class="block text-xs text-gray-500 mb-1">Top</label>
                     <input type="text" wire:model="data.hero_label_top"
-                        class="fi-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-800 font-mono"
-                        placeholder="12px">
+                        class="fi-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-800 font-mono" placeholder="12px">
                 </div>
                 <div>
-                    <label class="block text-xs text-gray-500 mb-1">Left (من اليسار)</label>
+                    <label class="block text-xs text-gray-500 mb-1">Left</label>
                     <input type="text" wire:model="data.hero_label_left"
-                        class="fi-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-800 font-mono"
-                        placeholder="0 أو 351px">
+                        class="fi-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-800 font-mono" placeholder="0">
                 </div>
                 <div>
-                    <label class="block text-xs text-gray-500 mb-1">Right (من اليمين)</label>
+                    <label class="block text-xs text-gray-500 mb-1">Right</label>
                     <input type="text" wire:model="data.hero_label_right"
-                        class="fi-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-800 font-mono"
-                        placeholder="0">
+                        class="fi-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-800 font-mono" placeholder="0">
                 </div>
             </div>
         </div>
@@ -115,21 +112,17 @@
     <div class="px-5 py-4 bg-white dark:bg-gray-800 flex items-center justify-between">
         <span class="font-semibold text-base">🔗 روابط النافبار</span>
         <div class="flex items-center gap-3">
-            <span x-text="linksOn ? 'مفعّل' : 'مخفي'"
-                  :class="linksOn ? 'text-green-600 dark:text-green-400' : 'text-gray-400'"
-                  class="text-sm font-medium"></span>
+            <span x-text="linksOn ? 'مفعّل' : 'مخفي'" :class="linksOn ? 'text-green-600 dark:text-green-400' : 'text-gray-400'" class="text-sm font-medium"></span>
             <button type="button" @click="linksOn = !linksOn"
                 :class="linksOn ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-600'"
                 class="relative inline-flex h-7 w-14 flex-shrink-0 items-center rounded-full transition-colors duration-300 focus:outline-none">
-                <span :class="linksOn ? 'translate-x-7' : 'translate-x-1'"
-                    class="inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform duration-300"></span>
+                <span :class="linksOn ? 'translate-x-7' : 'translate-x-1'" class="inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform duration-300"></span>
             </button>
         </div>
     </div>
-    <input type="hidden" wire:model="data.navbar_links_enabled" :value="linksOn  ? '1' : '0'">
+    <input type="hidden" wire:model="data.navbar_links_enabled" :value="linksOn ? '1' : '0'">
     <input type="hidden" wire:model="data.navbar_sticky_only"   :value="stickyOn ? '1' : '0'">
-    <div x-show="linksOn" x-transition
-         class="px-5 pb-5 pt-3 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700 space-y-3">
+    <div x-show="linksOn" x-transition class="px-5 pb-5 pt-3 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700 space-y-3">
         <div class="flex flex-wrap gap-2">
             @foreach(['🏠 الرئيسية','ℹ️ من نحن','📢 الحملات','📝 المدونة','📞 تواصل معنا','🔒 سياسة الخصوصية'] as $lbl)
             <span class="inline-flex items-center px-3 py-1 rounded-full text-xs bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-700">{{ $lbl }}</span>
@@ -138,17 +131,50 @@
         <div class="flex items-center justify-between p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700">
             <div>
                 <div class="font-medium text-sm">🔒 Sticky فقط</div>
-                <div class="text-xs text-gray-400 mt-0.5">النافبار مخفية في أعلى الصفحة وتظهر لما يسكرول</div>
+                <div class="text-xs text-gray-400 mt-0.5">تظهر عند السكرول فقط</div>
             </div>
             <div class="flex items-center gap-2">
                 <span x-text="stickyOn ? 'ON' : 'OFF'" :class="stickyOn ? 'text-blue-600' : 'text-gray-400'" class="text-xs font-bold"></span>
                 <button type="button" @click="stickyOn = !stickyOn"
                     :class="stickyOn ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600'"
                     class="relative inline-flex h-7 w-14 flex-shrink-0 items-center rounded-full transition-colors duration-300 focus:outline-none">
-                    <span :class="stickyOn ? 'translate-x-7' : 'translate-x-1'"
-                        class="inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform duration-300"></span>
+                    <span :class="stickyOn ? 'translate-x-7' : 'translate-x-1'" class="inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform duration-300"></span>
                 </button>
             </div>
+        </div>
+    </div>
+</div>
+
+{{-- =================== السوشيال ميديا =================== --}}
+<div x-data="{ open: true }" class="rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+    <button type="button" @click="open = !open"
+        class="w-full flex items-center justify-between px-5 py-4 bg-white dark:bg-gray-800 hover:bg-gray-50 transition-colors">
+        <span class="font-semibold text-base">📱 روابط السوشيال ميديا</span>
+        <svg :class="open ? 'rotate-180' : ''"
+            class="w-5 h-5 text-gray-400 transition-transform duration-200"
+            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+        </svg>
+    </button>
+    <div x-show="open" x-transition class="px-5 pb-5 pt-3 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700">
+        <p class="text-xs text-gray-400 mb-3">💡 اترك الحقل فارغاً لإخفاء الأيقونة من الموقع</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            @foreach([
+                ['key'=>'social_facebook',  'label'=>'Facebook',   'icon'=>'🔵', 'placeholder'=>'https://facebook.com/yourpage'],
+                ['key'=>'social_instagram', 'label'=>'Instagram',  'icon'=>'🟣', 'placeholder'=>'https://instagram.com/yourpage'],
+                ['key'=>'social_twitter',   'label'=>'X (Twitter)','icon'=>'⬛', 'placeholder'=>'https://x.com/yourpage'],
+                ['key'=>'social_whatsapp',  'label'=>'WhatsApp',   'icon'=>'🟢', 'placeholder'=>'https://wa.me/905XXXXXXXXX'],
+            ] as $s)
+            <div class="flex items-center gap-3 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
+                <span class="text-xl">{{ $s['icon'] }}</span>
+                <div class="flex-1">
+                    <label class="block text-xs font-semibold text-gray-500 mb-1">{{ $s['label'] }}</label>
+                    <input type="url" wire:model="data.{{ $s['key'] }}"
+                        class="fi-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-800"
+                        placeholder="{{ $s['placeholder'] }}">
+                </div>
+            </div>
+            @endforeach
         </div>
     </div>
 </div>
@@ -166,7 +192,7 @@
     </button>
     <div x-show="open" x-transition class="px-5 pb-5 pt-3 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700 space-y-3">
         @foreach([
-            ['key'=>'color_primary',   'label'=>'اللون الأساسي',  'desc'=>'الأزرار، progress bar، الروابط النشطة'],
+            ['key'=>'color_primary',   'label'=>'اللون الأساسي',  'desc'=>'الأزرار، progress bar'],
             ['key'=>'color_secondary', 'label'=>'اللون الثانوي',  'desc'=>'الغراديانت وبانر الهيرو'],
         ] as $c)
         <div class="flex items-center gap-4 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
@@ -192,10 +218,10 @@
     </button>
     <div x-show="open" x-transition class="px-5 pb-5 pt-3 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700 space-y-3">
         @foreach([
-            ['key'=>'color_text_dark',   'label'=>'نص غامق','desc'=>'العناوين h1 h2 h3'],
-            ['key'=>'color_text_muted',  'label'=>'نص رمادي','desc'=>'الفقرات والوصف'],
-            ['key'=>'color_text_label',  'label'=>'نص التسميات','desc'=>'لون التسميات'],
-            ['key'=>'color_placeholder', 'label'=>'لون البلسهولدر','desc'=>'نص حقول الإدخال'],
+            ['key'=>'color_text_dark',   'label'=>'نص غامق','desc'=>'العناوين'],
+            ['key'=>'color_text_muted',  'label'=>'نص رمادي','desc'=>'الفقرات'],
+            ['key'=>'color_text_label',  'label'=>'نص التسميات','desc'=>'ليبلات'],
+            ['key'=>'color_placeholder', 'label'=>'بلسهولدر','desc'=>'حقول الإدخال'],
         ] as $c)
         <div class="flex items-center gap-4 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
             <input type="color" wire:model="data.{{ $c['key'] }}" class="w-14 h-10 rounded border cursor-pointer flex-shrink-0">
@@ -220,9 +246,9 @@
     </button>
     <div x-show="open" x-transition class="px-5 pb-5 pt-3 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700 space-y-3">
         @foreach([
-            ['key'=>'color_bg_body',  'label'=>'خلفية الصفحة','desc'=>'body كاملاً'],
-            ['key'=>'color_bg_light', 'label'=>'خلفية فاتحة','desc'=>'أقسام support'],
-            ['key'=>'color_bg_card',  'label'=>'خلفية الكروت','desc'=>'why-donate-card'],
+            ['key'=>'color_bg_body',  'label'=>'خلفية الصفحة','desc'=>'body'],
+            ['key'=>'color_bg_light', 'label'=>'خلفية فاتحة','desc'=>'أقسام'],
+            ['key'=>'color_bg_card',  'label'=>'خلفية كروت','desc'=>'كروت'],
         ] as $c)
         <div class="flex items-center gap-4 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
             <input type="color" wire:model="data.{{ $c['key'] }}" class="w-14 h-10 rounded border cursor-pointer flex-shrink-0">
@@ -249,7 +275,7 @@
         @foreach([
             ['key'=>'color_warning',     'label'=>'لون التحذير','desc'=>'برتقالي'],
             ['key'=>'color_danger',      'label'=>'لون الخطر','desc'=>'أحمر'],
-            ['key'=>'color_step_active', 'label'=>'لون الخطوة النشطة','desc'=>'دائرة رقم الخطوة'],
+            ['key'=>'color_step_active', 'label'=>'لون الخطوة النشطة','desc'=>'دائرة الخطوة'],
         ] as $c)
         <div class="flex items-center gap-4 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
             <input type="color" wire:model="data.{{ $c['key'] }}" class="w-14 h-10 rounded border cursor-pointer flex-shrink-0">
@@ -310,9 +336,7 @@
         </svg>
     </button>
     <div x-show="open" x-transition class="px-5 pb-5 pt-3 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700 space-y-5">
-        <p class="text-xs text-gray-400">💡 اترك الحقل فارغاً لإخفائه من الموقع تلقائياً</p>
-
-        {{-- أرقام الهاتف --}}
+        <p class="text-xs text-gray-400">💡 اترك الحقل فارغاً لإخفائه تلقائياً</p>
         <div>
             <p class="text-sm font-semibold mb-2">📞 أرقام الهاتف</p>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -325,8 +349,6 @@
                 @endforeach
             </div>
         </div>
-
-        {{-- البريد الإلكتروني --}}
         <div>
             <p class="text-sm font-semibold mb-2">✉️ البريد الإلكتروني</p>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -339,14 +361,12 @@
                 @endforeach
             </div>
         </div>
-
-        {{-- واتساب --}}
         <div class="space-y-4">
             <p class="text-sm font-semibold">📲 أرقام الواتساب + نص الرسالة</p>
             @foreach([
-                ['num'=>'whatsapp_number',   'txt'=>'whatsapp_text_1', 'label'=>'واتساب 1'],
-                ['num'=>'whatsapp_number_2', 'txt'=>'whatsapp_text_2', 'label'=>'واتساب 2'],
-                ['num'=>'whatsapp_number_3', 'txt'=>'whatsapp_text_3', 'label'=>'واتساب 3'],
+                ['num'=>'whatsapp_number',   'txt'=>'whatsapp_text_1','label'=>'واتساب 1'],
+                ['num'=>'whatsapp_number_2', 'txt'=>'whatsapp_text_2','label'=>'واتساب 2'],
+                ['num'=>'whatsapp_number_3', 'txt'=>'whatsapp_text_3','label'=>'واتساب 3'],
             ] as $wa)
             <div class="p-3 rounded-lg border border-gray-200 dark:border-gray-700 space-y-2">
                 <p class="text-xs font-semibold text-gray-500">{{ $wa['label'] }}</p>
@@ -354,14 +374,12 @@
                     <div>
                         <label class="block text-xs text-gray-400 mb-1">📱 الرقم (بدون +)</label>
                         <input type="text" wire:model="data.{{ $wa['num'] }}"
-                            class="fi-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-800"
-                            placeholder="905XXXXXXXXX">
+                            class="fi-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-800" placeholder="905XXXXXXXXX">
                     </div>
                     <div>
-                        <label class="block text-xs text-gray-400 mb-1">💬 نص الرسالة المبدئية</label>
+                        <label class="block text-xs text-gray-400 mb-1">💬 نص الرسالة</label>
                         <input type="text" wire:model="data.{{ $wa['txt'] }}"
-                            class="fi-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-800"
-                            placeholder="مرحباً، أود الاستفسار عن...">
+                            class="fi-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-800" placeholder="مرحباً...">
                     </div>
                 </div>
             </div>

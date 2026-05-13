@@ -10,18 +10,23 @@
     $copyrightAr  = App\Models\Setting::get('footer_copyright_ar', 'جميع الحقوق محفوظة © مؤسسة رؤيا الإنسانية ' . date('Y'));
     $copyrightEn  = App\Models\Setting::get('footer_copyright_en', 'All Rights Reserved © Roaya Insanya ' . date('Y'));
 
+    // social links
+    $socialFb  = App\Models\Setting::get('social_facebook',  '');
+    $socialIg  = App\Models\Setting::get('social_instagram', '');
+    $socialTw  = App\Models\Setting::get('social_twitter',   '');
+    $socialWa  = App\Models\Setting::get('social_whatsapp',  '');
+
     $phones = array_filter([
-        App\Models\Setting::get('contact_phone', ''),
+        App\Models\Setting::get('contact_phone',   ''),
         App\Models\Setting::get('contact_phone_2', ''),
         App\Models\Setting::get('contact_phone_3', ''),
     ]);
     $emails = array_filter([
-        App\Models\Setting::get('contact_email', ''),
+        App\Models\Setting::get('contact_email',   ''),
         App\Models\Setting::get('contact_email_2', ''),
         App\Models\Setting::get('contact_email_3', ''),
     ]);
 
-    // Whatsapp: number + custom text per entry
     $whatsapps = [];
     $waNums  = [
         App\Models\Setting::get('whatsapp_number',   ''),
@@ -35,10 +40,7 @@
     ];
     foreach ($waNums as $i => $num) {
         if (trim($num)) {
-            $whatsapps[] = [
-                'number' => trim($num),
-                'text'   => trim($waTexts[$i]),
-            ];
+            $whatsapps[] = ['number' => trim($num), 'text' => trim($waTexts[$i])];
         }
     }
 @endphp
@@ -57,17 +59,33 @@
                 @if($footerDesc)
                 <p class="footer-about muted-color">{{ $footerDesc }}</p>
                 @endif
+
+                {{-- Social Icons - from dashboard --}}
+                @if($socialFb || $socialIg || $socialTw || $socialWa)
                 <div class="social-icons mt-4">
-                    <a href="https://www.facebook.com/profile.php?id=61568018236938" target="_blank">
+                    @if($socialFb)
+                    <a href="{{ $socialFb }}" target="_blank" rel="noopener">
                         <img width="24" height="24" src="https://roaya-ansany.com/website/images/facebook.svg" alt="facebook">
                     </a>
-                    <a href="https://www.instagram.com/roaya.ansany/" target="_blank">
+                    @endif
+                    @if($socialIg)
+                    <a href="{{ $socialIg }}" target="_blank" rel="noopener">
                         <img width="24" height="24" src="https://roaya-ansany.com/website/images/Instagram.svg" alt="Instagram">
                     </a>
-                    <a href="https://x.com/RoayaAnsany2025" target="_blank">
-                        <img width="24" height="24" src="https://roaya-ansany.com/website/images/xtwitter.png" alt="x">
+                    @endif
+                    @if($socialTw)
+                    <a href="{{ $socialTw }}" target="_blank" rel="noopener">
+                        <img width="24" height="24" src="https://roaya-ansany.com/website/images/xtwitter.png" alt="X">
                     </a>
+                    @endif
+                    @if($socialWa)
+                    <a href="{{ $socialWa }}" target="_blank" rel="noopener">
+                        <img width="24" height="24" src="https://roaya-ansany.com/website/images/whatsapp.svg"
+                            onerror="this.src='https://roaya-ansany.com/website/images/phone.svg'" alt="WhatsApp">
+                    </a>
+                    @endif
                 </div>
+                @endif
             </div>
 
             <div class="col-md-8">
@@ -112,9 +130,7 @@
                         @foreach($whatsapps as $wa)
                         @php
                             $waUrl = 'https://wa.me/' . $wa['number'];
-                            if ($wa['text']) {
-                                $waUrl .= '?text=' . rawurlencode($wa['text']);
-                            }
+                            if ($wa['text']) { $waUrl .= '?text=' . rawurlencode($wa['text']); }
                         @endphp
                         <p class="mb-2">
                             <img class="me-2" src="https://roaya-ansany.com/website/images/whatsapp.svg"
