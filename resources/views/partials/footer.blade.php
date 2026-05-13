@@ -4,13 +4,12 @@
     $siteLogo     = $siteLogoRaw
         ? (str_starts_with($siteLogoRaw, 'http') ? $siteLogoRaw : asset('storage/' . $siteLogoRaw))
         : null;
-    $siteName    = App\Models\Setting::get('site_name', 'رؤيا');
+    $siteName     = App\Models\Setting::get('site_name', 'رؤيا');
     $footerDescAr = App\Models\Setting::get('footer_description_ar', '');
     $footerDescEn = App\Models\Setting::get('footer_description_en', '');
     $copyrightAr  = App\Models\Setting::get('footer_copyright_ar', 'جميع الحقوق محفوظة © مؤسسة رؤيا الإنسانية ' . date('Y'));
     $copyrightEn  = App\Models\Setting::get('footer_copyright_en', 'All Rights Reserved © Roaya Insanya ' . date('Y'));
 
-    // Contact — collect only non-empty values
     $phones = array_filter([
         App\Models\Setting::get('contact_phone', ''),
         App\Models\Setting::get('contact_phone_2', ''),
@@ -21,11 +20,27 @@
         App\Models\Setting::get('contact_email_2', ''),
         App\Models\Setting::get('contact_email_3', ''),
     ]);
-    $whatsapps = array_filter([
-        App\Models\Setting::get('whatsapp_number', ''),
+
+    // Whatsapp: number + custom text per entry
+    $whatsapps = [];
+    $waNums  = [
+        App\Models\Setting::get('whatsapp_number',   ''),
         App\Models\Setting::get('whatsapp_number_2', ''),
         App\Models\Setting::get('whatsapp_number_3', ''),
-    ]);
+    ];
+    $waTexts = [
+        App\Models\Setting::get('whatsapp_text_1', ''),
+        App\Models\Setting::get('whatsapp_text_2', ''),
+        App\Models\Setting::get('whatsapp_text_3', ''),
+    ];
+    foreach ($waNums as $i => $num) {
+        if (trim($num)) {
+            $whatsapps[] = [
+                'number' => trim($num),
+                'text'   => trim($waTexts[$i]),
+            ];
+        }
+    }
 @endphp
 <footer class="footer mt-5 border-top pt-3">
     <div class="container overflow-hidden">
@@ -95,10 +110,18 @@
                         @endforeach
 
                         @foreach($whatsapps as $wa)
+                        @php
+                            $waUrl = 'https://wa.me/' . $wa['number'];
+                            if ($wa['text']) {
+                                $waUrl .= '?text=' . rawurlencode($wa['text']);
+                            }
+                        @endphp
                         <p class="mb-2">
-                            <img class="me-2" src="https://roaya-ansany.com/website/images/whatsapp.svg" onerror="this.src='https://roaya-ansany.com/website/images/phone.svg'" alt="whatsapp">
+                            <img class="me-2" src="https://roaya-ansany.com/website/images/whatsapp.svg"
+                                onerror="this.src='https://roaya-ansany.com/website/images/phone.svg'" alt="whatsapp">
                             <span class="muted-color" dir="ltr">
-                                <a class="link-offset-2 link-underline link-underline-opacity-0 link-secondary" href="https://wa.me/{{ $wa }}" target="_blank">+{{ $wa }}</a>
+                                <a class="link-offset-2 link-underline link-underline-opacity-0 link-secondary"
+                                    href="{{ $waUrl }}" target="_blank">+{{ $wa['number'] }}</a>
                             </span>
                         </p>
                         @endforeach

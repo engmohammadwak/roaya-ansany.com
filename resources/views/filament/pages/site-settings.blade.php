@@ -97,7 +97,6 @@
                         placeholder="0">
                 </div>
             </div>
-            <p class="text-xs text-gray-400 mt-2">💡 مثال: left=0 right=0 يمركز النص. left=351px يزيحه لليسار.</p>
         </div>
     </div>
 </div>
@@ -113,7 +112,6 @@
         $watch('stickyOn', v => @this.set('data.navbar_sticky_only',   v ? '1' : '0'));
     "
     class="rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
-
     <div class="px-5 py-4 bg-white dark:bg-gray-800 flex items-center justify-between">
         <span class="font-semibold text-base">🔗 روابط النافبار</span>
         <div class="flex items-center gap-3">
@@ -123,43 +121,32 @@
             <button type="button" @click="linksOn = !linksOn"
                 :class="linksOn ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-600'"
                 class="relative inline-flex h-7 w-14 flex-shrink-0 items-center rounded-full transition-colors duration-300 focus:outline-none">
-                <span
-                    :class="linksOn ? 'translate-x-7' : 'translate-x-1'"
-                    class="inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform duration-300">
-                </span>
+                <span :class="linksOn ? 'translate-x-7' : 'translate-x-1'"
+                    class="inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform duration-300"></span>
             </button>
         </div>
     </div>
-
     <input type="hidden" wire:model="data.navbar_links_enabled" :value="linksOn  ? '1' : '0'">
     <input type="hidden" wire:model="data.navbar_sticky_only"   :value="stickyOn ? '1' : '0'">
-
     <div x-show="linksOn" x-transition
          class="px-5 pb-5 pt-3 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700 space-y-3">
-        <p class="text-xs text-gray-400">✅ الروابط التالية ستظهر في النافبار على جميع الصفحات:</p>
         <div class="flex flex-wrap gap-2">
             @foreach(['🏠 الرئيسية','ℹ️ من نحن','📢 الحملات','📝 المدونة','📞 تواصل معنا','🔒 سياسة الخصوصية'] as $lbl)
-            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-700">
-                {{ $lbl }}
-            </span>
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-700">{{ $lbl }}</span>
             @endforeach
         </div>
         <div class="flex items-center justify-between p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700">
             <div>
-                <div class="font-medium text-sm">🔒 Sticky فقط (تظهر عند السكرول)</div>
+                <div class="font-medium text-sm">🔒 Sticky فقط</div>
                 <div class="text-xs text-gray-400 mt-0.5">النافبار مخفية في أعلى الصفحة وتظهر لما يسكرول</div>
             </div>
             <div class="flex items-center gap-2">
-                <span x-text="stickyOn ? 'ON' : 'OFF'"
-                      :class="stickyOn ? 'text-blue-600' : 'text-gray-400'"
-                      class="text-xs font-bold"></span>
+                <span x-text="stickyOn ? 'ON' : 'OFF'" :class="stickyOn ? 'text-blue-600' : 'text-gray-400'" class="text-xs font-bold"></span>
                 <button type="button" @click="stickyOn = !stickyOn"
                     :class="stickyOn ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600'"
                     class="relative inline-flex h-7 w-14 flex-shrink-0 items-center rounded-full transition-colors duration-300 focus:outline-none">
-                    <span
-                        :class="stickyOn ? 'translate-x-7' : 'translate-x-1'"
-                        class="inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform duration-300">
-                    </span>
+                    <span :class="stickyOn ? 'translate-x-7' : 'translate-x-1'"
+                        class="inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform duration-300"></span>
                 </button>
             </div>
         </div>
@@ -184,10 +171,7 @@
         ] as $c)
         <div class="flex items-center gap-4 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
             <input type="color" wire:model="data.{{ $c['key'] }}" class="w-14 h-10 rounded border cursor-pointer flex-shrink-0">
-            <div class="flex-1">
-                <div class="font-medium text-sm">{{ $c['label'] }}</div>
-                <div class="text-xs text-gray-400">{{ $c['desc'] }}</div>
-            </div>
+            <div class="flex-1"><div class="font-medium text-sm">{{ $c['label'] }}</div><div class="text-xs text-gray-400">{{ $c['desc'] }}</div></div>
             <input type="text" wire:model="data.{{ $c['key'] }}" placeholder="#000000"
                 class="fi-input w-32 rounded-lg border border-gray-300 dark:border-gray-600 px-2 py-1 text-sm bg-white dark:bg-gray-800 font-mono">
         </div>
@@ -208,17 +192,14 @@
     </button>
     <div x-show="open" x-transition class="px-5 pb-5 pt-3 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700 space-y-3">
         @foreach([
-            ['key'=>'color_text_dark',   'label'=>'نص غامق (العناوين)',    'desc'=>'العناوين الرئيسية h1 h2 h3'],
-            ['key'=>'color_text_muted',  'label'=>'نص رمادي (الوصف)',      'desc'=>'الفقرات والوصف'],
-            ['key'=>'color_text_label',  'label'=>'نص التسميات',           'desc'=>'#444C4E — لون التسميات والليبلات'],
-            ['key'=>'color_placeholder', 'label'=>'لون البلسهولدر',        'desc'=>'نص حقول الإدخال قبل الكتابة'],
+            ['key'=>'color_text_dark',   'label'=>'نص غامق','desc'=>'العناوين h1 h2 h3'],
+            ['key'=>'color_text_muted',  'label'=>'نص رمادي','desc'=>'الفقرات والوصف'],
+            ['key'=>'color_text_label',  'label'=>'نص التسميات','desc'=>'لون التسميات'],
+            ['key'=>'color_placeholder', 'label'=>'لون البلسهولدر','desc'=>'نص حقول الإدخال'],
         ] as $c)
         <div class="flex items-center gap-4 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
             <input type="color" wire:model="data.{{ $c['key'] }}" class="w-14 h-10 rounded border cursor-pointer flex-shrink-0">
-            <div class="flex-1">
-                <div class="font-medium text-sm">{{ $c['label'] }}</div>
-                <div class="text-xs text-gray-400">{{ $c['desc'] }}</div>
-            </div>
+            <div class="flex-1"><div class="font-medium text-sm">{{ $c['label'] }}</div><div class="text-xs text-gray-400">{{ $c['desc'] }}</div></div>
             <input type="text" wire:model="data.{{ $c['key'] }}" placeholder="#000000"
                 class="fi-input w-32 rounded-lg border border-gray-300 dark:border-gray-600 px-2 py-1 text-sm bg-white dark:bg-gray-800 font-mono">
         </div>
@@ -239,16 +220,13 @@
     </button>
     <div x-show="open" x-transition class="px-5 pb-5 pt-3 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700 space-y-3">
         @foreach([
-            ['key'=>'color_bg_body',  'label'=>'خلفية الصفحة',         'desc'=>'لون خلفية body كاملاً'],
-            ['key'=>'color_bg_light', 'label'=>'خلفية فاتحة (الأقسام)', 'desc'=>'أقسام support section وغيرها'],
-            ['key'=>'color_bg_card',  'label'=>'خلفية الكروت',          'desc'=>'why-donate-card وكروت التبرع'],
+            ['key'=>'color_bg_body',  'label'=>'خلفية الصفحة','desc'=>'body كاملاً'],
+            ['key'=>'color_bg_light', 'label'=>'خلفية فاتحة','desc'=>'أقسام support'],
+            ['key'=>'color_bg_card',  'label'=>'خلفية الكروت','desc'=>'why-donate-card'],
         ] as $c)
         <div class="flex items-center gap-4 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
             <input type="color" wire:model="data.{{ $c['key'] }}" class="w-14 h-10 rounded border cursor-pointer flex-shrink-0">
-            <div class="flex-1">
-                <div class="font-medium text-sm">{{ $c['label'] }}</div>
-                <div class="text-xs text-gray-400">{{ $c['desc'] }}</div>
-            </div>
+            <div class="flex-1"><div class="font-medium text-sm">{{ $c['label'] }}</div><div class="text-xs text-gray-400">{{ $c['desc'] }}</div></div>
             <input type="text" wire:model="data.{{ $c['key'] }}" placeholder="#ffffff"
                 class="fi-input w-32 rounded-lg border border-gray-300 dark:border-gray-600 px-2 py-1 text-sm bg-white dark:bg-gray-800 font-mono">
         </div>
@@ -269,16 +247,13 @@
     </button>
     <div x-show="open" x-transition class="px-5 pb-5 pt-3 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700 space-y-3">
         @foreach([
-            ['key'=>'color_warning',     'label'=>'لون التحذير',         'desc'=>'برتقالي — رسائل التحذير'],
-            ['key'=>'color_danger',      'label'=>'لون الخطر',           'desc'=>'أحمر — + وإشارات الخطر'],
-            ['key'=>'color_step_active', 'label'=>'لون الخطوة النشطة',   'desc'=>'دائرة رقم الخطوة المحددة'],
+            ['key'=>'color_warning',     'label'=>'لون التحذير','desc'=>'برتقالي'],
+            ['key'=>'color_danger',      'label'=>'لون الخطر','desc'=>'أحمر'],
+            ['key'=>'color_step_active', 'label'=>'لون الخطوة النشطة','desc'=>'دائرة رقم الخطوة'],
         ] as $c)
         <div class="flex items-center gap-4 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
             <input type="color" wire:model="data.{{ $c['key'] }}" class="w-14 h-10 rounded border cursor-pointer flex-shrink-0">
-            <div class="flex-1">
-                <div class="font-medium text-sm">{{ $c['label'] }}</div>
-                <div class="text-xs text-gray-400">{{ $c['desc'] }}</div>
-            </div>
+            <div class="flex-1"><div class="font-medium text-sm">{{ $c['label'] }}</div><div class="text-xs text-gray-400">{{ $c['desc'] }}</div></div>
             <input type="text" wire:model="data.{{ $c['key'] }}" placeholder="#000000"
                 class="fi-input w-32 rounded-lg border border-gray-300 dark:border-gray-600 px-2 py-1 text-sm bg-white dark:bg-gray-800 font-mono">
         </div>
@@ -341,12 +316,11 @@
         <div>
             <p class="text-sm font-semibold mb-2">📞 أرقام الهاتف</p>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                @foreach(['contact_phone' => 'رقم 1','contact_phone_2' => 'رقم 2','contact_phone_3' => 'رقم 3'] as $key => $label)
+                @foreach(['contact_phone'=>'رقم 1','contact_phone_2'=>'رقم 2','contact_phone_3'=>'رقم 3'] as $key=>$label)
                 <div>
                     <label class="block text-xs text-gray-500 mb-1">{{ $label }}</label>
                     <input type="text" wire:model="data.{{ $key }}"
-                        class="fi-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-800"
-                        placeholder="+9055XXXXXXXX">
+                        class="fi-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-800" placeholder="+9055XXXXXXXX">
                 </div>
                 @endforeach
             </div>
@@ -356,31 +330,43 @@
         <div>
             <p class="text-sm font-semibold mb-2">✉️ البريد الإلكتروني</p>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                @foreach(['contact_email' => 'بريد 1','contact_email_2' => 'بريد 2','contact_email_3' => 'بريد 3'] as $key => $label)
+                @foreach(['contact_email'=>'بريد 1','contact_email_2'=>'بريد 2','contact_email_3'=>'بريد 3'] as $key=>$label)
                 <div>
                     <label class="block text-xs text-gray-500 mb-1">{{ $label }}</label>
                     <input type="email" wire:model="data.{{ $key }}"
-                        class="fi-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-800"
-                        placeholder="example@email.com">
+                        class="fi-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-800" placeholder="example@email.com">
                 </div>
                 @endforeach
             </div>
         </div>
 
         {{-- واتساب --}}
-        <div>
-            <p class="text-sm font-semibold mb-2">📲 أرقام الواتساب</p>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                @foreach(['whatsapp_number' => 'واتساب 1','whatsapp_number_2' => 'واتساب 2','whatsapp_number_3' => 'واتساب 3'] as $key => $label)
-                <div>
-                    <label class="block text-xs text-gray-500 mb-1">{{ $label }}</label>
-                    <input type="text" wire:model="data.{{ $key }}"
-                        class="fi-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-800"
-                        placeholder="905XXXXXXXXX (بدون +)">
+        <div class="space-y-4">
+            <p class="text-sm font-semibold">📲 أرقام الواتساب + نص الرسالة</p>
+            @foreach([
+                ['num'=>'whatsapp_number',   'txt'=>'whatsapp_text_1', 'label'=>'واتساب 1'],
+                ['num'=>'whatsapp_number_2', 'txt'=>'whatsapp_text_2', 'label'=>'واتساب 2'],
+                ['num'=>'whatsapp_number_3', 'txt'=>'whatsapp_text_3', 'label'=>'واتساب 3'],
+            ] as $wa)
+            <div class="p-3 rounded-lg border border-gray-200 dark:border-gray-700 space-y-2">
+                <p class="text-xs font-semibold text-gray-500">{{ $wa['label'] }}</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs text-gray-400 mb-1">📱 الرقم (بدون +)</label>
+                        <input type="text" wire:model="data.{{ $wa['num'] }}"
+                            class="fi-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-800"
+                            placeholder="905XXXXXXXXX">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-400 mb-1">💬 نص الرسالة المبدئية</label>
+                        <input type="text" wire:model="data.{{ $wa['txt'] }}"
+                            class="fi-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-800"
+                            placeholder="مرحباً، أود الاستفسار عن...">
+                    </div>
                 </div>
-                @endforeach
             </div>
-            <p class="text-xs text-gray-400 mt-1">بدون + — مثال: 905398863777</p>
+            @endforeach
+            <p class="text-xs text-gray-400">اترك الرسالة فارغة لفتح المحادثة بدون نص مسبق</p>
         </div>
     </div>
 </div>
@@ -409,7 +395,7 @@
                     class="fi-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-800">
             </div>
             <div>
-                <label class="block text-sm font-medium mb-1">كلمة المرور الجديدة (فارغة = بدون تغيير)</label>
+                <label class="block text-sm font-medium mb-1">كلمة المرور الجديدة</label>
                 <input type="password" wire:model="data.admin_password" placeholder="••••••••"
                     class="fi-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-800">
             </div>
@@ -417,8 +403,7 @@
     </div>
 </div>
 
-</div>{{-- end space-y-3 --}}
-
+</div>
 <div class="mt-6 flex justify-end">
     <x-filament::button type="submit" size="lg" color="success">
         💾 حفظ كل الإعدادات
