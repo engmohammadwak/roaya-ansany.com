@@ -4,11 +4,11 @@ namespace App\Filament\Pages;
 
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Livewire\WithFileUploads;
 use PDO;
+use ZipArchive;
 
 class BackupManager extends Page
 {
@@ -28,12 +28,15 @@ class BackupManager extends Page
         $this->loadBackups();
     }
 
+    // ─────────────────────────────────────────────
+    // Helpers
+    // ─────────────────────────────────────────────
     private function loadBackups(): void
     {
         $files = Storage::disk('local')->files('backups');
         $list  = [];
         foreach ($files as $file) {
-            if (str_ends_with($file, '.sql') || str_ends_with($file, '.sql.gz')) {
+            if (str_ends_with($file, '.zip')) {
                 $list[] = [
                     'name' => basename($file),
                     'path' => $file,
@@ -42,36 +45,63 @@ class BackupManager extends Page
                 ];
             }
         }
-        // Sort newest first
         usort($list, fn($a, $b) => $b['date'] <=> $a['date']);
         $this->backups = $list;
     }
 
     private function formatBytes(int $bytes): string
     {
-        if ($bytes >= 1048576) return round($bytes / 1048576, 2) . ' MB';
-        if ($bytes >= 1024)    return round($bytes / 1024, 2)    . ' KB';
+        if ($bytes >= 1073741824) return round($bytes / 1073741824, 2) . ' GB';
+        if ($bytes >= 1048576)    return round($bytes / 1048576, 2)    . ' MB';
+        if ($bytes >= 1024)       return round($bytes / 1024, 2)       . ' KB';
         return $bytes . ' B';
     }
 
-    // =========================================================
-    // 1. Create DB backup
-    // =========================================================
+    // ─────────────────────────────────────────────
+    // 1. Create full backup (DB + storage images)
+    // ─────────────────────────────────────────────
     public function createBackup(): void
     {
         try {
-            $db   = config('database.connections.' . config('database.default'));
-            $name = 'backups/backup_' . now()->format('Y-m-d_H-i-s') . '.sql';
+            $timestamp  = now()->format('Y-m-d_H-i-s');
+            $backupDir  = storage_path('app/backups');
+            $zipPath    = $backupDir . '/backup_' . $timestamp . '.zip';
+            $sqlPath    = $backupDir . '/db_temp_' . $timestamp . '.sql';
 
-            $sql = $this->dumpDatabase($db);
+            if (!is_dir($backupDir)) {
+                mkdir($backupDir, 0755, true);
+            }
 
-            Storage::disk('local')->put($name, $sql);
+            // 1. Dump database to temp SQL file
+            file_put_contents($sqlPath, $this->dumpDatabase());
+
+            // 2. Create ZIP
+            $zip = new ZipArchive();
+            if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
+                throw new \RuntimeException('تعذر إنشاء ملف ZIP');
+            }
+
+            // Add DB sql
+            $zip->addFile($sqlPath, 'database/database.sql');
+
+            // Add all files from storage/app/public (uploaded images, etc.)
+            $publicStoragePath = storage_path('app/public');
+            if (is_dir($publicStoragePath)) {
+                $this->addDirectoryToZip($zip, $publicStoragePath, 'storage');
+            }
+
+            $zip->close();
+
+            // Remove temp SQL
+            @unlink($sqlPath);
+
             $this->loadBackups();
 
             Notification::make()
-                ->title('تم إنشاء النسخة الاحتياطية بنجاح ✅')
+                ->title('تم إنشاء النسخة الاحتياطية بنجاح ✅ (DB + الصور)')
                 ->success()
                 ->send();
+
         } catch (\Throwable $e) {
             Notification::make()
                 ->title('خطأ: ' . $e->getMessage())
@@ -80,21 +110,34 @@ class BackupManager extends Page
         }
     }
 
-    private function dumpDatabase(array $db): string
+    private function addDirectoryToZip(ZipArchive $zip, string $dir, string $zipFolder): void
+    {
+        $files = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS),
+            \RecursiveIteratorIterator::LEAVES_ONLY
+        );
+
+        foreach ($files as $file) {
+            if (!$file->isFile()) continue;
+            $realPath    = $file->getRealPath();
+            $relativePath = $zipFolder . '/' . ltrim(str_replace($dir, '', $realPath), DIRECTORY_SEPARATOR);
+            $zip->addFile($realPath, $relativePath);
+        }
+    }
+
+    private function dumpDatabase(): string
     {
         $pdo    = DB::connection()->getPdo();
-        $dbName = $db['database'];
+        $dbName = config('database.connections.' . config('database.default') . '.database');
         $sql    = "-- Backup: {$dbName} | " . now()->toDateTimeString() . "\nSET FOREIGN_KEY_CHECKS=0;\n\n";
 
         $tables = $pdo->query('SHOW TABLES')->fetchAll(PDO::FETCH_COLUMN);
 
         foreach ($tables as $table) {
-            // Drop + create
             $create = $pdo->query("SHOW CREATE TABLE `{$table}`")->fetch(PDO::FETCH_ASSOC);
             $sql .= "DROP TABLE IF EXISTS `{$table}`;\n";
             $sql .= $create['Create Table'] . ";\n\n";
 
-            // Data
             $rows = $pdo->query("SELECT * FROM `{$table}`")->fetchAll(PDO::FETCH_ASSOC);
             foreach ($rows as $row) {
                 $values = array_map(fn($v) => $v === null ? 'NULL' : $pdo->quote($v), $row);
@@ -107,24 +150,22 @@ class BackupManager extends Page
         return $sql;
     }
 
-    // =========================================================
-    // 2. Download a backup file
-    // =========================================================
+    // ─────────────────────────────────────────────
+    // 2. Download backup ZIP
+    // ─────────────────────────────────────────────
     public function downloadBackup(string $path)
     {
-        if (!Storage::disk('local')->exists($path)) {
+        $fullPath = Storage::disk('local')->path($path);
+        if (!file_exists($fullPath)) {
             Notification::make()->title('الملف غير موجود')->danger()->send();
             return;
         }
-        return response()->download(
-            Storage::disk('local')->path($path),
-            basename($path)
-        );
+        return response()->download($fullPath, basename($path));
     }
 
-    // =========================================================
-    // 3. Delete a backup
-    // =========================================================
+    // ─────────────────────────────────────────────
+    // 3. Delete backup
+    // ─────────────────────────────────────────────
     public function deleteBackup(string $path): void
     {
         Storage::disk('local')->delete($path);
@@ -132,38 +173,76 @@ class BackupManager extends Page
         Notification::make()->title('تم حذف النسخة ✅')->success()->send();
     }
 
-    // =========================================================
-    // 4. Upload & restore a .sql backup
-    // =========================================================
+    // ─────────────────────────────────────────────
+    // 4. Upload & Restore full ZIP backup
+    // ─────────────────────────────────────────────
     public function restoreBackup(): void
     {
         $this->validate([
-            'backup_file' => 'required|file|mimes:sql,txt|max:102400',
+            'backup_file' => 'required|file|mimes:zip|max:512000',
         ], [
             'backup_file.required' => 'يرجى اختيار ملف النسخة.',
-            'backup_file.mimes'    => 'يجب أن يكون الملف بصيغة .sql',
+            'backup_file.mimes'    => 'يجب أن يكون الملف بصيغة .zip',
         ]);
 
         try {
-            $sql = file_get_contents($this->backup_file->getRealPath());
+            $tmpPath   = $this->backup_file->getRealPath();
+            $timestamp = now()->format('Y-m-d_H-i-s');
+            $backupDir = storage_path('app/backups');
+            $savedZip  = $backupDir . '/restored_' . $timestamp . '.zip';
 
-            // Save uploaded file to backups folder
-            $stored = 'backups/restored_' . now()->format('Y-m-d_H-i-s') . '.sql';
-            Storage::disk('local')->put($stored, $sql);
+            if (!is_dir($backupDir)) mkdir($backupDir, 0755, true);
 
-            // Execute SQL statements
-            DB::unprepared($sql);
+            // Save zip permanently
+            copy($tmpPath, $savedZip);
+
+            $zip = new ZipArchive();
+            if ($zip->open($savedZip) !== true) {
+                throw new \RuntimeException('تعذر فتح ملف ZIP');
+            }
+
+            // ── Restore DB ──
+            $sqlContent = null;
+            for ($i = 0; $i < $zip->numFiles; $i++) {
+                $name = $zip->getNameIndex($i);
+                if (str_ends_with($name, '.sql')) {
+                    $sqlContent = $zip->getFromIndex($i);
+                    break;
+                }
+            }
+
+            if ($sqlContent) {
+                DB::unprepared($sqlContent);
+            }
+
+            // ── Restore storage files ──
+            $publicStoragePath = storage_path('app/public');
+            for ($i = 0; $i < $zip->numFiles; $i++) {
+                $name = $zip->getNameIndex($i);
+                if (!str_starts_with($name, 'storage/')) continue;
+                if (str_ends_with($name, '/')) continue; // skip dirs
+
+                $relativePath = substr($name, strlen('storage/'));
+                $destPath     = $publicStoragePath . '/' . $relativePath;
+                $destDir      = dirname($destPath);
+
+                if (!is_dir($destDir)) mkdir($destDir, 0755, true);
+                file_put_contents($destPath, $zip->getFromIndex($i));
+            }
+
+            $zip->close();
 
             $this->backup_file = null;
             $this->loadBackups();
 
             Notification::make()
-                ->title('تم استعادة قاعدة البيانات بنجاح ✅')
+                ->title('تمت استعادة النسخة بنجاح ✅ (DB + الصور)')
                 ->success()
                 ->send();
+
         } catch (\Throwable $e) {
             Notification::make()
-                ->title('خطأ أثناء الاستعادة: ' . $e->getMessage())
+                ->title('خطأ: ' . $e->getMessage())
                 ->danger()
                 ->send();
         }
