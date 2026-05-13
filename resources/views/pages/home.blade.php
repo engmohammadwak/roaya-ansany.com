@@ -448,7 +448,9 @@
 
 {{-- ============ FAQ ============ --}}
 @php
-    $faqs = $data['faqs'] ?? [];
+    $faqs           = $data['faqs'] ?? [];
+    $faqSectionLabel = $data['faq_section_label'] ?? ($locale==='ar' ? 'الأسئلة الشائعة' : 'FAQ');
+    $faqSectionTitle = $data['faq_section_title'] ?? ($locale==='ar' ? 'أسئلة وأجوبة' : 'Q&A');
     $defaultFaqs = [
         ['question'=>($locale==='ar'?'كيف يمكنني التبرع؟':'How can I donate?'),'answer'=>($locale==='ar'?'عبر الموقع مباشرةً.':'Through the website directly.')],
         ['question'=>($locale==='ar'?'هل تبرعاتي تصل؟':'Do my donations reach?'),'answer'=>($locale==='ar'?'نعم، 100%.':'Yes, 100%.')],
@@ -460,8 +462,8 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-5 mb-4 mb-lg-0">
-                <h6>{{ $locale==='ar'?'الأسئلة الشائعة':'FAQ' }}</h6>
-                <h2 class="section-title mb-4">{{ $locale==='ar'?'أسئلة وأجوبة':'Q&A' }}</h2>
+                <h6>{{ $faqSectionLabel }}</h6>
+                <h2 class="section-title mb-4">{{ $faqSectionTitle }}</h2>
                 <a href="{{ url($locale.'/contact') }}" class="btn-donate d-inline-block">{{ $locale==='ar'?'تواصل معنا':'Contact Us' }}</a>
             </div>
             <div class="col-lg-7">
@@ -475,7 +477,7 @@
                             </button>
                         </h2>
                         <div id="faqC{{ $fi }}" class="accordion-collapse collapse {{ $fi===0?'show':'' }}" data-bs-parent="#faqAccordion">
-                            <div class="accordion-body faq-body">{{ $faq['answer'] ?? '' }}</div>
+                            <div class="accordion-body faq-body">{!! $faq['answer'] ?? '' !!}</div>
                         </div>
                     </div>
                     @endforeach

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Faq;
+use App\Models\FaqCategory;
 use App\Models\HomeSetting;
 use App\Models\Partner;
 use App\Models\Setting;
@@ -34,6 +36,18 @@ class HomeController extends Controller
                 'color' => $p->color,
             ];
         })->toArray();
+
+        // قراءة الأسئلة من جدول faqs مباشرة
+        $dbFaqs = Faq::orderBy('sort_order')->get()->map(function ($f) use ($locale) {
+            return [
+                'question' => $locale === 'ar' ? $f->question_ar : ($f->question_en ?: $f->question_ar),
+                'answer'   => $locale === 'ar' ? $f->answer_ar   : ($f->answer_en   ?: $f->answer_ar),
+                'is_active'=> $f->is_active,
+            ];
+        })->filter(fn($f) => $f['is_active'])->values()->toArray();
+
+        // إذا ما في أسئلة بالداتابيس نستخدم القديمة من HomeSetting
+        $faqs = !empty($dbFaqs) ? $dbFaqs : ($hs->faqs ?? []);
 
         $heroLabelTop   = Setting::get('hero_label_top',   '');
         $heroLabelLeft  = Setting::get('hero_label_left',  '');
@@ -71,7 +85,7 @@ class HomeController extends Controller
                 'description' => $locale === 'ar' ? $hs->support_description_ar : $hs->support_description_en,
                 'items'       => $hs->support_items ?? [],
             ],
-            'faqs'     => $hs->faqs ?? [],
+            'faqs'    => $faqs,
             'partners' => $dbPartners,
             'donation_counter' => [
                 'goal'     => $hs->donation_goal,
@@ -80,6 +94,13 @@ class HomeController extends Controller
             ],
             'newsletter_title'       => $locale === 'ar' ? $hs->newsletter_title_ar       : $hs->newsletter_title_en,
             'newsletter_description' => $locale === 'ar' ? $hs->newsletter_description_ar : $hs->newsletter_description_en,
+            // عناوين قسم الأسئلة في الصفحة الرئيسية
+            'faq_section_label' => $locale === 'ar'
+                ? Setting::get('home_faq_label_ar', 'الأسئلة الشائعة')
+                : Setting::get('home_faq_label_en', 'FAQ'),
+            'faq_section_title' => $locale === 'ar'
+                ? Setting::get('home_faq_title_ar', 'أسئلة وأجوبة')
+                : Setting::get('home_faq_title_en', 'Q&A'),
         ];
 
         return view('pages.home', compact('data', 'projects', 'programs'));
