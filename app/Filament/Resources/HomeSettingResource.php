@@ -9,7 +9,6 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Support\HtmlString;
 
 class HomeSettingResource extends Resource
 {
@@ -43,7 +42,6 @@ class HomeSettingResource extends Resource
                                 Forms\Components\TextInput::make('hero_label_en')
                                     ->label('Image Label (English)'),
                             ]),
-
                             Forms\Components\FileUpload::make('hero_image')
                                 ->label('صورة الـ Hero')
                                 ->image()->directory('home/hero')
@@ -102,18 +100,14 @@ class HomeSettingResource extends Resource
                                             ->label('الوصف (عربي)')->rows(2),
                                         Forms\Components\Textarea::make('description_en')
                                             ->label('Description (English)')->rows(2),
-                                        Forms\Components\TextInput::make('icon')
-                                            ->label('أيقونة FontAwesome')
-                                            ->placeholder('fa-house-crack')
-                                            ->helperText(new HtmlString(
-                                                'مثال: fa-bowl-food, fa-droplet &nbsp;|&nbsp; '
-                                                . '<a href="https://fontawesome.com/icons" target="_blank" '
-                                                . 'style="color:#6366f1;text-decoration:underline;font-weight:600;">'
-                                                . '🔍 تصفح جميع الأيقونات</a>'
-                                            )),
-                                        Forms\Components\ColorPicker::make('color')
-                                            ->label('لون الخلفية'),
                                     ]),
+                                    Forms\Components\FileUpload::make('icon')
+                                        ->label('صورة الأيقونة')
+                                        ->image()
+                                        ->directory('home/why-icons')
+                                        ->imagePreviewHeight('80')
+                                        ->helperText('ارفع صورة PNG أو SVG للأيقونة (يفضل 80×80 بكسل)')
+                                        ->columnSpanFull(),
                                 ])
                                 ->addActionLabel('+ إضافة كارت')
                                 ->collapsible()

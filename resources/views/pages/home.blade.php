@@ -213,18 +213,17 @@
     $whyCards = $data['why_donate'] ?? [];
     $whyLabel = $data['why_donate_label'] ?? ($locale==='ar' ? 'لماذا تتبرع لنا؟' : 'Why donate to us?');
 
-    // استخدام المفتاح الصحيح حسب اللغة
     $whyTitle = $locale === 'ar'
         ? (App\Models\Setting::get('why_donate_title_ar', '') ?: ($data['why_donate_title'] ?? 'لأننا نهتم بالحالات الأكثر احتياجًا.'))
         : (App\Models\Setting::get('why_donate_title_en', '') ?: ($data['why_donate_title'] ?? 'Because we care about those in greatest need.'));
 
     $defaultCards = [
-        ['icon'=>'fa-house-crack',   'title'=>($locale==='ar'?'الأطفال والنساء بلا مأوى':'Children & Women Without Shelter'),      'description'=>($locale==='ar'?'نهتم بالأطفال والنساء الذين هُدمت منازلهم ويعيشون في الخيام ومراكز الإيواء.':'We care for children and women whose homes were destroyed.')],
-        ['icon'=>'fa-bowl-food',     'title'=>($locale==='ar'?'الأطفال والنساء بلا غذاء':'Children & Women Without Food'),         'description'=>($locale==='ar'?'نقدّم الدعم للأسر التي تعاني من شبح المجاعة.':'We support families suffering from famine.')],
-        ['icon'=>'fa-people-arrows', 'title'=>($locale==='ar'?'الأسر النازحة':'Displaced Families'),                       'description'=>($locale==='ar'?'نهتم بالأسر التي نزحت إلى مراكز الإيواء.':'We care for families displaced to shelters.')],
-        ['icon'=>'fa-box-open',      'title'=>($locale==='ar'?'توزيع الطرود الغذائية':'Food Package Distribution'),              'description'=>($locale==='ar'?'نسعى إلى توفير طرود غذائية للأسر الفقيرة.':'We provide food packages for poor families.')],
-        ['icon'=>'fa-child-reaching','title'=>($locale==='ar'?'كفالة الأيتام والأرامل':'Orphan & Widow Sponsorship'),            'description'=>($locale==='ar'?'نساند الأيتام والنساء الأرامل.':'We support orphans and widows.')],
-        ['icon'=>'fa-droplet',       'title'=>($locale==='ar'?'مشاريع سقيا الماء':'Water Projects'),                              'description'=>($locale==='ar'?'ندعم حفر الآبار وتوفير المياه.':'We support well drilling and water provision.')],
+        ['icon'=>null, 'title'=>($locale==='ar'?'الأطفال والنساء بلا مأوى':'Children & Women Without Shelter'),      'description'=>($locale==='ar'?'نهتم بالأطفال والنساء الذين هُدمت منازلهم ويعيشون في الخيام ومراكز الإيواء.':'We care for children and women whose homes were destroyed.')],
+        ['icon'=>null, 'title'=>($locale==='ar'?'الأطفال والنساء بلا غذاء':'Children & Women Without Food'),         'description'=>($locale==='ar'?'نقدّم الدعم للأسر التي تعاني من شبح المجاعة.':'We support families suffering from famine.')],
+        ['icon'=>null, 'title'=>($locale==='ar'?'الأسر النازحة':'Displaced Families'),                               'description'=>($locale==='ar'?'نهتم بالأسر التي نزحت إلى مراكز الإيواء.':'We care for families displaced to shelters.')],
+        ['icon'=>null, 'title'=>($locale==='ar'?'توزيع الطرود الغذائية':'Food Package Distribution'),                'description'=>($locale==='ar'?'نسعى إلى توفير طرود غذائية للأسر الفقيرة.':'We provide food packages for poor families.')],
+        ['icon'=>null, 'title'=>($locale==='ar'?'كفالة الأيتام والأرامل':'Orphan & Widow Sponsorship'),              'description'=>($locale==='ar'?'نساند الأيتام والنساء الأرامل.':'We support orphans and widows.')],
+        ['icon'=>null, 'title'=>($locale==='ar'?'مشاريع سقيا الماء':'Water Projects'),                              'description'=>($locale==='ar'?'ندعم حفر الآبار وتوفير المياه.':'We support well drilling and water provision.')],
     ];
     if (empty($whyCards)) $whyCards = $defaultCards;
     $whyAlign = $locale === 'ar' ? 'right' : 'left';
@@ -237,11 +236,22 @@
         </div>
         <div class="row mt-5">
             @foreach($whyCards as $card)
-            @php $icon = $card['icon'] ?? 'fa-heart'; @endphp
+            @php
+                $cardIcon = $card['icon'] ?? null;
+                $cardIconUrl = $cardIcon ? asset('storage/' . $cardIcon) : null;
+            @endphp
             <div class="col-lg-4 mb-4">
                 <div class="why-donate-card">
                     <div class="why-icon-wrap mb-3">
-                        <div class="why-icon-circle"><i class="fa-solid {{ $icon }} fa-lg"></i></div>
+                        @if($cardIconUrl)
+                            <div class="why-icon-circle">
+                                <img src="{{ $cardIconUrl }}" alt="icon" style="width:36px;height:36px;object-fit:contain;">
+                            </div>
+                        @else
+                            <div class="why-icon-circle">
+                                <i class="fa-solid fa-heart fa-lg"></i>
+                            </div>
+                        @endif
                     </div>
                     <h5 class="mb-3">{{ $card['title'] ?? '' }}</h5>
                     <p class="mb-4">{{ $card['description'] ?? '' }}</p>
@@ -530,12 +540,10 @@
 @push('styles')
 <style>
 /* ===== WHY DONATE HEADER FIX ===== */
-/* الـ .header الأصلي عنده flex + justify-content:space-between
-   اللي بيكسر الـ text-align، فبنستخدم class جديد why-donate-header */
 .why-donate-header {
     display: flex;
     flex-direction: column;
-    align-items: flex-end; /* RTL default */
+    align-items: flex-end;
     width: 100%;
 }
 html[dir="ltr"] .why-donate-header {
